@@ -1,0 +1,6 @@
+# IDE
+
+.*~
+Thumbs.db
+*~
+.directory
