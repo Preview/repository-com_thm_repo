@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<form>
+	<fieldset>
+		<field
+			name="id"
+			type="hidden"
+		/>
+		<field
+			name="name"
+			type="text"
+			label="COM_THM_REPO_FILE_NAME"
+			description="COM_THM_REPO_FILE_NAME_DESC"
+		/>
+		<field
+			name="path"
+			type="text"
+			label="COM_THM_REPO_FILE_PATH"
+			description="COM_THM_REPO_FILE_PATH_DESC"
+		/>
+		<field
+			name="size"
+			type="text"
+			label="COM_THM_REPO_FILE_SIZE"
+			description="COM_THM_REPO_FILE_SIZE_DESC"
+		/>
+		<field
+			name="mimeType"
+			type="text"
+			label="COM_THM_REPO_FILE_MIMETYPE"
+			description="COM_THM_REPO_FILE_MIMETYPE_DESC"
+		/>
+	</fieldset>
+</form>

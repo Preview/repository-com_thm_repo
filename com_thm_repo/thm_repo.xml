@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="component" version="0.1" method="upgrade">
+	<name>COM_THM_Repo</name>
+	<author>Stefan Schneider</author>
+	<creationDate>2013-06-03</creationDate>
+	<copyright>TH Mittelhessen 2013</copyright>
+	<licence>GNU GPL v.2</licence>
+	<authorEMail>Stefan.Schneider@mni.thm.de</authorEMail>
+	<authorUrl>www.mni.thm.de</authorUrl>
+	<version>0.0.1</version>
+	<description></description>
+	<administration>
+		<menu>COM_THM_REPO</menu>
+		<submenu>
+			<menu link="option=com_thm_repo&amp;view=files" view="files" alt="THM_repo/files">COM_THM_FILES</menu>
+			<menu link="option=com_thm_repo&amp;view=folders" view="folders" alt="THM_repo/folders">COM_THM_FOLDERS</menu>
+			<menu link="option=com_thm_repo&amp;view=links" view="links" alt="THM_repo/links">COM_THM_LINKS</menu>
+		</submenu>
+		<files folder="admin">
+			<filename>index.html</filename>
+			<filename>controller.php</filename>
+			<filename>thm_repo.php</filename>
+			<folder>controllers</folder>
+			<folder>language</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+		</files>
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB/en-GB.com_thm_repo.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_thm_repo.sys.ini</language>
+			<language tag="de-DE">language/de-DE/de-DE.com_thm_repo.ini</language>
+			<language tag="de-DE">language/de-DE/de-DE.com_thm_repo.sys.ini</language>
+		</languages>
+	</administration>
+</extension>

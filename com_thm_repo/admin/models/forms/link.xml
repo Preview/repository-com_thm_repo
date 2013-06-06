@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<form>
+	<fieldset>
+		<field
+			name="id"
+			type="hidden"
+		/>
+		<field
+			name="name"
+			type="text"
+			label="COM_THM_REPO_LINK_NAME"
+			description="COM_THM_REPO_LINK_NAME_DESC"
+		/>
+		<field
+			name="link"
+			type="text"
+			label="COM_THM_REPO_LINK_LINK"
+			description="COM_THM_REPO_LINK_LINK_DESC"
+		/>
+	</fieldset>
+</form>
