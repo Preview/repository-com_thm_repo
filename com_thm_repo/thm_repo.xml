@@ -9,6 +9,19 @@
 	<authorUrl>www.mni.thm.de</authorUrl>
 	<version>0.0.1</version>
 	<description></description>
+
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+		</sql>
+	</uninstall>
+
+
 	<administration>
 		<menu>COM_THM_REPO</menu>
 		<submenu>
