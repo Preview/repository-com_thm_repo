@@ -24,6 +24,6 @@ class THM_RepoTableFolder extends JTable
 	 */
 	function __construct(&$db)
 	{
-		parent::__construct('#__thm_repo_folders', 'id', $db);
+		parent::__construct('#__thm_repo_folder', 'id', $db);
 	}
 }

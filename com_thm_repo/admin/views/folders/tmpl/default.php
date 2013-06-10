@@ -18,7 +18,14 @@ JHtml::_('behavior.tooltip');
         		<tr>
         			<th></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_PARENT_ID'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_DESCRIPTION')?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_CREATED'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_MODIFIED'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_MODIFIED_BY'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_CREATE_BY'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVELS'); ?></th>
         		</tr>
         	</thead>
        		<tbody>
@@ -26,7 +33,15 @@ JHtml::_('behavior.tooltip');
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
+        				<td><?php echo $item->parent_id; ?></td>
         				<td><?php echo $item->name; ?></td>
+        				<td><?php echo $item->description; ?></td>
+        				<td><?php echo $item->created; ?></td>
+        				<td><?php echo $item->modified; ?></td>
+        				<td><?php echo $item->modified_by; ?></td>
+        				<td><?php echo $item->create_by; ?></td>
+        				<td><?php echo $item->viewlevels; ?></td>
+        				<td></td>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>

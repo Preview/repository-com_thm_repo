@@ -11,9 +11,9 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&layout=edit&id='.(int) $this->item->id); ?>"
-      method="post" name="adminForm" id="file-form">
+      method="post" name="adminForm" id="folder-form">
         <fieldset class="adminform">
-                <legend><?php echo JText::_( 'COM_THM_REPO_FILE_DETAILS' ); ?></legend>
+                <legend><?php echo JText::_( 'COM_THM_REPO_FOLDER_DETAILS' ); ?></legend>
                 <ul class="adminformlist">
 <?php foreach($this->form->getFieldset() as $field): ?>
                         <li><?php echo $field->label;echo $field->input;?></li>
@@ -21,7 +21,7 @@ JHtml::_('behavior.tooltip');
                 </ul>
         </fieldset>
         <div>
-                <input type="hidden" name="task" value="file.edit" />
+                <input type="hidden" name="task" value="folder.edit" />
                 <?php echo JHtml::_('form.token'); ?>
         </div>
 </form>

@@ -12,16 +12,16 @@ defined('_JEXEC') or die;
 // load tooltip behavior
 JHtml::_('behavior.tooltip');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_thm_repo'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=files'); ?>" method="post" name="adminForm" id="adminForm">
         <table class="adminlist">
         	<thead>
         		<tr>
         			<th></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_PATH'); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_SIZE'); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_MIMETYPE'); ?></th>
+        			<th><?php echo JHTML::_( 'grid.sort', 'COM_THM_REPO_VIEW_ID', 'id', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_( 'grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_( 'grid.sort', 'COM_THM_REPO_VIEW_PATH', 'path', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_( 'grid.sort', 'COM_THM_REPO_VIEW_SIZE', 'size', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_( 'grid.sort', 'COM_THM_REPO_VIEW_MIMETYPE', 'mimeType', $this->sortDirection, $this->sortColumn); ?></th>
         		</tr>
         	</thead>
        		<tbody>
@@ -45,6 +45,8 @@ JHtml::_('behavior.tooltip');
         <div>
                 <input type="hidden" name="task" value="" />
                 <input type="hidden" name="boxchecked" value="0" />
+                <input type="hidden" name="filter_order" value="<?php echo $this->sortColumn; ?>" />
+                <input type="hidden" name="filter_order_Dir" value="<?php echo $this->sortDirection; ?>" />
                 <?php echo JHtml::_('form.token'); ?>
         </div>
 </form>

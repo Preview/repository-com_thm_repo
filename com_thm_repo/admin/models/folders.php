@@ -28,9 +28,9 @@ class THM_RepoModelFolders extends JModelList
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		// Select some fields
-		$query->select('id,name');
+		$query->select('*');
 		// From the folders table
-		$query->from('#__thm_repo_folders');
+		$query->from('#__thm_repo_folder');
 		return $query;
 	}
 }

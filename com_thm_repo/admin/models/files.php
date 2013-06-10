@@ -17,6 +17,32 @@ jimport('joomla.application.component.modellist');
 class THM_RepoModelFiles extends JModelList
 {
 	/**
+	 * Constructor.
+	 *
+	 * @param    array    An optional associative array of configuration settings.
+	 * @see        JController
+	 */
+	public function __construct($config = array())
+	{
+		$config['filter_fields'] = array(
+				'id',
+				'name',
+				'path',
+				'mimeType'
+		);
+		parent::__construct($config);
+	}
+	
+	/**
+	 * Method to auto-populate the model state
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		// List state information.
+		parent::populateState('id', 'ASC');
+	}
+	
+	/**
 	 * Method to build an SQL query to load the list data.
 	 *
 	 * @return      string  An SQL query
@@ -30,6 +56,10 @@ class THM_RepoModelFiles extends JModelList
 		$query->select('id,name,path,size,mimeType');
 		// From the files table
 		$query->from('#__thm_repo_files');
+		// Order query
+		$query->order($db->escape($this->getState('list.ordering', 'id')).' '.
+				$db->escape($this->getState('list.direction', 'ASC')));
+		
 		return $query;
 	}
 }

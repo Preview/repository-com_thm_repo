@@ -30,6 +30,7 @@ class THM_RepoViewFiles extends JView
 		// Get data from the model
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');
+		$state = $this->get('State');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -40,6 +41,8 @@ class THM_RepoViewFiles extends JView
 		// Assign data to the view
 		$this->items = $items;
 		$this->pagination = $pagination;
+		$this->sortDirection = $state->get('list.direction');
+		$this->sortColumn = $state->get('list.ordering');
 
 		// Set the toolbar
 		$this->addToolBar();
