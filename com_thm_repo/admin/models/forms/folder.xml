@@ -29,7 +29,9 @@
 			type="calendar"
 			label="COM_THM_REPO_FOLDER_CREATED"
 			description="COM_THM_REPO_FOLDER_CREATED_DESC" 
+			default="now"
 			readonly="true" 
+			format="%Y-%m-%d %H:%M:%S" 
 			filter="user_utc" 
 		/>
 		<field
