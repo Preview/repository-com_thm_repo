@@ -32,6 +32,9 @@ class JFormFieldFolder extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
+		// get current id
+		$id = JFactory::getApplication()->input->getInt('id') ;
+		
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('id,name');
@@ -42,8 +45,11 @@ class JFormFieldFolder extends JFormFieldList
 		if ($messages)
 		{
 			foreach($messages as $message)
-			{
-				$options[] = JHtml::_('select.option', $message->id, $message->name);
+			{	// create select list without current id
+				if ($message->id != $id) 
+				{
+					$options[] = JHtml::_('select.option', $message->id, $message->name);
+				}
 			}
 		}
 		$options = array_merge(parent::getOptions(), $options);
