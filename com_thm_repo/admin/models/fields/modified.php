@@ -34,18 +34,11 @@ class JFormFieldModified extends JFormField
 	{
 		// Initialize variables.
 		$html = array();
-        
-        
-		$old_time_updated = $this->value;
-        if (!$old_time_updated) {
-            $html[] = '-';
-        } else {
-            $jdate = new JDate($old_time_updated);
-            $pretty_date = $jdate->format(JText::_('DATE_FORMAT_LC2'));
-            $html[] = "<div>".$pretty_date."</div>";
-        }
-        $time_updated = date("Y-m-d H:i:s");
+		$time_updated = date("Y-m-d H:i:s");
+		
+		// HTML output
         $html[] = '<input type="hidden" name="'.$this->name.'" value="'.$time_updated.'" />';
+        $html[] = '<input type="text" value="'.$time_updated.'" readonly />';
         
 		return implode($html);
 	}

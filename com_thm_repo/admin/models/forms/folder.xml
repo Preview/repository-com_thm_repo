@@ -18,11 +18,19 @@
 			name="modified"
 			type="modified"
 			label="COM_THM_REPO_FOLDER_MODIFIED"
-			description="COM_THM_REPO_FOLDER_MODIFIED_DESC"
+			description="COM_THM_REPO_FOLDER_MODIFIED_DESC" 
 		/>
 		<field
 			name="id"
 			type="hidden"
+		/>
+		<field
+			name="created"
+			type="calendar"
+			label="COM_THM_REPO_FOLDER_CREATED"
+			description="COM_THM_REPO_FOLDER_CREATED_DESC" 
+			readonly="true" 
+			filter="user_utc" 
 		/>
 		<field
 			name="parent_id"		

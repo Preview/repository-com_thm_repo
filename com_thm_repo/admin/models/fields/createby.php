@@ -45,7 +45,7 @@ class JFormFieldCreateby extends JFormField
 			
 		}
 		$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$user->id.'" />';
-		$html[] = "<div>".$user->name." (".$user->username.")</div>";
+		$html[] = '<input type="text" value="'.$user->name.' ('.$user->username.')" readonly />';
         
 		return implode($html);
 	}
