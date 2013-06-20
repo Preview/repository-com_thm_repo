@@ -15,7 +15,7 @@ jimport('joomla.database.table');
 /**
  * Link Table class
 */
-class THM_RepoTableLink extends JTable
+class THM_RepoTableEntity extends JTable
 {
 	/**
 	 * Constructor
@@ -24,6 +24,6 @@ class THM_RepoTableLink extends JTable
 	 */
 	function __construct(&$db)
 	{
-		parent::__construct('#__thm_repo_links', 'id', $db);
+		parent::__construct('#__thm_repo_entity', 'id', $db);
 	}
 }

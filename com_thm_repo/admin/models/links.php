@@ -28,9 +28,10 @@ class THM_RepoModelLinks extends JModelList
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		// Select some fields
-		$query->select('id,name,link');
+		$query->select('a.*, b.id AS link_id, b.*');
 		// From the links table
-		$query->from('#__thm_repo_links');
+		$query->from('#__thm_repo_entity AS a');
+		$query->join('INNER','#__thm_repo_link AS b ON a.id = b.id');
 		return $query;
 	}
 }

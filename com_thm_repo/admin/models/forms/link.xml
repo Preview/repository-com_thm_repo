@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<form>
+<form>	
 	<fieldset>
+		<field
+			name="link"
+			type="text"
+			label="COM_THM_REPO_LINK_LINK"
+			description="COM_THM_REPO_LINK_LINK_DESC"
+		/>
+		<field
+			name="create_by"
+			type="createby"
+			label="COM_THM_REPO_LINK_CREATE_BY"
+			description="COM_THM_REPO_LINK_CREATE_BY_DESC"
+		/>
+		<field
+			name="modified_by"
+			type="modifiedby"
+			label="COM_THM_REPO_LINK_MODIFIED_BY"
+			description="COM_THM_REPO_LINK_MODIFIED_BY_DESC"
+		/>
+		<field
+			name="modified"
+			type="modified"
+			label="COM_THM_REPO_LINK_MODIFIED"
+			description="COM_THM_REPO_LINK_MODIFIED_DESC" 
+		/>
 		<field
 			name="id"
 			type="hidden"
+		/>
+		<field
+			name="link_id"
+			type="hidden"
+		/>
+		<field
+			name="created"
+			type="calendar"
+			label="COM_THM_REPO_LINK_CREATED"
+			description="COM_THM_REPO_LINK_CREATED_DESC" 
+			default="now"
+			readonly="true" 
+			format="%Y-%m-%d %H:%M:%S" 
+			filter="user_utc" 
+		/>
+		<field
+			name="parent_id"		
+			type="filefolder"		
+			label="COM_THM_REPO_LINK_PARENT_ID"
+			description="COM_THM_REPO_LINK_PARENT_ID_DESC"
 		/>
 		<field
 			name="name"
@@ -13,10 +57,16 @@
 			description="COM_THM_REPO_LINK_NAME_DESC"
 		/>
 		<field
-			name="link"
+			name="description"
 			type="text"
-			label="COM_THM_REPO_LINK_LINK"
-			description="COM_THM_REPO_LINK_LINK_DESC"
+			label="COM_THM_REPO_LINK_DESCRIPTION"
+			description="COM_THM_REPO_LINK_DESCRIPTION_DESC"
+		/>
+		<field
+			name="viewlevels"
+			type="viewlevels"
+			label="COM_THM_REPO_LINK_VIEWLEVELS"
+			description="COM_THM_REPO_LINK_VIEWLEVELS_DESC"
 		/>
 	</fieldset>
 </form>
