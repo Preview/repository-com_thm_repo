@@ -159,7 +159,5 @@ class THM_RepoModelLink extends JModelAdmin
 	public function delete($data)
 	{
 	}
-	}
-
 }
 ?>
