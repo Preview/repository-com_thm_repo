@@ -1,10 +1,10 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @package    THM_Repo
+ * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright  2013 TH Mittelhessen
+ * @license    GNU GPL v.2
+ * @link       www.mni.thm.de
  */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -20,11 +20,13 @@ class THM_RepoModelLink extends JModelAdmin
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
-	 * @param       type    The table type to instantiate
-	 * @param       string  A prefix for the table class name. Optional.
-	 * @param       array   Configuration array for model. Optional.
-	 * @return      JTable  A database object
-	 * @since       2.5
+	 * @param   type    The table type to instantiate
+	 * @param   string  A prefix for the table class name. Optional.
+	 * @param   array   Configuration array for model. Optional.
+	 * 
+	 * @return  JTable  A database object
+	 * 
+	 * @since   2.5
 	 */
 	public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
 	{
@@ -34,16 +36,17 @@ class THM_RepoModelLink extends JModelAdmin
 	/**
 	 * Method to get the record form.
 	 *
-	 * @param       array   $data           Data for the form.
-	 * @param       boolean $loadData       True if the form is to load its own data (default case), false if not.
-	 * @return      mixed   A JForm object on success, false on failure
-	 * @since       2.5
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * 
+	 * @return   mixed   A JForm object on success, false on failure
+	 * 
+	 * @since    2.5
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_thm_repo.link', 'link',
-				array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_thm_repo.link', 'link', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form))
 		{
 			return false;
@@ -54,6 +57,7 @@ class THM_RepoModelLink extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return      mixed   The data for the form.
+	 * 
 	 * @since       2.5
 	 */
 	protected function loadFormData()
@@ -67,13 +71,21 @@ class THM_RepoModelLink extends JModelAdmin
 		return $data;
 	}
 	
+	/**
+	 * @param    string $pk
+	 * 
+	 * @return unknown
+	 */
 	public function getItem($pk = null)
 	{
 		$item = parent::getItem($pk);
+		
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName().'.id');
-		if ($pk > 0) {
-			// get Data from #__thm_repo_entity table and assign it to $item
+		if ($pk > 0) 
+		{
+			
+			// Get Data from #__thm_repo_entity table and assign it to $item
 			$data = $this->getData($item->id);
 		/*	$item->entity_id = $data->id;
 			$item->parent_id = $data->parent_id;
@@ -86,20 +98,23 @@ class THM_RepoModelLink extends JModelAdmin
 			$item->viewlevels = $data->viewlevels; */
 			$item->link = $data->link;
 			$item->link_id = $data->id;
-		} else 
+		} 
+		else 
 		{
-			// set link and link_id NULL for creating new links
-			$item->link = NULL;
-			$item->link_id = NULL;
+			// Set link and link_id NULL for creating new links
+			$item->link = null;
+			$item->link_id = null;
 		}
 		return $item;
 	}
 	
 	/**
 	 * Method to get the needed data from entity table
-	 *
-	 * @return      mixed   The data from #__thm_repo_entity table.
-	 */	
+	 * 
+	 * @param   unknown $id
+	 * 
+	 * @return mixed   The data from #__thm_repo_entity table.
+	 */
 	public function getData($id)
 	{
 		// Create a new query object.
@@ -115,11 +130,18 @@ class THM_RepoModelLink extends JModelAdmin
 		
 	}
 	
+	/**
+	 * 
+	 * @param   unknown $data
+	 * 
+	 * @return boolean
+	 */
 	public function save($data)
 	{
-		// assign link_data
+		// Assign link_data
 		$linkdata  = (object) $data;
-		// remove not needed data for link table
+		
+		// Remove not needed data for link table
 		unset($linkdata->name);
 		unset($linkdata->parent_id);
 		unset($linkdata->description);
@@ -129,35 +151,68 @@ class THM_RepoModelLink extends JModelAdmin
 		unset($linkdata->create_by);
 		unset($linkdata->viewlevels);
 			
-		// assign entity data
+		// Assign entity data
 		$entitydata = (object) $data;
-		// remove link from entitydata
+		
+		// Remove link from entitydata
 		unset($entitydata->link);
-		//getDBO
+		
+		// GetDBO
 		$db1 = JFactory::getDBO();
 		$db2 = JFactory::getDBO();
 
 		if ($linkdata->id == 0)
 		{
 			$db1->insertObject('#__thm_repo_entity', $entitydata, 'id');
-			// insert created entity id to linkdata id 
+			
+			// Insert created entity id to linkdata id 
 			$linkdata->id = $db1->insertID();
 			$db2->insertObject('#__thm_repo_link', $linkdata, 'id');
 			
-		} else
+		} 
+		else
 		{
-			// update #__thm_repo_entity table
+			// Update #__thm_repo_entity table
 			$db1->updateObject('#__thm_repo_entity', $entitydata, 'id');
-			// update #__thm_repo_link table
+			
+			// Update #__thm_repo_link table
 			$db2->updateObject('#__thm_repo_link', $linkdata, 'id');
 		}		
 		
 		// TO DO: return statement
 		return true;
 	}
-	// TO DO
+
+	/**
+	 * 
+	 * @param   unknown $data
+	 * 
+	 * @return boolean
+	 */
 	public function delete($data)
 	{
+		$id = $data[0];
+
+		// GetDBO
+		$db1 = JFactory::getDBO();
+		$db2 = JFactory::getDBO();
+		
+		$query1 = $db1->getQuery(true);
+		$query2 = $db2->getQuery(true);
+		
+		// Delete Entity record
+		$query1->delete($db1->quoteName('#__thm_repo_link'));
+		$query1->where('id = ' . $id);
+		$db1->setQuery($query1);
+		$db1->query();
+
+		// Delete Link record
+		$query2->delete($db2->quoteName('#__thm_repo_entity'));
+		$query2->where('id = ' . $id);
+		$db1->setQuery($query2);
+		$db1->query();
+		
+		// TO DO: return statement
+		return true;
 	}
 }
-?>
