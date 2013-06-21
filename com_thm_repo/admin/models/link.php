@@ -194,23 +194,22 @@ class THM_RepoModelLink extends JModelAdmin
 		$id = $data[0];
 
 		// GetDBO
-		$db1 = JFactory::getDBO();
-		$db2 = JFactory::getDBO();
+		$db = JFactory::getDBO();
 		
-		$query1 = $db1->getQuery(true);
-		$query2 = $db2->getQuery(true);
+		$query1 = $db->getQuery(true);
+		$query2 = $db->getQuery(true);
 		
 		// Delete Entity record
-		$query1->delete($db1->quoteName('#__thm_repo_link'));
+		$query1->delete($db->quoteName('#__thm_repo_link'));
 		$query1->where('id = ' . $id);
-		$db1->setQuery($query1);
-		$db1->query();
+		$db->setQuery($query1);
+		$db->query();
 
 		// Delete Link record
-		$query2->delete($db2->quoteName('#__thm_repo_entity'));
+		$query2->delete($db->quoteName('#__thm_repo_entity'));
 		$query2->where('id = ' . $id);
-		$db1->setQuery($query2);
-		$db1->query();
+		$db->setQuery($query2);
+		$db->query();
 		
 		// TO DO: return statement
 		return true;
