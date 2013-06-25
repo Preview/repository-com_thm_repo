@@ -72,7 +72,7 @@ class THM_RepoModelLink extends JModelAdmin
 	}
 	
 	/**
-	 * @param    string $pk
+	 * @param   string $pk
 	 * 
 	 * @return unknown
 	 */
@@ -87,15 +87,6 @@ class THM_RepoModelLink extends JModelAdmin
 			
 			// Get Data from #__thm_repo_entity table and assign it to $item
 			$data = $this->getData($item->id);
-		/*	$item->entity_id = $data->id;
-			$item->parent_id = $data->parent_id;
-			$item->name = $data->name;
-			$item->description = $data->description;
-			$item->created = $data->created;
-			$item->modified = $data->modified;
-			$item->modified_by = $data->modified_by;
-			$item->create_by = $data->create_by;
-			$item->viewlevels = $data->viewlevels; */
 			$item->link = $data->link;
 			$item->link_id = $data->id;
 		} 
@@ -160,26 +151,38 @@ class THM_RepoModelLink extends JModelAdmin
 		// GetDBO
 		$db1 = JFactory::getDBO();
 		$db2 = JFactory::getDBO();
-
+		
+		
+		// Insert New Link
 		if ($linkdata->id == 0)
 		{
-			$db1->insertObject('#__thm_repo_entity', $entitydata, 'id');
+			
+			if (!($db1->insertObject('#__thm_repo_entity', $entitydata, 'id')))
+			{
+				return false;
+			}
 			
 			// Insert created entity id to linkdata id 
 			$linkdata->id = $db1->insertID();
-			$db2->insertObject('#__thm_repo_link', $linkdata, 'id');
-			
+			if (!($db2->insertObject('#__thm_repo_link', $linkdata, 'id'))) 
+			{
+				return false;
+			}		
 		} 
 		else
 		{
 			// Update #__thm_repo_entity table
-			$db1->updateObject('#__thm_repo_entity', $entitydata, 'id');
+			if (!($db1->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+			{
+				return false;
+			}
 			
 			// Update #__thm_repo_link table
-			$db2->updateObject('#__thm_repo_link', $linkdata, 'id');
+			if (!($db2->updateObject('#__thm_repo_link', $linkdata, 'id')))
+			{
+				return false;
+			}
 		}		
-		
-		// TO DO: return statement
 		return true;
 	}
 
@@ -203,15 +206,19 @@ class THM_RepoModelLink extends JModelAdmin
 		$query1->delete($db->quoteName('#__thm_repo_link'));
 		$query1->where('id = ' . $id);
 		$db->setQuery($query1);
-		$db->query();
-
+		if (!($db->query()))
+		{
+			return false;
+		}
+		
 		// Delete Link record
 		$query2->delete($db->quoteName('#__thm_repo_entity'));
 		$query2->where('id = ' . $id);
 		$db->setQuery($query2);
-		$db->query();
-		
-		// TO DO: return statement
+		if (!($db->query()))
+		{
+			return false;
+		}
 		return true;
 	}
 }

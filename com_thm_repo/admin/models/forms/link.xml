@@ -7,6 +7,7 @@
 			type="text"
 			label="COM_THM_REPO_LINK_LINK"
 			description="COM_THM_REPO_LINK_LINK_DESC"
+			default="http://"
 		/>
 		<field
 			name="create_by"
