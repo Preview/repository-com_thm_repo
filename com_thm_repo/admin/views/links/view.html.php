@@ -11,7 +11,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import Joomla view library
+// Import Joomla view library
 jimport('joomla.application.component.view');
 
 /**
@@ -21,6 +21,7 @@ class THM_RepoViewLinks extends JView
 {
 	/**
 	 * Links view display method
+	 * 
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
@@ -30,6 +31,7 @@ class THM_RepoViewLinks extends JView
 		// Get data from the model
 		$items = $this->get('Items');
 		$pagination = $this->get('Pagination');
+		$state = $this->get('State');		
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -40,6 +42,8 @@ class THM_RepoViewLinks extends JView
 		// Assign data to the view
 		$this->items = $items;
 		$this->pagination = $pagination;
+		$this->sortDirection = $state->get('list.direction');
+		$this->sortColumn = $state->get('list.ordering');
 
 		// Set the toolbar
 		$this->addToolBar();

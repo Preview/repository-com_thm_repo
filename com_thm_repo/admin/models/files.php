@@ -1,15 +1,16 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @package    THM_Repo
+ * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright  2013 TH Mittelhessen
+ * @license    GNU GPL v.2
+ * @link       www.mni.thm.de
  */
 
 // No direct access to this file
 defined('_JEXEC') or die();
-// import the Joomla modellist library
+
+// Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
 /**
  * FilesList Model
@@ -19,16 +20,17 @@ class THM_RepoModelFiles extends JModelList
 	/**
 	 * Constructor.
 	 *
-	 * @param    array    An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 * 
 	 * @see        JController
 	 */
 	public function __construct($config = array())
 	{
 		$config['filter_fields'] = array(
-				'id',
-				'name',
-				'path',
-				'mimetype'
+				'a.id',
+				'a.name',
+				'b.path',
+				'b.mimetype'
 		);
 		parent::__construct($config);
 	}
@@ -39,7 +41,7 @@ class THM_RepoModelFiles extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// List state information.
-		parent::populateState('id', 'ASC');
+		parent::populateState('a.id', 'ASC');
 	}
 	
 	/**
@@ -52,15 +54,15 @@ class THM_RepoModelFiles extends JModelList
 		// Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
+		
 		// Select some fields
-		$query->select('*');
-		// From the entity table
-		$query->from('#__thm_repo_entity');
-		// Join with file table
-		//$query->join('INNER','#__thm_repo_entity AS b ON a.id = b.id');
-		// Order query
-		$query->order($db->escape($this->getState('list.ordering', 'id')).' '.
-			$db->escape($this->getState('list.direction', 'ASC')));
+		$query->select('a.*, b.*');
+		
+		// From the links table
+		$query->from('#__thm_repo_entity AS a');
+		$query->join('INNER', '#__thm_repo_file AS b ON a.id = b.id');
+		
+		$query->order($db->escape($this->getState('list.ordering', 'a.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
 		return $query;
 	}

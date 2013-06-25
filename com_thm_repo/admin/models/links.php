@@ -69,8 +69,6 @@ class THM_RepoModelLinks extends JModelList
 	
 	public function getFoldername($id)
 	{
-		//		$id = JRequest::getVar('b.parent_id');
-		// Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('name');

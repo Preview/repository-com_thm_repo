@@ -24,6 +24,6 @@ class THM_RepoTableFile extends JTable
 	 */
 	function __construct(&$db)
 	{
-		parent::__construct('#__thm_repo_files', 'id', $db);
+		parent::__construct('#__thm_repo_entity', 'id', $db);
 	}
 }
