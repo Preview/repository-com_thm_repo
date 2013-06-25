@@ -36,7 +36,7 @@ class JFormFieldFileFolder extends JFormFieldList
 		$query = $db->getQuery(true);
 		$query->select('id,name');
 		$query->from('#__thm_repo_folder');
-		$db->setQuery((string)$query);
+		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 		$options = array();
 

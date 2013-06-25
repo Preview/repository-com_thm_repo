@@ -4,7 +4,7 @@
 	<fieldset>
 		<field
 			name="link"
-			type="text"
+			type="url"
 			label="COM_THM_REPO_LINK_LINK"
 			description="COM_THM_REPO_LINK_LINK_DESC"
 			default="http://"
@@ -59,7 +59,9 @@
 		/>
 		<field
 			name="description"
-			type="text"
+			type="textarea"
+			rows="6"
+			cols="40"
 			label="COM_THM_REPO_LINK_DESCRIPTION"
 			description="COM_THM_REPO_LINK_DESCRIPTION_DESC"
 		/>

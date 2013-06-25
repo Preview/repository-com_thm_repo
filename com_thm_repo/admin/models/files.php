@@ -8,7 +8,7 @@
  */
 
 // No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die();
 // import the Joomla modellist library
 jimport('joomla.application.component.modellist');
 /**
@@ -28,7 +28,7 @@ class THM_RepoModelFiles extends JModelList
 				'id',
 				'name',
 				'path',
-				'mimeType'
+				'mimetype'
 		);
 		parent::__construct($config);
 	}
@@ -53,12 +53,14 @@ class THM_RepoModelFiles extends JModelList
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
 		// Select some fields
-		$query->select('id,name,path,size,mimeType');
-		// From the files table
-		$query->from('#__thm_repo_files');
+		$query->select('*');
+		// From the entity table
+		$query->from('#__thm_repo_entity');
+		// Join with file table
+		//$query->join('INNER','#__thm_repo_entity AS b ON a.id = b.id');
 		// Order query
 		$query->order($db->escape($this->getState('list.ordering', 'id')).' '.
-				$db->escape($this->getState('list.direction', 'ASC')));
+			$db->escape($this->getState('list.direction', 'ASC')));
 		
 		return $query;
 	}

@@ -1,15 +1,15 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @package    THM_Repo
+ * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright  2013 TH Mittelhessen
+ * @license    GNU GPL v.2
+ * @link       www.mni.thm.de
  */
 // No direct access to this file
 defined('_JEXEC') or die;
  
-// import Joomla controlleradmin library
+// Import Joomla controlleradmin library
 jimport('joomla.application.component.controlleradmin');
  
 /**
@@ -17,11 +17,15 @@ jimport('joomla.application.component.controlleradmin');
  */
 class THM_RepoControllerLinks extends JControllerAdmin
 {
-	/**
-	 * Proxy for getModel.
-	 * @since       2.5
-	 */
-	public function getModel($name = 'Link', $prefix = 'THM_RepoModel')
+/**
+ * Returns the Model (proxy)
+ *
+ * @param   string  $name    Model name
+ * @param   string  $prefix  Model prefix
+ *
+ * @return  JModel
+ */
+	public function getModel($name = 'Links', $prefix = 'THM_RepoModel')
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;

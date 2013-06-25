@@ -36,11 +36,14 @@ class JFormFieldCreateby extends JFormField
 		$html = array();
         
         
-		//Load user
+		// Load user
 		$user_id = $this->value;
-		if ($user_id) {
+		if ($user_id) 
+		{
 			$user = JFactory::getUser($user_id);
-		} else {
+		} 
+		else 
+		{
 			$user = JFactory::getUser();
 			
 		}

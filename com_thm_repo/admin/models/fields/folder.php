@@ -33,20 +33,21 @@ class JFormFieldFolder extends JFormFieldList
 	protected function getOptions()
 	{
 		// get current id
-		$id = JFactory::getApplication()->input->getInt('id') ;
+		$id = JFactory::getApplication()->input->getInt('id');
 		
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('id,name');
+		$query->select('id,parent_id,name');
 		$query->from('#__thm_repo_folder');
 		$db->setQuery((string)$query);
 		$messages = $db->loadObjectList();
 		$options = array();
+
 		if ($messages)
 		{
 			foreach($messages as $message)
-			{	// create select list without current id
-				if ($message->id != $id) 
+			{	// create select list without current id & direct childs
+				if ($message->id != $id && $message->parent_id != $id) 
 				{
 					$options[] = JHtml::_('select.option', $message->id, $message->name);
 				}

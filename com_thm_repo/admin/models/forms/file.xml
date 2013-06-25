@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<form>
+<form>	
 	<fieldset>
+		<field
+			name="create_by"
+			type="createby"
+			label="COM_THM_REPO_FILE_CREATE_BY"
+			description="COM_THM_REPO_FILE_CREATE_BY_DESC"
+		/>
+		<field
+			name="modified_by"
+			type="modifiedby"
+			label="COM_THM_REPO_FILE_MODIFIED_BY"
+			description="COM_THM_REPO_FILE_MODIFIED_BY_DESC"
+		/>
+		<field
+			name="modified"
+			type="modified"
+			label="COM_THM_REPO_FILE_MODIFIED"
+			description="COM_THM_REPO_FILE_MODIFIED_DESC" 
+		/>
 		<field
 			name="id"
 			type="hidden"
+		/>
+		<field
+			name="created"
+			type="calendar"
+			label="COM_THM_REPO_FILE_CREATED"
+			description="COM_THM_REPO_FILE_CREATED_DESC" 
+			default="now"
+			readonly="true" 
+			format="%Y-%m-%d %H:%M:%S" 
+			filter="user_utc" 
+		/>
+		<field
+			name="parent_id"		
+			type="filefolder"		
+			label="COM_THM_REPO_FILE_PARENT_ID"
+			description="COM_THM_REPO_FILE_PARENT_ID_DESC"
 		/>
 		<field
 			name="name"
@@ -13,22 +47,18 @@
 			description="COM_THM_REPO_FILE_NAME_DESC"
 		/>
 		<field
-			name="path"
-			type="text"
-			label="COM_THM_REPO_FILE_PATH"
-			description="COM_THM_REPO_FILE_PATH_DESC"
+			name="description"
+			type="textarea"
+			rows="6"
+			cols="40"
+			label="COM_THM_REPO_FILE_DESCRIPTION"
+			description="COM_THM_REPO_FILE_DESCRIPTION_DESC"
 		/>
 		<field
-			name="size"
-			type="text"
-			label="COM_THM_REPO_FILE_SIZE"
-			description="COM_THM_REPO_FILE_SIZE_DESC"
-		/>
-		<field
-			name="mimeType"
-			type="text"
-			label="COM_THM_REPO_FILE_MIMETYPE"
-			description="COM_THM_REPO_FILE_MIMETYPE_DESC"
+			name="viewlevels"
+			type="viewlevels"
+			label="COM_THM_REPO_FILE_VIEWLEVELS"
+			description="COM_THM_REPO_FILE_VIEWLEVELS_DESC"
 		/>
 	</fieldset>
 </form>
