@@ -66,4 +66,17 @@ class THM_RepoModelFiles extends JModelList
 		
 		return $query;
 	}
+	
+	public function getFoldername($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('name');
+		$query->from('#__thm_repo_folder');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadResult();
+	
+		return $result;
+	}
 }
