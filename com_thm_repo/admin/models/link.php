@@ -9,7 +9,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import Joomla modelform library
+// Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
 
 /**

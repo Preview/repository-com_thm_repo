@@ -60,5 +60,12 @@
 			label="COM_THM_REPO_FILE_VIEWLEVELS"
 			description="COM_THM_REPO_FILE_VIEWLEVELS_DESC"
 		/>
+		<field 
+			name="file" 
+			type="file" 
+			label="COM_THM_REPO_FILE_UPLOAD" 
+			description="COM_THM_REPO_FILE_UPLOAD_DESC" 
+		/>
+		
 	</fieldset>
 </form>
