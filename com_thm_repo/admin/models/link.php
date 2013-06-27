@@ -149,22 +149,20 @@ class THM_RepoModelLink extends JModelAdmin
 		unset($entitydata->link);
 		
 		// GetDBO
-		$db1 = JFactory::getDBO();
-		$db2 = JFactory::getDBO();
-		
+		$db = JFactory::getDBO();
 		
 		// Insert New Link
 		if ($linkdata->id == 0)
 		{
 			
-			if (!($db1->insertObject('#__thm_repo_entity', $entitydata, 'id')))
+			if (!($db->insertObject('#__thm_repo_entity', $entitydata, 'id')))
 			{
 				return false;
 			}
 			
 			// Insert created entity id to linkdata id 
-			$linkdata->id = $db1->insertID();
-			if (!($db2->insertObject('#__thm_repo_link', $linkdata, 'id'))) 
+			$linkdata->id = $db->insertID();
+			if (!($db->insertObject('#__thm_repo_link', $linkdata, 'id'))) 
 			{
 				return false;
 			}		
@@ -172,13 +170,13 @@ class THM_RepoModelLink extends JModelAdmin
 		else
 		{
 			// Update #__thm_repo_entity table
-			if (!($db1->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
 			{
 				return false;
 			}
 			
 			// Update #__thm_repo_link table
-			if (!($db2->updateObject('#__thm_repo_link', $linkdata, 'id')))
+			if (!($db->updateObject('#__thm_repo_link', $linkdata, 'id')))
 			{
 				return false;
 			}
@@ -199,22 +197,22 @@ class THM_RepoModelLink extends JModelAdmin
 		// GetDBO
 		$db = JFactory::getDBO();
 		
-		$query1 = $db->getQuery(true);
-		$query2 = $db->getQuery(true);
 		
-		// Delete Entity record
-		$query1->delete($db->quoteName('#__thm_repo_link'));
-		$query1->where('id = ' . $id);
-		$db->setQuery($query1);
+		// Delete Link record
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__thm_repo_link'));
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
 		if (!($db->query()))
 		{
 			return false;
 		}
 		
-		// Delete Link record
-		$query2->delete($db->quoteName('#__thm_repo_entity'));
-		$query2->where('id = ' . $id);
-		$db->setQuery($query2);
+		// Delete Entity record
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__thm_repo_entity'));
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
 		if (!($db->query()))
 		{
 			return false;
