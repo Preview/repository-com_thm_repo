@@ -217,13 +217,9 @@ class THM_RepoModelFile extends JModelAdmin
 		$src = $file['tmp_name'];
 		$dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $filedata->id . "_" . $filename;
 		
-		if (JFile::upload($src, $dest))
+		if (!JFile::upload($src, $dest))
 		{
-			// Redirect to a page of your choice
-		}
-		else
-		{
-			// Redirect and throw an error message
+			return false;
 		}
 		
 		return true;
@@ -244,6 +240,15 @@ class THM_RepoModelFile extends JModelAdmin
 	
 		$query1 = $db->getQuery(true);
 		$query2 = $db->getQuery(true);
+		$query3 = $db->getQuery(true);
+		
+		// Delete File
+		$query3->select('path');
+		$query3->from('#__thm_repo_file');
+		$query3->where('id = ' . $id);
+		$db->setQuery($query3);
+		$path = $db->loadObject();
+		JFile::delete($path->path);
 	
 		// Delete File record
 		$query1->delete($db->quoteName('#__thm_repo_file'));
