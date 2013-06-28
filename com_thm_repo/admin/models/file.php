@@ -308,17 +308,17 @@ class THM_RepoModelFile extends JModelAdmin
 		$query->from('#__thm_repo_version');
 		$query->where('id = ' . $id);
 		$db->setQuery($query);
-		$version = $db->loadObject();
-		
+		$version = $db->loadResultArray();
+				
 		// Increment Version Number and add to Versiondata
-		$versiondata->versionnumber = $version->versionnumber + 1;
+		$versiondata->versionnumber = max($version) + 1;
 			
 		// Check if File is changed
 		if ($filename)
 		{			
 			// Create a Version of File
 			$versionsrc = $versiondata->path;
-			$versiondest = $versiondata->path . $versiondata->versionnumber;
+			$versiondest = $versiondata->path . "_" . $versiondata->versionnumber;
 		
 			if (!JFile::move($versionsrc, $versiondest))
 			{
