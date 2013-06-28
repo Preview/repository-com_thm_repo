@@ -50,7 +50,7 @@ CREATE TABLE #__thm_repo_version (
 	modified timestamp,
 	path varchar(100) NOT NULL,
 	size long NOT NULL,
-	mineTape varchar(15) NOT NULL,
+	mimetype varchar(15) NOT NULL,
 	PRIMARY KEY(id, versionnumber),
 	FOREIGN KEY(id) REFERENCES #__thm_repo_file(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

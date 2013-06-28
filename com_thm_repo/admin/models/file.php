@@ -195,30 +195,42 @@ class THM_RepoModelFile extends JModelAdmin
 		}
 		else
 		{
+			// Save Version Data to Table
+			$this->saveVersion($entitydata->id, $filename);
+			
 			// Update #__thm_repo_entity table
 			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
 			{
 				return false;
 			}
 			
-			// Add Path to Filedata			
-			$filedata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $filedata->id . "_" . $filename;
+			// Check If New File is Uploaded
+			if ($filename)
+			{			
+				// Build Path
+				$filedata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $filedata->id . "_" . $filename;
+			
 				
-				
-			// Update #__thm_repo_file table
-			if (!($db->updateObject('#__thm_repo_file', $filedata, 'id')))
-			{
-				return false;
+				// Update #__thm_repo_file table
+				if (!($db->updateObject('#__thm_repo_file', $filedata, 'id')))
+				{
+					return false;
+				}
 			}
 		}
 		
-		// Set up the source and destination of the file
-		$src = $file['tmp_name'];
-		$dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $filedata->id . "_" . $filename;
 		
-		if (!JFile::upload($src, $dest))
+		
+		// Set up the source and destination of the file
+		if ($filename)
 		{
-			return false;
+			$src = $file['tmp_name'];
+			$dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $filedata->id . "_" . $filename;
+			
+			if (!JFile::upload($src, $dest))
+			{
+				return false;
+			}
 		}
 		
 		return true;
@@ -266,5 +278,64 @@ class THM_RepoModelFile extends JModelAdmin
 			return false;
 		}
 		return true;
+	}
+	
+	public function getVersionData($id)
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('a.id, a.name, a.modified, b.path, b.size, b.mimetype');
+		$query->from('#__thm_repo_entity AS a');
+		$query->where('a.id = ' . $id);
+		$query->join('INNER', '#__thm_repo_file AS b ON a.id = b.id');		
+		$db->setQuery($query);
+		$result = $db->loadObject();
+	
+		return $result;
+	
+	}
+	
+	public function saveVersion($id, $filename)
+	{
+		// Get needed Data for Version Update
+		$versiondata = $this->getVersionData($id);
+			
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('versionnumber');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$version = $db->loadObject();
+		
+		// Increment Version Number and add to Versiondata
+		$versiondata->versionnumber = $version->versionnumber + 1;
+			
+		// Check if File is changed
+		if ($filename)
+		{			
+			// Create a Version of File
+			$versionsrc = $versiondata->path;
+			$versiondest = $versiondata->path . $versiondata->versionnumber;
+		
+			if (!JFile::move($versionsrc, $versiondest))
+			{
+				return false;
+			}
+			
+			// Add Versionnumber to Path
+			$versiondata->path = $versiondest;
+		}
+		
+		// Insert into Version table
+		if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
+		{
+			return false;
+		}
+		
+		return true;
+
 	}
 }
