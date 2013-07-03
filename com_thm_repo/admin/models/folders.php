@@ -10,13 +10,41 @@
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
-// import the Joomla modellist library
+
+// Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
 /**
  * FoldersList Model
 */
 class THM_RepoModelFolders extends JModelList
 {
+	/**
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 *
+	 * @see        JController
+	 */
+	public function __construct($config = array())
+	{
+		$config['filter_fields'] = array(
+				'id',
+				'name',
+				'parent_id',
+				'description',
+				'viewlevels'
+		);
+		parent::__construct($config);
+	}
+	
+	/**
+	 * Method to auto-populate the model state
+	 */
+	protected function populateState($ordering = null, $direction = null)
+	{
+		// List state information.
+		parent::populateState('id', 'ASC');
+	}
 	/**
 	 * Method to build an SQL query to load the list data.
 	 *
@@ -27,10 +55,25 @@ class THM_RepoModelFolders extends JModelList
 		// Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		// Select some fields
+		
+		// Select all fields from folder table
 		$query->select('*');
-		// From the folders table
 		$query->from('#__thm_repo_folder');
+		$query->order($db->escape($this->getState('list.ordering', 'default_sort_column')).' '.
+				$db->escape($this->getState('list.direction', 'ASC')));
 		return $query;
+	}
+	
+	public function getFoldername($id)
+	{
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('name');
+		$query->from('#__thm_repo_folder');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadResult();
+	
+		return $result;
 	}
 }

@@ -37,7 +37,7 @@ CREATE TABLE #__thm_repo_file (
 	id int(10) UNSIGNED,
 	path varchar(100) NOT NULL,
 	size long,
-	mimetype varchar(15),
+	mimetype varchar(20),
 	PRIMARY KEY(id),
 	FOREIGN KEY(id) REFERENCES #__thm_repo_entity(id) ON UPDATE CASCADE ON DELETE CASCADE
 
@@ -50,7 +50,7 @@ CREATE TABLE #__thm_repo_version (
 	modified timestamp,
 	path varchar(100) NOT NULL,
 	size long NOT NULL,
-	mimetype varchar(15) NOT NULL,
+	mimetype varchar(20) NOT NULL,
 	PRIMARY KEY(id, versionnumber),
 	FOREIGN KEY(id) REFERENCES #__thm_repo_file(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -28,11 +28,8 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'a.parent_id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_DESCRIPTION', 'a.description', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_CREATED', 'a.created', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED', 'a.modified', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED_BY', 'a.modified_by', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_CREATE_BY', 'a.create_by', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'a.viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?></th>
         		</tr>
         	</thead>
        		<tbody>
@@ -47,11 +44,9 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         				<td><?php echo $item->name; ?></td>
         				<td><?php echo $model->getFoldername($item->parent_id); ?></td>
         				<td><?php echo $item->description; ?></td>
-        				<td><?php echo $item->created; ?></td>
-        				<td><?php echo $item->modified; ?></td>
-        				<td><?php echo $item->modified_by; ?></td>
-        				<td><?php echo $item->create_by; ?></td>
         				<td><?php echo $item->viewlevels; ?></td>
+        				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id) ?>">
+        				Button</a></td>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>

@@ -50,8 +50,7 @@ class THM_RepoModelFile extends JModelAdmin
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_thm_repo.file', 'file',
-				array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_thm_repo.file', 'file', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form))
 		{
 			return false;
@@ -257,6 +256,33 @@ class THM_RepoModelFile extends JModelAdmin
 		$db->setQuery($query);
 		$path = $db->loadObject();
 		JFile::delete($path->path);
+		
+		// Delete Version files
+		$query = $db->getQuery(true);
+		$query->select('path');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id);
+		$db->setQuery((string) $query);
+		$versions = $db->loadObjectList();
+	
+		if ($versions)
+		{
+			foreach ($versions as $version)
+			{	
+				// Delete every Version File from deleted File
+				JFile::delete($version->path);
+			}
+		}
+		
+		// Delete Version record
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__thm_repo_version'));
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		if (!($db->query()))
+		{
+			return false;
+		}
 	
 		// Delete File record
 		$query = $db->getQuery(true);
@@ -327,6 +353,15 @@ class THM_RepoModelFile extends JModelAdmin
 			
 			// Add Versionnumber to Path
 			$versiondata->path = $versiondest;
+			
+			// Update Path on Version with same File
+			$query = $db->getQuery(true);
+			$query->update($db->quoteName('#__thm_repo_version'));
+			$query->set('path = ' . $db->quote($versiondest));
+			$query->where('path = ' . $db->quote($versionsrc));
+			$db->setQuery($query);
+			$db->query();
+
 		}
 		
 		// Insert into Version table

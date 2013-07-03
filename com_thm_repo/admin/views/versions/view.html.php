@@ -1,26 +1,27 @@
 <?php
 
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @package    THM_Repo
+ * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright  2013 TH Mittelhessen
+ * @license    GNU GPL v.2
+ * @link       www.mni.thm.de
  */
 
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import Joomla view library
+// Import Joomla view library
 jimport('joomla.application.component.view');
 
 /**
- * Folders View
+ * Versions View
 */
-class THM_RepoViewFolders extends JView
+class THM_RepoViewVersions extends JView
 {
 	/**
 	 * Folders view display method
+	 * 
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
@@ -56,9 +57,9 @@ class THM_RepoViewFolders extends JView
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_FOLDERS'));
-		JToolBarHelper::deleteList('', 'folders.delete');
-		JToolBarHelper::editList('folder.edit');
-		JToolBarHelper::addNew('folder.add');
+		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_VERSIONS'));
+// 		JToolBarHelper::deleteList('', 'folders.delete');
+// 		JToolBarHelper::editList('folder.edit');
+// 		JToolBarHelper::addNew('folder.add');
 	}
 }

@@ -23,9 +23,12 @@ $model = JModel::getInstance('folders', 'THM_RepoModel');
         			<th></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'parent_id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_DESCRIPTION', 'description', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VERSIONNUMBER', 'versionnumber', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 'path', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_SIZE', 'size', $this->sortDirection, $this->sortColumn); ?></th>
+         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MIMETYPE', 'mimetype', $this->sortDirection, $this->sortColumn); ?></th>
+         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED', 'modified', $this->sortDirection, $this->sortColumn); ?></th>
+        			
         		</tr>
         	</thead>
        		<tbody>
@@ -33,12 +36,12 @@ $model = JModel::getInstance('folders', 'THM_RepoModel');
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
-        				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&view=folder&layout=edit&id=' . (int) $item->id); ?>">
-        				<?php echo $item->name; ?></a></td>
-        				<td><?php echo $model->getFoldername($item->parent_id); ?></td>
-        				<td><?php echo $item->description; ?></td>
-        				<td><?php echo $item->viewlevels; ?></td>
-        				<td></td>
+        				<td><?php echo $item->name; ?></td>
+        				<td><?php echo $item->versionnumber; ?></td>
+        				<td><?php echo $item->path; ?></td>
+        				<td><?php echo $item->size; ?></td>
+        				<td><?php echo $item->mimetype; ?></td>
+        				<td><?php echo $item->modified; ?></td>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>
