@@ -15,8 +15,12 @@ JHtml::_('behavior.tooltip');
 
 // Get Model Functions
 $model = JModel::getInstance('folders', 'THM_RepoModel');
+
+// Get ID from URL
+$id = JRequest::getVar('id');
+
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_thm_repo'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $id); ?>" method="post" name="adminForm" id="adminForm">
         <table class="adminlist">
         	<thead>
         		<tr>

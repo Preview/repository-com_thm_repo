@@ -68,7 +68,10 @@ class THM_RepoModelVersions extends JModelList
 				'id',
 				'versionnumber',
 				'path',
-				'name'
+				'name',
+				'size',
+				'mimetype',
+				'modified'
 		);
 		parent::__construct($config);
 	}

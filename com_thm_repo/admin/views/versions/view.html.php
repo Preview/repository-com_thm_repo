@@ -61,5 +61,6 @@ class THM_RepoViewVersions extends JView
 // 		JToolBarHelper::deleteList('', 'folders.delete');
 // 		JToolBarHelper::editList('folder.edit');
 // 		JToolBarHelper::addNew('folder.add');
+		JToolBarHelper::back();
 	}
 }

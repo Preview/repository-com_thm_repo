@@ -23,14 +23,9 @@ $model = JModel::getInstance('links', 'THM_RepoModel');
         		<tr>
         			<th></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'a.id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_LINK', 'b.link', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'a.parent_id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_DESCRIPTION', 'a.description', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_CREATED', 'a.created', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED', 'a.modified', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED_BY', 'a.modified_by', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_CREATE_BY', 'a.create_by', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_LINK', 'b.link', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'a.viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
         		</tr>
         	</thead>
@@ -39,15 +34,10 @@ $model = JModel::getInstance('links', 'THM_RepoModel');
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
-        				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&view=link&layout=edit&id=' . (int) $item->id); ?>">
+           				<td><?php echo $item->name; ?></td>
+            			<td><?php echo $model->getFoldername($item->parent_id); ?></td>
+        				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
         				<?php echo $item->link; ?></a></td>
-        				<td><?php echo $item->name; ?></td>
-        				<td><?php echo $model->getFoldername($item->parent_id); ?></td>
-        				<td><?php echo $item->description; ?></td>
-        				<td><?php echo $item->created; ?></td>
-        				<td><?php echo $item->modified; ?></td>
-        				<td><?php echo $item->modified_by; ?></td>
-        				<td><?php echo $item->create_by; ?></td>
         				<td><?php echo $item->viewlevels; ?></td>
         			</tr>
 				<?php endforeach; ?>

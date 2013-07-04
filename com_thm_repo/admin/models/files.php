@@ -30,7 +30,8 @@ class THM_RepoModelFiles extends JModelList
 				'a.id',
 				'a.name',
 				'b.path',
-				'b.mimetype'
+				'a.parent_id',
+				'a.viewlevels'
 		);
 		parent::__construct($config);
 	}

@@ -62,7 +62,9 @@ class THM_RepoModelLinks extends JModelList
 		$config['filter_fields'] = array(
 				'a.id',
 				'b.link',
-				'a.name'
+				'a.name',
+				'a.parent_id',
+				'a.viewlevels'
 		);
 		parent::__construct($config);
 	}

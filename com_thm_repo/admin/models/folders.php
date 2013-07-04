@@ -31,7 +31,6 @@ class THM_RepoModelFolders extends JModelList
 				'id',
 				'name',
 				'parent_id',
-				'description',
 				'viewlevels'
 		);
 		parent::__construct($config);
