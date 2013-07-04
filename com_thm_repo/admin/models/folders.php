@@ -1,11 +1,11 @@
 <?php
 
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @package    THM_Repo
+ * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright  2013 TH Mittelhessen
+ * @license    GNU GPL v.2
+ * @link       www.mni.thm.de
  */
 
 // No direct access to this file
@@ -58,11 +58,17 @@ class THM_RepoModelFolders extends JModelList
 		// Select all fields from folder table
 		$query->select('*');
 		$query->from('#__thm_repo_folder');
-		$query->order($db->escape($this->getState('list.ordering', 'default_sort_column')).' '.
-				$db->escape($this->getState('list.direction', 'ASC')));
+		$query->order($db->escape($this->getState('list.ordering', 'default_sort_column')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		return $query;
 	}
 	
+	/**
+	 * Gets the foldername 
+	 * 
+	 * @param   unknown  $id  The Current id
+	 * 
+	 * @return unknown Returns the Current Foldername
+	 */
 	public function getFoldername($id)
 	{
 		$db = JFactory::getDBO();
