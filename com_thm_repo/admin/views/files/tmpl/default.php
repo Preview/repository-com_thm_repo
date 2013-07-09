@@ -37,7 +37,7 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         				<td><?php echo $item->name; ?></td>
          				<td><?php echo $model->getFoldername($item->parent_id); ?></td>
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=file.edit&id=' . (int) $item->id); ?>">
-        				<?php echo $item->path; ?></a></td>
+        					<?php echo $item->path; ?></a></td>
         				<td><?php echo $item->viewlevels; ?></td>
         				<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?>'></td>
         			</tr>

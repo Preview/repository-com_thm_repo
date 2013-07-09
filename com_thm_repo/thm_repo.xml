@@ -9,6 +9,8 @@
 	<authorUrl>www.mni.thm.de</authorUrl>
 	<version>0.0.1</version>
 	<description></description>
+	
+	<scriptfile>script.php</scriptfile>
 
 	<install>
 		<sql>

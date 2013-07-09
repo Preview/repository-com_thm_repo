@@ -52,6 +52,7 @@ class THM_RepoViewLink extends JView
                 $input = JFactory::getApplication()->input;
                 $input->set('hidemainmenu', true);
                 $isNew = ($this->item->id == 0);
+                JToolBarHelper::back();
                 JToolBarHelper::title($isNew ? JText::_('COM_THM_REPO_MANAGER_LINK_NEW')
                                              : JText::_('COM_THM_REPO_MANAGER_LINK_EDIT'));
                 JToolBarHelper::save('link.save');
