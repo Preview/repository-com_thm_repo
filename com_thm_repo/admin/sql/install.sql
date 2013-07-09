@@ -37,7 +37,7 @@ CREATE TABLE #__thm_repo_file (
 	id int(10) UNSIGNED,
 	path varchar(100) NOT NULL,
 	size long,
-	mimetype varchar(20),
+	mimetype varchar(100),
 	PRIMARY KEY(id),
 	FOREIGN KEY(id) REFERENCES #__thm_repo_entity(id) ON UPDATE CASCADE ON DELETE CASCADE
 
