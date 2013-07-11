@@ -12,8 +12,6 @@
 // No direct access to this file
 defined('_JEXEC') or die();
 
-//jimport('joomla.application.component.controller');
-
  
 /**
  * Script file of THM_Repo component
@@ -27,9 +25,10 @@ class COM_THM_RepoInstallerScript
      */
 	public function install($parent) 
     {
+    	
     	// $parent is the class calling this method
-    	// $parent->getParent()->setRedirect('index.php?option=com_thm_repo&task=folder.edit', JText::_('COM_THM_REPO_VIEW_MODIFIED_BY'));
-       $parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
-       echo '<p>' . JText::_('COM_THM_REPO_VIEW_MODIFIED_BY') . '</p>';
+    	$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
+    	JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
+    	 
     }        
 }

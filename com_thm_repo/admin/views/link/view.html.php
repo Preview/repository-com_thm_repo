@@ -1,15 +1,15 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
- * @copyright   2013 TH Mittelhessen
- * @license     GNU GPL v.2
- * @link        www.mni.thm.de
+ * @package    THM_Repo
+ * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright  2013 TH Mittelhessen
+ * @license    GNU GPL v.2
+ * @link       www.mni.thm.de
  */
 // No direct access to this file
 defined('_JEXEC') or die;
  
-// import Joomla view library
+// Import Joomla view library
 jimport('joomla.application.component.view');
  
 /**
@@ -23,7 +23,7 @@ class THM_RepoViewLink extends JView
          */
         public function display($tpl = null) 
         {
-                // get the Data
+                // Get the Data
                 $form = $this->get('Form');
                 $item = $this->get('Item');
  

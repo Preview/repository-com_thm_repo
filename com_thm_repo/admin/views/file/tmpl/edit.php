@@ -16,7 +16,7 @@ JHtml::_('behavior.tooltip');
       	<legend><?php echo JText::_('COM_THM_REPO_FILE_DETAILS'); ?></legend>
       	<ul class="adminformlist">
       		<li>
-        		<label for="file">Filename:</label>
+        		<label for="file"><?php echo JText::_('COM_THM_REPO_FILE_UPLOAD'); ?></label>
         		<input type="file" name="file"/>
         	</li>      		
       		<li><?php echo $this->form->getLabel('name'); ?>

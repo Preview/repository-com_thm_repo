@@ -8,6 +8,8 @@
 			label="COM_THM_REPO_LINK_LINK"
 			description="COM_THM_REPO_LINK_LINK_DESC"
 			default="http://"
+			required="true"
+			size="40"
 		/>
 		<field
 			name="create_by"
@@ -56,6 +58,8 @@
 			type="text"
 			label="COM_THM_REPO_LINK_NAME"
 			description="COM_THM_REPO_LINK_NAME_DESC"
+			required="true"
+			size="40"
 		/>
 		<field
 			name="description"
