@@ -1,7 +1,9 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -9,17 +11,25 @@
 // No direct access to this file
 defined('_JEXEC') or die;
  
-// import Joomla controlleradmin library
+// Import Joomla controlleradmin library
 jimport('joomla.application.component.controlleradmin');
  
 /**
  * Folders Controller
+ * 
+ * @category  Joomla.Component.Admin
+ * @package   thm_repo
+ * 
  */
 class THM_RepoControllerFolders extends JControllerAdmin
 {
 	/**
-	 * Proxy for getModel.
-	 * @since       2.5
+	 * Returns the Model (proxy)
+	 *
+	 * @param   string  $name    Model name
+	 * @param   string  $prefix  Model prefix
+	 *
+	 * @return  JModel
 	 */
 	public function getModel($name = 'Folder', $prefix = 'THM_RepoModel')
 	{

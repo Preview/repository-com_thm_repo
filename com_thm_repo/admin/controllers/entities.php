@@ -1,10 +1,12 @@
 <?php
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -14,6 +16,10 @@ jimport('joomla.application.component.controlleradmin');
  
 /**
  * Entities Controller
+ * 
+ * @category  Joomla.Component.Admin
+ * @package   thm_repo
+ * 
  */
 class THM_RepoControllerEntities extends JControllerAdmin
 {
