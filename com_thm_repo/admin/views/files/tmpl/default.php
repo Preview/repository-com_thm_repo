@@ -25,7 +25,7 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'a.parent_id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 'b.path', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'a.viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'c.title', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?></th>
         		</tr>
         	</thead>
@@ -38,7 +38,7 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
          				<td><?php echo $model->getFoldername($item->parent_id); ?></td>
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=file.edit&id=' . (int) $item->id); ?>">
         					<?php echo $item->path; ?></a></td>
-        				<td><?php echo $item->viewlevels; ?></td>
+        				<td><?php echo $item->title; ?></td>
         				<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?>'></td>
         			</tr>
 				<?php endforeach; ?>

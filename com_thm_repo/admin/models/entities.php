@@ -34,7 +34,7 @@ class THM_RepoModelEntities extends JModelList
 		
 		
 		// Select some fields
-		$query->select('entity.id AS id, entity.*, link.link, file.path');
+		$query->select('entity.id AS id, entity.*, link.link, file.path, viewlevel.title');
 		
 		// From the entity table
 		$query->from('#__thm_repo_entity AS entity');
@@ -42,6 +42,7 @@ class THM_RepoModelEntities extends JModelList
 		// Get File Infos
 		$query->join('LEFT', '#__thm_repo_file AS file ON entity.id = file.id');
 		$query->join('LEFT', '#__thm_repo_link AS link ON entity.id = link.id');
+		$query->join('INNER', '#__viewlevels AS viewlevel on entity.viewlevels = viewlevel.id');
 		if ($id != null)
 		{
 			$query->where('entity.parent_id = ' . $id);
@@ -92,7 +93,7 @@ class THM_RepoModelEntities extends JModelList
 				'entity.id',
 				'name',
 				'path',
-				'viewlevels'
+				'viewlevel.title'
 		);
 		parent::__construct($config);
 	}

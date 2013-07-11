@@ -21,10 +21,10 @@ $model = JModel::getInstance('folders', 'THM_RepoModel');
         	<thead>
         		<tr>
         			<th></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'parent_id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'a.id', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'a.parent_id', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'b.title', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>
         			
         		</tr>
@@ -37,7 +37,7 @@ $model = JModel::getInstance('folders', 'THM_RepoModel');
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
         				<?php echo $item->name; ?></a></td>
         				<td><?php echo $model->getFoldername($item->parent_id); ?></td>
-        				<td><?php echo $item->viewlevels; ?></td>
+        				<td><?php echo $item->title; ?></td>
         				<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'></td>
         				
         			</tr>

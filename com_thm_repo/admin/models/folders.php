@@ -28,10 +28,10 @@ class THM_RepoModelFolders extends JModelList
 	public function __construct($config = array())
 	{
 		$config['filter_fields'] = array(
-				'id',
-				'name',
-				'parent_id',
-				'viewlevels'
+				'a.id',
+				'a.name',
+				'a.parent_id',
+				'b.title'
 		);
 		parent::__construct($config);
 	}
@@ -42,7 +42,7 @@ class THM_RepoModelFolders extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// List state information.
-		parent::populateState('id', 'ASC');
+		parent::populateState('a.id', 'ASC');
 	}
 	/**
 	 * Method to build an SQL query to load the list data.
@@ -56,8 +56,10 @@ class THM_RepoModelFolders extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select all fields from folder table
-		$query->select('*');
-		$query->from('#__thm_repo_folder');
+		$query->select('a.*, b.title');
+		$query->from('#__thm_repo_folder AS a');
+		$query->join('INNER', '#__viewlevels AS b on a.viewlevels = b.id');
+		
 		$query->order($db->escape($this->getState('list.ordering', 'default_sort_column')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		return $query;
 	}

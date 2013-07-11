@@ -26,7 +26,7 @@ $model = JModel::getInstance('links', 'THM_RepoModel');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'a.parent_id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_LINK', 'b.link', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'a.viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'c.title', $this->sortDirection, $this->sortColumn); ?></th>
         		</tr>
         	</thead>
        		<tbody>
@@ -38,7 +38,7 @@ $model = JModel::getInstance('links', 'THM_RepoModel');
             			<td><?php echo $model->getFoldername($item->parent_id); ?></td>
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
         				<?php echo $item->link; ?></a></td>
-        				<td><?php echo $item->viewlevels; ?></td>
+        				<td><?php echo $item->title; ?></td>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>

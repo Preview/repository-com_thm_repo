@@ -26,7 +26,7 @@ $id = JRequest::getVar('id');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_TYPE', 'path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ENTITIES', 'path', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'viewlevels', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'viewlevel.title', $this->sortDirection, $this->sortColumn); ?></th>
         			
         		</tr>
         	</thead>
@@ -42,7 +42,7 @@ $id = JRequest::getVar('id');
         				<td><?php echo $item->path ? JTEXT::_('FILE') : JTEXT::_('LINK');?>
         				<td><?php echo $item->path; ?>
         					<?php echo $item->link;?></td>
-        				<td><?php echo $item->viewlevels; ?></td>
+        				<td><?php echo $item->title; ?></td>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>

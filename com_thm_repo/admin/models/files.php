@@ -31,7 +31,7 @@ class THM_RepoModelFiles extends JModelList
 				'a.name',
 				'b.path',
 				'a.parent_id',
-				'a.viewlevels'
+				'c.title'
 		);
 		parent::__construct($config);
 	}
@@ -57,11 +57,12 @@ class THM_RepoModelFiles extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select some fields
-		$query->select('a.*, b.*');
+		$query->select('a.*, b.*, c.title');
 		
 		// From the links table
 		$query->from('#__thm_repo_entity AS a');
 		$query->join('INNER', '#__thm_repo_file AS b ON a.id = b.id');
+		$query->join('INNER', '#__viewlevels AS c on a.viewlevels = c.id');
 		
 		$query->order($db->escape($this->getState('list.ordering', 'a.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
