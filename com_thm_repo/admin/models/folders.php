@@ -1,11 +1,13 @@
 <?php
 
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 // No direct access to this file
@@ -30,7 +32,7 @@ class THM_RepoModelFolders extends JModelList
 		$config['filter_fields'] = array(
 				'a.id',
 				'a.name',
-				'a.parent_id',
+				'c.parent',
 				'b.title'
 		);
 		parent::__construct($config);
@@ -56,31 +58,12 @@ class THM_RepoModelFolders extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select all fields from folder table
-		$query->select('a.*, b.title');
+		$query->select('a.*, b.title, c.name AS parent');
 		$query->from('#__thm_repo_folder AS a');
 		$query->join('INNER', '#__viewlevels AS b on a.viewlevels = b.id');
+		$query->join('LEFT', '#__thm_repo_folder AS c on a.parent_id = c.id');
 		
 		$query->order($db->escape($this->getState('list.ordering', 'default_sort_column')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		return $query;
-	}
-	
-	/**
-	 * Gets the foldername 
-	 * 
-	 * @param   unknown  $id  The Current id
-	 * 
-	 * @return unknown Returns the Current Foldername
-	 */
-	public function getFoldername($id)
-	{
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('name');
-		$query->from('#__thm_repo_folder');
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		$result = $db->loadResult();
-	
-		return $result;
 	}
 }
