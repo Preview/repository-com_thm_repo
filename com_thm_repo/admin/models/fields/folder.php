@@ -66,7 +66,8 @@ class JFormFieldFolder extends JFormFieldList
 	 		}
  		}
 
-		$messages = $allData;
+		$messages = $this->parentChildSort_r('id', 'parent_id', $allData);
+		
 
 
 		if ($messages)
@@ -76,7 +77,15 @@ class JFormFieldFolder extends JFormFieldList
 				// Create select list without current id
 				if ($message->id != $id) 
 				{
-					$options[] = JHtml::_('select.option', $message->id, $message->name);
+					$count = 0;
+					$prefix = '';
+					while ($count < $message->depth)
+					{
+						$prefix .= '-';
+						$count++;
+					}
+					
+					$options[] = JHtml::_('select.option', $message->id, $prefix . $message->name);
 				}
 			}
 			$options = array_merge(parent::getOptions(), $options);
@@ -131,6 +140,37 @@ class JFormFieldFolder extends JFormFieldList
 		$db->setQuery((string) $query);
 		return $result = $db->loadObjectList();
 		
+	}
+	
+	/**
+	 * sorts an array after parent, child, grandchild,...
+	 *
+	 * @param   string  $idField      The item's ID identifier (required)
+	 * @param   string  $parentField  The item's parent identifier (required)
+	 * @param   array	$els          The array (required)
+	 * @param   string  $parentID	  The parent ID for which to sort (internal)
+	 * @param   array   &$result	  The result set (internal)
+	 * @param   number  &$depth		  The depth (internal)
+	 *
+	 * @return array sorted array
+	 */
+	public function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
+	{
+		foreach ($els as $key => $value):
+		if ($value->$parentField == $parentID)
+		{
+			$value->depth = $depth;
+			array_push($result, $value);
+			unset($els[$key]);
+			$oldParent = $parentID;
+			$parentID = $value->$idField;
+			$depth++;
+			$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
+			$parentID = $oldParent;
+			$depth--;
+		}
+		endforeach;
+		return $result;
 	}
 	
 }
