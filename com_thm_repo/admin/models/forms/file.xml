@@ -36,7 +36,7 @@
 		/>
 		<field
 			name="parent_id"		
-			type="filefolder"		
+			type="allfolder"		
 			label="COM_THM_REPO_FILE_PARENT_ID"
 			description="COM_THM_REPO_FILE_PARENT_ID_DESC"
 		/>
