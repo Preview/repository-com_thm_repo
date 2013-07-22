@@ -47,6 +47,7 @@ CREATE TABLE #__thm_repo_version (
 	id int(10) UNSIGNED NOT NULL,
 	versionnumber int(10) UNSIGNED NOT NULL,
 	name varchar(25) NOT NULL, 
+	description varchar(255),
 	modified timestamp,
 	path varchar(100) NOT NULL,
 	size long NOT NULL,

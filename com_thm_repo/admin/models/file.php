@@ -311,7 +311,7 @@ class THM_RepoModelFile extends JModelAdmin
 		// Create a new query object.
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-		$query->select('a.id, a.name, a.modified, b.path, b.size, b.mimetype');
+		$query->select('a.id, a.name, a.modified, a.description, b.path, b.size, b.mimetype');
 		$query->from('#__thm_repo_entity AS a');
 		$query->where('a.id = ' . $id);
 		$query->join('INNER', '#__thm_repo_file AS b ON a.id = b.id');		
