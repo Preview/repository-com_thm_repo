@@ -12,36 +12,46 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+// Help Variables
+$model = JModel::getInstance('folders', 'THM_RepoModel');	
+$span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
+
+
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
-
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo'); ?>" method="post" name="adminForm" id="adminForm">
         <table class="adminlist">
         	<thead>
         		<tr>
         			<th></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'a.id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'c.parent', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'b.title', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>
-        			
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVELS'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>     			
         		</tr>
         	</thead>
        		<tbody>
-        		<?php foreach ($this->items as $i => $item) : ?>
-        			<tr class="row<?php echo $i % 2; ?>">
-        				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
-        				<td><?php echo $item->id; ?></td>
-        				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
-        				<?php echo $item->name; ?></a></td>
-        				<td><?php echo $item->parent; ?></td>
-        				<td><?php echo $item->title; ?></td>
-        				<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'></td>
-        				
-        			</tr>
-				<?php endforeach; ?>
+       			<?php $this->items = $model->parentChildSort_r('id', 'parent_id', $this->items); ?>
+	        	<?php foreach ($this->items as $i => $item) : ?>
+	        		<?php $count = 0; ?>
+	        		<tr class="row<?php echo $i % 2; ?>">
+		        		<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
+			        	<td><?php echo $item->id; ?></td>
+			        	<td><?php while ($count < $item->depth) :?>
+			        			<?php echo $span; ?>
+			        			<?php $count++;?>
+			        		<?php endwhile; ?>
+			        		<a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
+			        		<?php echo $item->name; ?></a></td>
+			        	<td><?php echo $item->title; ?></td>
+			        	<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'></td>		        				
+		        	</tr>
+					<?php endforeach; ?>
+       				
+       		
+       		
+
 			</tbody>
 			<tfoot>
         		<tr>
@@ -52,8 +62,6 @@ JHtml::_('behavior.tooltip');
         <div>
                 <input type="hidden" name="task" value="" />
                 <input type="hidden" name="boxchecked" value="0" />
-                <input type="hidden" name="filter_order" value="<?php echo $this->sortColumn; ?>" />
-        		<input type="hidden" name="filter_order_Dir" value="<?php echo $this->sortDirection; ?>" />
                 <?php echo JHtml::_('form.token'); ?>
         </div>
 </form>

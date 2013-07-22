@@ -21,32 +21,6 @@ jimport('joomla.application.component.modellist');
 class THM_RepoModelFolders extends JModelList
 {
 	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see        JController
-	 */
-	public function __construct($config = array())
-	{
-		$config['filter_fields'] = array(
-				'a.id',
-				'a.name',
-				'c.parent',
-				'b.title'
-		);
-		parent::__construct($config);
-	}
-	
-	/**
-	 * Method to auto-populate the model state
-	 */
-	protected function populateState($ordering = null, $direction = null)
-	{
-		// List state information.
-		parent::populateState('a.id', 'ASC');
-	}
-	/**
 	 * Method to build an SQL query to load the list data.
 	 *
 	 * @return      string  An SQL query
@@ -58,12 +32,41 @@ class THM_RepoModelFolders extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select all fields from folder table
-		$query->select('a.*, b.title, c.name AS parent');
+		$query->select('a.*, b.title');
 		$query->from('#__thm_repo_folder AS a');
 		$query->join('INNER', '#__viewlevels AS b on a.viewlevels = b.id');
-		$query->join('LEFT', '#__thm_repo_folder AS c on a.parent_id = c.id');
 		
-		$query->order($db->escape($this->getState('list.ordering', 'default_sort_column')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		return $query;
+	}
+
+	/**
+	 * sorts an array after parent, child, grandchild,...
+	 * 
+	 * @param   string  $idField      The item's ID identifier (required)
+	 * @param   string  $parentField  The item's parent identifier (required)
+	 * @param   array	$els          The array (required)
+	 * @param   string  $parentID	  The parent ID for which to sort (internal)
+	 * @param   array   &$result	  The result set (internal)
+	 * @param   number  &$depth		  The depth (internal)
+	 * 
+	 * @return array sorted array
+	 */
+	protected function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
+	{
+		foreach ($els as $key => $value):
+		if ($value->$parentField == $parentID)
+		{
+			$value->depth = $depth;
+			array_push($result, $value);
+			unset($els[$key]);
+			$oldParent = $parentID;
+			$parentID = $value->$idField;
+			$depth++;
+			$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
+			$parentID = $oldParent;
+			$depth--;
+		}
+		endforeach;
+		return $result;
 	}
 }
