@@ -51,7 +51,7 @@ class THM_RepoModelFolders extends JModelList
 	 * 
 	 * @return array sorted array
 	 */
-	protected function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
+	public function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
 	{
 		foreach ($els as $key => $value):
 		if ($value->$parentField == $parentID)

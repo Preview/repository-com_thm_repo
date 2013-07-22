@@ -12,8 +12,10 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// Help Variables
+// Load model Functions
 $model = JModel::getInstance('folders', 'THM_RepoModel');	
+
+// Span layout
 $span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
 
 
@@ -48,10 +50,6 @@ JHtml::_('behavior.tooltip');
 			        	<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'></td>		        				
 		        	</tr>
 					<?php endforeach; ?>
-       				
-       		
-       		
-
 			</tbody>
 			<tfoot>
         		<tr>

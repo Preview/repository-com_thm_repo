@@ -94,6 +94,7 @@ class JFormFieldFolder extends JFormFieldList
 	 */
 	public function getChilds($parents)
 	{
+		$results = array();
 
 		if ($parents)
 		{
