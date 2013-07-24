@@ -36,7 +36,7 @@ CREATE TABLE #__thm_repo_folder (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE #__thm_repo_entity (
-	id int (10) UNSIGNED,
+	id int (10) UNSIGNED AUTO_INCREMENT,
 	parent_id int(10) UNSIGNED NOT NULL,
 	asset int(10) UNSIGNED NOT NULL,
 	viewlevel int(10) UNSIGNED NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE #__thm_repo_file (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE #__thm_repo_version (
-	id int(10) UNSIGNED AUTO_INCREMENT,
+	id int(10) UNSIGNED,
 	version int (10) UNSIGNED NOT NULL DEFAULT 1,
 	name varchar(25) NOT NULL,
 	description varchar(255),
@@ -74,7 +74,7 @@ CREATE TABLE #__thm_repo_version (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE #__thm_repo_link (
-	id int(10) UNSIGNED AUTO_INCREMENT,
+	id int(10) UNSIGNED,
 	name varchar(25) NOT NULL,
 	description varchar(255),
 	modified Timestamp NOT NULL,
