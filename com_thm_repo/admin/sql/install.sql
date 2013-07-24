@@ -39,10 +39,15 @@ CREATE TABLE #__thm_repo_entity (
 	id int (10) UNSIGNED,
 	parent_id int(10) UNSIGNED NOT NULL,
 	asset int(10) UNSIGNED NOT NULL,
+	viewlevel int(10) UNSIGNED NOT NULL,
+	created timestamp NOT NULL,
+	created_by int(11) NOT NULL,
 	ordering int(12),
 	PRIMARY KEY(id),
 	FOREIGN KEY(parent_id) REFERENCES #__thm_repo_folder(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY(asset) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	FOREIGN KEY(asset) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY(viewlevel) REFERENCES #__viewlevels(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY(created_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE #__thm_repo_file (
@@ -58,36 +63,26 @@ CREATE TABLE #__thm_repo_version (
 	version int (10) UNSIGNED NOT NULL DEFAULT 1,
 	name varchar(25) NOT NULL,
 	description varchar(255),
-	created timestamp,
 	modified timestamp,
 	modified_by int(11) NOT NULL,
-	created_by int(11) NOT NULL,
-	viewlevel int(10) UNSIGNED NOT NULL,
 	path varchar(100) NOT NULL,
 	size long NOT NULL,
 	mimetype varchar(100) NOT NULL,
 	PRIMARY KEY(id, version),
 	FOREIGN KEY(id) REFERENCES #__thm_repo_file(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY(created_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY(viewlevel) REFERENCES #__viewlevels(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE #__thm_repo_link (
 	id int(10) UNSIGNED AUTO_INCREMENT,
 	name varchar(25) NOT NULL,
 	description varchar(255),
-	created Timestamp NOT NULL,
 	modified Timestamp NOT NULL,
 	modified_by int(11) NOT NULL,
-	created_by int(11) NOT NULL,
-	viewlevel int(10) UNSIGNED NOT NULL,
 	link varchar(250) NOT NULL,
 	PRIMARY KEY(id),
 	FOREIGN KEY(id) REFERENCES #__thm_repo_entity(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY(created_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY(viewlevel) REFERENCES #__viewlevels(id) ON UPDATE CASCADE ON DELETE RESTRICT
+	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 COMMIT;
