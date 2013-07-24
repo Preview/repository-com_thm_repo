@@ -1,7 +1,20 @@
+-- =============================================
+-- File: install.sql
+-- Type: UTF-8
+-- Name: Technische Hochschule Mittelhessen
+-- URL : www.mni.thm.de
+-- Desc: Install Script for thm_repo
+-- Date: 2013-07-24
+-- Last: 2013-07-24
+-- Auth: Abel Zephyrin Moffo <Abel.Zephyrin.Moffo@mni.thm.de>
+-- Auth: Andrej Sajenko <Andrej.Sajenko@mni.thm.de>
+-- =============================================
+
 START TRANSACTION;
 
 CREATE TABLE #__thm_repo_folder (
 	id int(10) UNSIGNED AUTO_INCREMENT,
+	asset int(10) UNSIGNED NOT NULL,
 	lft int(12) UNSIGNED NULL,
 	rgt int(12) UNSIGNED NULL,
 	parent_id int(10) UNSIGNED NULL,
@@ -15,6 +28,7 @@ CREATE TABLE #__thm_repo_folder (
 	PRIMARY KEY(id),
 	KEY thm_repo_folder_lft (lft),
 	KEY thm_repo_folder_rgt (rgt),
+	FOREIGN KEY(asset) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(parent_id) REFERENCES #__thm_repo_folder(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(created_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -24,10 +38,12 @@ CREATE TABLE #__thm_repo_folder (
 CREATE TABLE #__thm_repo_entity (
 	id int (10) UNSIGNED,
 	parent_id int(10) UNSIGNED NOT NULL,
+	asset int(10) UNSIGNED NOT NULL,
 	ordering int(12),
 	PRIMARY KEY(id),
-	FOREIGN KEY(parent_id) REFERENCES #__thm_repo_folder(id) ON UPDATE CASCADE ON DELETE RESTRICT
-);
+	FOREIGN KEY(parent_id) REFERENCES #__thm_repo_folder(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY(asset) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE #__thm_repo_file (
 	id int(10) UNSIGNED,
