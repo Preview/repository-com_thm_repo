@@ -16,8 +16,13 @@ defined('_JEXEC') or die('Restricted access');
 // Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
 /**
- * EntitiesList Model
-*/
+ * THM_RepoModelEntities class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
+ */
 class THM_RepoModelEntities extends JModelList
 {
 	/**
@@ -32,70 +37,58 @@ class THM_RepoModelEntities extends JModelList
 		// Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query2 = $db->getQuery(true);
 		
 		
 		// Select some fields
-		$query->select('entity.id AS id, entity.*, link.link, file.path, viewlevel.title');
+		$query->select('e.id AS id, ve.name as vename, l.link, l.name as lname, ve.path, vi.title');
 		
 		// From the entity table
-		$query->from('#__thm_repo_entity AS entity');
+		$query->from('#__thm_repo_entity AS e');
 		
 		// Get File Infos
-		$query->join('LEFT', '#__thm_repo_file AS file ON entity.id = file.id');
-		$query->join('LEFT', '#__thm_repo_link AS link ON entity.id = link.id');
-		$query->join('INNER', '#__viewlevels AS viewlevel on entity.viewlevels = viewlevel.id');
+		$query->join('LEFT', '#__thm_repo_file AS f ON e.id = f.id');
+		$query->join('LEFT', '#__thm_repo_version AS ve ON ve.id = e.id AND f.current_version = ve.version');
+		$query->join('LEFT', '#__thm_repo_link AS l ON e.id = l.id');
+		$query->join('INNER', '#__viewlevels AS vi on e.viewlevel = vi.id');
 		if ($id != null)
 		{
-			$query->where('entity.parent_id = ' . $id);
+			$query->where('e.parent_id = ' . $id);
 		}
-		
-// 		// Select some fields
-// 		$query2->select('entity.id');
-		
-// 		// From the entity table
-// 		$query2->from('#__thm_repo_entity AS entity');
-
-// 		// Get Link Infos
-// 		$query2->join('INNER', '#__thm_repo_link AS link ON entity.id = link.id');
-		
-// 		if ($id != null)
-// 		{
-// 			$query2->where('entity.parent_id = ' . $id);
-// 		}
-// 		$query->union($query2);
 
 		
-		
-		
-		$query->order($db->escape($this->getState('list.ordering', 'entity.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
 		return $query;
 	}
 	
 	/**
-	 * Order State of Entities View
+	 * Method to populate
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 * 
-	 * @param   string $ordering 
-	 * @param   string $direction
+	 * @access  protected
+	 * @return	populatestate
 	 */
 	protected function populateState($ordering = null, $direction = null) 
 	{
-		parent::populateState('entity.id', 'ASC');
+		parent::populateState('e.id', 'ASC');
 	}
 	
 	/**
-	 * Filter Fields
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 * 
-	 * @param   unknown $config
+	 * @see        JController
 	 */
 	public function __construct($config = array())
 	{
 		$config['filter_fields'] = array(
-				'entity.id',
+				'e.id',
 				'name',
 				'path',
-				'viewlevel.title'
+				'vi.title'
 		);
 		parent::__construct($config);
 	}

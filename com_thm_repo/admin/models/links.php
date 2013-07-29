@@ -15,9 +15,15 @@ defined('_JEXEC') or die('Restricted access');
 
 // Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
+
 /**
- * LinksList Model
-*/
+ * THM_RepoModelLinks class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
+ */
 class THM_RepoModelLinks extends JModelList
 {
 	/**
@@ -32,45 +38,48 @@ class THM_RepoModelLinks extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select some fields
-		$query->select('a.*, b.id AS link_id, b.*, c.title, d.name AS parent');
+		$query->select('e.*, l.id, l.*, v.title, f.name AS parent');
 		
 		// From the links table
-		$query->from('#__thm_repo_entity AS a');
-		$query->join('INNER', '#__thm_repo_link AS b ON a.id = b.id');
-		$query->join('INNER', '#__viewlevels AS c on a.viewlevels = c.id');
-		$query->join('LEFT', '#__thm_repo_folder AS d on a.parent_id = d.id');
+		$query->from('#__thm_repo_entity AS e');
+		$query->join('INNER', '#__thm_repo_link AS l ON e.id = l.id');
+		$query->join('INNER', '#__viewlevels AS v on e.viewlevel = v.id');
+		$query->join('LEFT', '#__thm_repo_folder AS f on e.parent_id = f.id');
 		
-		
-		
-		$query->order($db->escape($this->getState('list.ordering', 'a.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
 		return $query;
 	}
 	
 	/**
-	 * Order State of Links View
+	 * Method to populate
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 * 
-	 * @param   string $ordering
-	 * @param   string $direction
+	 * @access  protected
+	 * @return	populatestate
 	 */
 	protected function populateState($ordering = null, $direction = null) 
 	{
-		parent::populateState('a.id', 'ASC');
+		parent::populateState('e.id', 'ASC');
 	}
 	
 	/**
-	 * Filter Fields
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 * 
-	 * @param   unknown $config
+	 * @see        JController
 	 */
 	public function __construct($config = array())
 	{
 		$config['filter_fields'] = array(
-				'a.id',
-				'b.link',
-				'a.name',
-				'd.parent',
-				'c.title'
+				'e.id',
+				'l.link',
+				'l.name',
+				'f.parent',
+				'v.title'
 		);
 		parent::__construct($config);
 	}

@@ -3,10 +3,10 @@
 <form>	
 	<fieldset>
 		<field
-			name="create_by"
-			type="createby"
-			label="COM_THM_REPO_FILE_CREATE_BY"
-			description="COM_THM_REPO_FILE_CREATE_BY_DESC"
+			name="created_by"
+			type="createdby"
+			label="COM_THM_REPO_FILE_CREATED_BY"
+			description="COM_THM_REPO_FILE_CREATED_BY_DESC"
 		/>
 		<field
 			name="modified_by"
@@ -22,6 +22,10 @@
 		/>
 		<field
 			name="id"
+			type="hidden"
+		/>
+		<field
+			name="current_version"
 			type="hidden"
 		/>
 		<field
@@ -57,10 +61,10 @@
 			description="COM_THM_REPO_FILE_DESCRIPTION_DESC"
 		/>
 		<field
-			name="viewlevels"
-			type="viewlevels"
-			label="COM_THM_REPO_FILE_VIEWLEVELS"
-			description="COM_THM_REPO_FILE_VIEWLEVELS_DESC"
+			name="viewlevel"
+			type="viewlevel"
+			label="COM_THM_REPO_FILE_VIEWLEVEL"
+			description="COM_THM_REPO_FILE_VIEWLEVEL_DESC"
 		/>
 		<field 
 			name="file" 

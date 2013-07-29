@@ -1,10 +1,12 @@
 <?php
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 // No direct access
 defined('_JEXEC') or die;
@@ -28,16 +30,19 @@ JHtml::_('behavior.tooltip');
       		<li><?php echo $this->form->getLabel('parent_id'); ?>
       			<?php echo $this->form->getInput('parent_id'); ?>
       		</li>
-      		<li><?php echo $this->form->getLabel('viewlevels'); ?>
-      			<?php echo $this->form->getInput('viewlevels'); ?>
+      		<li><?php echo $this->form->getLabel('viewlevel'); ?>
+      			<?php echo $this->form->getInput('viewlevel'); ?>
+      		</li>
+      		<li><?php echo $this->form->getLabel('current_version'); ?>
+      			<?php echo $this->form->getInput('current_version'); ?>
       		</li>
 		</ul>
 	</fieldset>
 		<fieldset class="adminform">
       	<legend><?php echo JText::_('COM_THM_REPO_FILE_INFOS'); ?></legend>
       	<ul class="adminformlist">
-      		<li><?php echo $this->form->getLabel('create_by'); ?>
-      			<?php echo $this->form->getInput('create_by'); ?>
+      		<li><?php echo $this->form->getLabel('created_by'); ?>
+      			<?php echo $this->form->getInput('created_by'); ?>
       		</li>
       		<li><?php echo $this->form->getLabel('created'); ?>
       			<?php echo $this->form->getInput('created'); ?>

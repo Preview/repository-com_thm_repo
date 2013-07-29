@@ -1,7 +1,9 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -9,21 +11,24 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import the list field type
+// Import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Viewlevels Form Field class for the THM Repo component
+ * Viewlevel Form Field class for the THM Repo component
+ * 
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
 */
-class JFormFieldViewLevels extends JFormFieldList
+class JFormFieldViewLevel extends JFormFieldList
 {
 	/**
 	 * The field type.
 	 *
 	 * @var         string
 	 */
-	protected $type = 'viewlevels';
+	protected $type = 'viewlevel';
 
 	/**
 	 * Method to get a list of options for a list input.
@@ -36,12 +41,12 @@ class JFormFieldViewLevels extends JFormFieldList
 		$query = $db->getQuery(true);
 		$query->select('id,title');
 		$query->from('#__viewlevels');
-		$db->setQuery((string)$query);
+		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 		$options = array();
 		if ($messages)
 		{
-			foreach($messages as $message)
+			foreach ($messages as $message)
 			{
 				$options[] = JHtml::_('select.option', $message->id, $message->title);
 			}

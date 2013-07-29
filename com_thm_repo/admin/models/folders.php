@@ -15,9 +15,15 @@ defined('_JEXEC') or die('Restricted access');
 
 // Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
+
 /**
- * FoldersList Model
-*/
+ * THM_RepoModelFolders class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
+ */
 class THM_RepoModelFolders extends JModelList
 {
 	/**
@@ -32,9 +38,9 @@ class THM_RepoModelFolders extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select all fields from folder table
-		$query->select('a.*, b.title');
-		$query->from('#__thm_repo_folder AS a');
-		$query->join('INNER', '#__viewlevels AS b on a.viewlevels = b.id');
+		$query->select('f.*, v.title');
+		$query->from('#__thm_repo_folder AS f');
+		$query->join('INNER', '#__viewlevels AS v on f.viewlevel = v.id');
 		
 		return $query;
 	}

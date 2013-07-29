@@ -1,10 +1,12 @@
 <?php
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 // No direct access to this file
@@ -22,11 +24,11 @@ $id = JRequest::getVar('id');
         	<thead>
         		<tr>
         			<th></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'entity.id', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'e.id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_TYPE', 'path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ENTITIES', 'path', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'viewlevel.title', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'viewlevel.title', $this->sortDirection, $this->sortColumn); ?></th>
         			
         		</tr>
         	</thead>
@@ -38,7 +40,8 @@ $id = JRequest::getVar('id');
         				<td><a href="<?php echo $item->path ? 
         					JRoute::_('index.php?option=com_thm_repo&task=file.edit&id=' . (int) $item->id)
         					: JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
-        					<?php echo $item->name; ?></a></td>
+        					<?php echo $item->lname; ?>
+        					<?php echo $item->vename; ?></a></td>
         				<td><?php echo $item->path ? JTEXT::_('FILE') : JTEXT::_('LINK');?>
         				<td><?php echo $item->path; ?>
         					<?php echo $item->link;?></td>

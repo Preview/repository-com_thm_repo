@@ -1,10 +1,12 @@
 <?php
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -14,6 +16,12 @@ jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
+ * 
+ * THM_RepoModelfolder class for component com_thm_repo
+ * 
+ * @category  Joomla.Component.Admin
+ * @package   thm_repo
+ * 
  * Folder Form Field class for the THM Repo component
 */
 class JFormFieldFolder extends JFormFieldList
@@ -156,20 +164,21 @@ class JFormFieldFolder extends JFormFieldList
 	 */
 	public function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
 	{
-		foreach ($els as $key => $value):
-		if ($value->$parentField == $parentID)
+		foreach ($els as $key => $value)
 		{
-			$value->depth = $depth;
-			array_push($result, $value);
-			unset($els[$key]);
-			$oldParent = $parentID;
-			$parentID = $value->$idField;
-			$depth++;
-			$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
-			$parentID = $oldParent;
-			$depth--;
+			if ($value->$parentField == $parentID)
+			{
+				$value->depth = $depth;
+				array_push($result, $value);
+				unset($els[$key]);
+				$oldParent = $parentID;
+				$parentID = $value->$idField;
+				$depth++;
+				$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
+				$parentID = $oldParent;
+				$depth--;
+			}
 		}
-		endforeach;
 		return $result;
 	}
 	

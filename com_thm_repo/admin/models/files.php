@@ -15,8 +15,13 @@ defined('_JEXEC') or die();
 // Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
 /**
- * FilesList Model
-*/
+ * THM_RepoModelFiles class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
+ */
 class THM_RepoModelFiles extends JModelList
 {
 	/**
@@ -29,22 +34,28 @@ class THM_RepoModelFiles extends JModelList
 	public function __construct($config = array())
 	{
 		$config['filter_fields'] = array(
-				'a.id',
-				'a.name',
-				'b.path',
-				'd.parent',
-				'c.title'
+				'e.id',
+				've.name',
+				've.path',
+				'fo.parent',
+				'vi.title'
 		);
 		parent::__construct($config);
 	}
 	
 	/**
-	 * Method to auto-populate the model state
+	 * Method to populate
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 * 
+	 * @access  protected
+	 * @return	populatestate
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// List state information.
-		parent::populateState('a.id', 'ASC');
+		parent::populateState('e.id', 'ASC');
 	}
 	
 	/**
@@ -59,16 +70,17 @@ class THM_RepoModelFiles extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select some fields
-		$query->select('a.*, b.*, c.title, d.name AS parent');
+		$query->select('e.*, vi.title, fo.name AS parent, ve.*, fi.*');
 		
 		// From the links table
-		$query->from('#__thm_repo_entity AS a');
-		$query->join('INNER', '#__thm_repo_file AS b ON a.id = b.id');
-		$query->join('INNER', '#__viewlevels AS c on a.viewlevels = c.id');
-		$query->join('LEFT', '#__thm_repo_folder AS d on a.parent_id = d.id');
+		$query->from('#__thm_repo_entity AS e');
+		$query->join('INNER', '#__thm_repo_version AS ve ON e.id = ve.id');
+		$query->join('INNER', '#__thm_repo_file AS fi ON ve.id = fi.id AND ve.version = fi.current_version');
+		$query->join('INNER', '#__viewlevels AS vi on e.viewlevel = vi.id');
+		$query->join('LEFT', '#__thm_repo_folder AS fo on e.parent_id = fo.id');
 		
 		
-		$query->order($db->escape($this->getState('list.ordering', 'a.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
 		return $query;
 	}

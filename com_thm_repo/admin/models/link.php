@@ -1,10 +1,12 @@
 <?php
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 // No direct access to this file
 defined('_JEXEC') or die;
@@ -13,8 +15,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.modeladmin');
 
 /**
- * Link Model
-*/
+ * THM_RepoModelLink class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
+ */
 class THM_RepoModelLink extends JModelAdmin
 {
 	/**
@@ -81,7 +88,7 @@ class THM_RepoModelLink extends JModelAdmin
 		$item = parent::getItem($pk);
 		
 		// Initialise variables.
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName().'.id');
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . ' . id');
 		if ($pk > 0) 
 		{
 			
@@ -102,7 +109,7 @@ class THM_RepoModelLink extends JModelAdmin
 	/**
 	 * Method to get the needed data from entity table
 	 * 
-	 * @param   unknown $id
+	 * @param   number  $id  ID
 	 * 
 	 * @return mixed   The data from #__thm_repo_entity table.
 	 */
@@ -129,25 +136,21 @@ class THM_RepoModelLink extends JModelAdmin
 	 */
 	public function save($data)
 	{
-		// Assign link_data
-		$linkdata  = (object) $data;
-		
-		// Remove not needed data for link table
-		unset($linkdata->name);
-		unset($linkdata->parent_id);
-		unset($linkdata->description);
-		unset($linkdata->created);
-		unset($linkdata->modified);
-		unset($linkdata->modified_by);
-		unset($linkdata->create_by);
-		unset($linkdata->viewlevels);
+		// Assign linkdata
+		$linkdata->id  = $data['id'];
+		$linkdata->name = $data['name'];
+		$linkdata->description = $data['description'];
+		$linkdata->modified = $data['modified'];
+		$linkdata->modified_by = $data['modified_by'];
+		$linkdata->link = $data['link'];
 			
-		// Assign entity data
-		$entitydata = (object) $data;
-		
-		// Remove link from entitydata
-		unset($entitydata->link);
-		
+		// Assign entitydata
+		$entitydata->id = $data['id'];
+		$entitydata->parent_id = $data['parent_id'];
+		$entitydata->viewlevel = $data['viewlevel'];
+		$entitydata->created = $data['created'];
+		$entitydata->created_by = $data['created_by'];
+			
 		// GetDBO
 		$db = JFactory::getDBO();
 		

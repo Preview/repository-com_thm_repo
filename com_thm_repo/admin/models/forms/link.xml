@@ -12,10 +12,10 @@
 			size="40"
 		/>
 		<field
-			name="create_by"
-			type="createby"
-			label="COM_THM_REPO_LINK_CREATE_BY"
-			description="COM_THM_REPO_LINK_CREATE_BY_DESC"
+			name="created_by"
+			type="createdby"
+			label="COM_THM_REPO_LINK_CREATED_BY"
+			description="COM_THM_REPO_LINK_CREATED_BY_DESC"
 		/>
 		<field
 			name="modified_by"
@@ -70,10 +70,10 @@
 			description="COM_THM_REPO_LINK_DESCRIPTION_DESC"
 		/>
 		<field
-			name="viewlevels"
-			type="viewlevels"
-			label="COM_THM_REPO_LINK_VIEWLEVELS"
-			description="COM_THM_REPO_LINK_VIEWLEVELS_DESC"
+			name="viewlevel"
+			type="viewlevel"
+			label="COM_THM_REPO_LINK_VIEWLEVEL"
+			description="COM_THM_REPO_LINK_VIEWLEVEL_DESC"
 		/>
 	</fieldset>
 </form>

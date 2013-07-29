@@ -1,7 +1,9 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -9,7 +11,7 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import the list field type
+// Import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 

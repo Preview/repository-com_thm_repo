@@ -1,7 +1,9 @@
 <?php
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -9,21 +11,24 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import the list field type
+// Import the list field type
 jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
 /**
- * Createby Form Field class for the THM Repo component
+ * Createdby Form Field class for the THM Repo component
+ * 
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
 */
-class JFormFieldCreateby extends JFormField
+class JFormFieldCreatedby extends JFormField
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var		string
 	 */
-	protected $type = 'createby';
+	protected $type = 'createdby';
 
 	/**
 	 * Method to get the field input markup.
@@ -47,8 +52,8 @@ class JFormFieldCreateby extends JFormField
 			$user = JFactory::getUser();
 			
 		}
-		$html[] = '<input type="hidden" name="'.$this->name.'" value="'.$user->id.'" />';
-		$html[] = '<input type="text" value="'.$user->name.' ('.$user->username.')" readonly />';
+		$html[] = '<input type="hidden" name="' . $this->name . '" value="' . $user->id . '" />';
+		$html[] = '<input type="text" value="' . $user->name . ' (' . $user->username . ')" readonly />';
         
 		return implode($html);
 	}

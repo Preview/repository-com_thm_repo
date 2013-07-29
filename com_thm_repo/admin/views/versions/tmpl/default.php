@@ -1,10 +1,12 @@
 <?php
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 // No direct access to this file
@@ -41,7 +43,7 @@ $id = JRequest::getVar('id');
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
         				<td><?php echo $item->name; ?></td>
-        				<td><?php echo $item->versionnumber; ?></td>
+        				<td><?php echo $item->version; ?></td>
         				<td><?php echo $item->path; ?></td>
         				<td><?php echo $item->size; ?></td>
         				<td><?php echo $item->mimetype; ?></td>

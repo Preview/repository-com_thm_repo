@@ -29,7 +29,7 @@ JHtml::_('behavior.tooltip');
         			<th></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVELS'); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVEL'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>     			
         		</tr>
         	</thead>

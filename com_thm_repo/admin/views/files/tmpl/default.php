@@ -21,11 +21,11 @@ JHtml::_('behavior.tooltip');
         	<thead>
         		<tr>
         			<th></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'a.id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'a.name', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'd.parent', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 'b.path', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVELS', 'c.title', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'e.id', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 've.name', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'fo.parent', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 've.path', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'vi.title', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?></th>
         		</tr>
         	</thead>

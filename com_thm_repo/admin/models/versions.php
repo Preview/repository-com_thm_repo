@@ -1,11 +1,13 @@
 <?php
 
 /**
- * @package    THM_REPO
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 // No direct access to this file
@@ -13,9 +15,15 @@ defined('_JEXEC') or die('Restricted access');
 
 // Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
+
 /**
- * VersionsList Model
-*/
+ * THM_RepoModelVersions class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ * @since     Class available since Release 2.0
+ */
 class THM_RepoModelVersions extends JModelList
 {
 	/**
@@ -47,10 +55,13 @@ class THM_RepoModelVersions extends JModelList
 	}
 	
 	/**
-	 * Order State of Versions View
+	 * Method to populate
+	 *
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
 	 * 
-	 * @param   string $ordering 
-	 * @param   string $direction
+	 * @access  protected
+	 * @return	populatestate
 	 */
 	protected function populateState($ordering = null, $direction = null) 
 	{
@@ -58,15 +69,17 @@ class THM_RepoModelVersions extends JModelList
 	}
 	
 	/**
-	 * Filter Fields
+	 * Constructor.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 * 
-	 * @param   unknown $config
+	 * @see        JController
 	 */
 	public function __construct($config = array())
 	{
 		$config['filter_fields'] = array(
 				'id',
-				'versionnumber',
+				'version',
 				'path',
 				'name',
 				'size',
