@@ -81,4 +81,221 @@ class THM_RepoModelFolder extends JModelAdmin
 		}
 		return $data;
 	}
+	
+	
+	/**
+	 * Function to save a folder
+	 *
+	 * @param   unknown  $data  Data from saved folder
+	 *
+	 * @return boolean
+	 */
+	public function save($data)
+	{
+
+		$folderdata = (object) $data;
+		
+		// TODO: asset
+		$folderdata->asset = 1;
+		
+		// GetDBO
+		$db = JFactory::getDBO();
+		
+		// Start transaction
+		$db->transactionStart();
+		
+		// Root create
+		if ($folderdata->parent_id == null)
+		{
+			$folderdata->lft = 1;
+			$folderdata->rgt = 2;
+			if (!($db->insertObject('#__thm_repo_folder', $folderdata, 'id')))
+			{
+				return false;
+			}
+		}
+		else 
+		{
+			// Check if new file or updated
+			if ($data['id'] == 0)
+			{
+				// Get lft and rgt from Parent
+				$query = $db->getQuery(true);
+				$query->select('*');
+				$query->from('#__thm_repo_folder');
+				$query->where('id = ' . $folderdata->parent_id);
+				$db->setQuery($query);
+				$parent = $db->loadObject();
+					
+				/* 			
+				 * UPDATE tree SET rgt=rgt+2 WHERE rgt >= $RGT;
+				 * UPDATE tree SET lft=lft+2 WHERE lft > $RGT;
+				 * INSERT INTO tree (name,lft,rgt) VALUES ('Nagetiere', $RGT, $RGT+1);
+				 */
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('rgt = rgt + 2');
+				$query->where("rgt >= " . (int) $parent->rgt);
+				$db->setQuery($query);
+				$db->query();
+					
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('lft = lft + 2');
+				$query->where("lft > " . (int) $parent->rgt);
+				$db->setQuery($query);
+				$db->query();
+					
+				$folderdata->lft = (int) $parent->rgt;
+				$folderdata->rgt = (int) $parent->rgt + 1;
+				
+	
+				if (!($db->insertObject('#__thm_repo_folder', $folderdata, 'id')))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				// Update Folder
+				if (!($db->updateObject('#__thm_repo_folder', $folderdata, 'id')))
+				{
+					return false;
+				}
+				
+				// Reload Folder
+				$query = $db->getQuery(true);
+				$query->select('*');
+				$query->from('#__thm_repo_folder');
+				$query->where('id = ' . (int) $folderdata->id);
+				$db->setQuery($query);
+				$folderdata = $db->loadObject();
+				
+				$range = (int) $folderdata->rgt - (int) $folderdata->lft + 1;
+				
+				// Negate subtree that needs to be moved
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('lft = 0 - lft, rgt = 0 - rgt');
+				$query->where('lft >= ' . (int) $folderdata->lft . ' AND rgt <= ' . (int) $folderdata->rgt);			
+				$db->setQuery($query);
+				$db->query();
+				
+				// Degrade everything thats on top and right on subtree
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('lft = lft - ' . $range);
+				$query->where('lft > ' . (int) $folderdata->rgt);
+				$db->setQuery($query);
+				$db->query();
+				
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('rgt = rgt - ' . $range);
+				$query->where('rgt > ' . (int) $folderdata->rgt);
+				$db->setQuery($query);
+				$db->query();
+				
+				// Get new Parent folder
+				$query = $db->getQuery(true);
+				$query->select('*');
+				$query->from('#__thm_repo_folder');
+				$query->where('id = ' . (int) $folderdata->parent_id);
+				$db->setQuery($query);
+				$parent = $db->loadObject();
+				
+				// Increase everything right from Parent folder
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('lft = lft + ' . $range);
+				$query->where('lft > ' . (int) $parent->lft);
+				$db->setQuery($query);
+				$db->query();
+				
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('rgt = rgt + ' . $range);
+				$query->where('rgt > ' . (int) $parent->lft);
+				$db->setQuery($query);
+				$db->query();
+				
+				// Bring subtree back into the tree
+				
+				
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('lft = (-(lft)) - ' . (int) $folderdata->lft . ' + ' . (int) $parent->lft . '+ 1');
+				$query->where('lft < 0');
+				$db->setQuery($query);
+				$db->query();
+				
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_folder');
+				$query->set('rgt = (-(rgt)) - ' . (int) $folderdata->lft . ' + ' . (int) $parent->lft . '+ 1');
+				$query->where('rgt < 0');
+				$db->setQuery($query);
+				$db->query();
+				
+				
+				
+	
+				
+			}
+		
+		}
+		// Transaction commit
+		$db->transactionCommit();
+		return true;
+	}
+
+	
+	/**
+	 * Function to delete a folder
+	 *
+	 * @param   unknown  $data  Data from folder
+	 *
+	 * @return boolean
+	 */
+	public function delete($data)
+	{
+		$id = $data[0];
+			
+		// GetDBO
+		$db = JFactory::getDBO();
+		
+		// Get Data
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__thm_repo_folder');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$folderdata = $db->loadObject();
+		
+		/* DELETE FROM tree WHERE id=$id;
+		 * UPDATE tree SET lft=lft-2 WHERE lft>$lft;
+		 * UPDATE tree SET rgt=rgt-2 WHERE rgt>$rgt;
+		 */		
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__thm_repo_folder'));
+		$query->where('id = ' . (int) $folderdata->id);
+		$db->setQuery($query);
+		if (!($db->query()))
+		{
+			return false;
+		}
+		
+		$query = $db->getQuery(true);
+		$query->update('#__thm_repo_folder');
+		$query->set('lft = lft - 2');
+		$query->where("lft > " . (int) $folderdata->lft);
+		$db->setQuery($query);
+		$db->query();
+		
+		$query = $db->getQuery(true);
+		$query->update('#__thm_repo_folder');
+		$query->set('rgt = rgt - 2');
+		$query->where("rgt > " . (int) $folderdata->rgt);
+		$db->setQuery($query);
+		$db->query();	
+	}
 }

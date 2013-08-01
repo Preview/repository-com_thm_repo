@@ -40,6 +40,7 @@ class JFormFieldFolder extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
+		$options = null;
 		
 		// Get current id
 		$id = JFactory::getApplication()->input->getInt('id');

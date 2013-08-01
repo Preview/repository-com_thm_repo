@@ -152,7 +152,7 @@ class THM_RepoModelFile extends JModelAdmin
 	/**
 	 * Function to save an entry and create a version 
 	 * 
-	 * @param   unknown  $data  Data from the deleted file
+	 * @param   unknown  $data  Data from the saved file
 	 *
 	 * @return boolean
 	 */
