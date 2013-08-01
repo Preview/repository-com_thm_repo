@@ -20,7 +20,7 @@ CREATE TABLE #__thm_repo_folder (
 	parent_id int(10) UNSIGNED NULL,
 	name varchar(25) NOT NULL,
 	description varchar(255) NULL,
-	created timestamp NOT NULL,
+	created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	modified timestamp NOT NULL,
 	modified_by int(11) NOT NULL,
 	created_by int(11) NOT NULL,
