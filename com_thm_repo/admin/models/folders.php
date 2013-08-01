@@ -38,41 +38,13 @@ class THM_RepoModelFolders extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select all fields from folder table
-		$query->select('f.*, v.title');
-		$query->from('#__thm_repo_folder AS f');
-		$query->join('INNER', '#__viewlevels AS v on f.viewlevel = v.id');
+		$query->select('f.*, v.title, COUNT(*)-1 AS level');
+		$query->from('#__thm_repo_folder AS f, #__thm_repo_folder AS p');
+		$query->where('f.lft BETWEEN p.lft AND p.rgt');
+		$query->join('INNER', '#__viewlevels AS v on p.viewlevel = v.id');
+		$query->group('f.lft');
+		$query->order('f.lft');
 		
 		return $query;
-	}
-
-	/**
-	 * sorts an array after parent, child, grandchild,...
-	 * 
-	 * @param   string  $idField      The item's ID identifier (required)
-	 * @param   string  $parentField  The item's parent identifier (required)
-	 * @param   array	$els          The array (required)
-	 * @param   string  $parentID	  The parent ID for which to sort (internal)
-	 * @param   array   &$result	  The result set (internal)
-	 * @param   number  &$depth		  The depth (internal)
-	 * 
-	 * @return array sorted array
-	 */
-	public function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
-	{
-		foreach ($els as $key => $value):
-		if ($value->$parentField == $parentID)
-		{
-			$value->depth = $depth;
-			array_push($result, $value);
-			unset($els[$key]);
-			$oldParent = $parentID;
-			$parentID = $value->$idField;
-			$depth++;
-			$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
-			$parentID = $oldParent;
-			$depth--;
-		}
-		endforeach;
-		return $result;
 	}
 }

@@ -10,14 +10,10 @@
  */
 
 // No direct access to this file
-defined('_JEXEC') or die;
-
-// Load model Functions
-$model = JModel::getInstance('folders', 'THM_RepoModel');	
+defined('_JEXEC') or die;	
 
 // Span layout
 $span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
-
 
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
@@ -30,17 +26,16 @@ JHtml::_('behavior.tooltip');
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVEL'); ?></th>
-        			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>     			
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>  
         		</tr>
         	</thead>
        		<tbody>
-       			<?php $this->items = $model->parentChildSort_r('id', 'parent_id', $this->items); ?>
 	        	<?php foreach ($this->items as $i => $item) : ?>
 	        		<?php $count = 0; ?>
 	        		<tr class="row<?php echo $i % 2; ?>">
 		        		<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
 			        	<td><?php echo $item->id; ?></td>
-			        	<td><?php while ($count < $item->depth) :?>
+			        	<td><?php while ($count < $item->level) :?>
 			        			<?php echo $span; ?>
 			        			<?php $count++;?>
 			        		<?php endwhile; ?>
