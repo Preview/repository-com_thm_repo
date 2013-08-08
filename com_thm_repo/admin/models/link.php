@@ -86,9 +86,12 @@ class THM_RepoModelLink extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		$item = parent::getItem($pk);
+
 		
 		// Initialise variables.
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . ' . id');
+
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
+		
 		if ($pk > 0) 
 		{
 			
@@ -96,12 +99,24 @@ class THM_RepoModelLink extends JModelAdmin
 			$data = $this->getData($item->id);
 			$item->link = $data->link;
 			$item->link_id = $data->id;
+			$item->name = $data->name;
+			$item->description = $data->description;
+			$item->modified = $data->modified;
+			$item->modified_by = $data->modified_by;
+
 		} 
 		else 
 		{
 			// Set link and link_id NULL for creating new links
 			$item->link = null;
 			$item->link_id = null;
+			$item->name = null;
+			$item->description = null;
+			$item->modified = null;
+			$item->modified_by = null;
+			var_dump($item);
+			die;
+				
 		}
 		return $item;
 	}
@@ -136,6 +151,7 @@ class THM_RepoModelLink extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		
 		// Assign linkdata
 		$linkdata->id  = $data['id'];
 		$linkdata->name = $data['name'];
@@ -153,6 +169,18 @@ class THM_RepoModelLink extends JModelAdmin
 			
 		// GetDBO
 		$db = JFactory::getDBO();
+		
+		// Get Ordering count
+		$query = $db->getQuery(true);
+		$query->select('ordering');
+		$query->from('#__thm_repo_entity');
+		$query->where('parent_id = ' . $entitydata->parent_id);
+		$db->setQuery($query);
+		$ordering = $db->loadResultArray();
+		
+		// Increment Version Number and add to Versiondata
+		$entitydata->ordering = max($ordering) + 1;
+		
 		
 		// Insert New Link
 		if ($linkdata->id == 0)

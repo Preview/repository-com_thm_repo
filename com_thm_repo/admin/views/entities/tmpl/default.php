@@ -17,6 +17,9 @@ JHtml::_('behavior.tooltip');
 
 // Get ID from URL
 $id = JRequest::getVar('id');
+$listOrder	= $this->sortColumn;
+$listDirn	= $this->sortDirection;
+$saveOrder	= $listOrder == 'e.ordering';
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $id); ?>" method="post" name="adminForm" id="adminForm">
@@ -28,12 +31,23 @@ $id = JRequest::getVar('id');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_TYPE', 'path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ENTITIES', 'path', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'viewlevel.title', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'v.title', $this->sortDirection, $this->sortColumn); ?></th>
+           			<th width="10%">
+						<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'e.ordering', $listDirn, $listOrder); ?>
+						<?php 
+						if ($saveOrder)
+						{
+							echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'entities.saveorder');
+						}
+						?>
+					</th>
         			
         		</tr>
         	</thead>
        		<tbody>
         		<?php foreach ($this->items as $i => $item) : ?>
+        			<?php $ordering	= $listOrder == 'e.ordering'; ?>
+        		
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
@@ -46,7 +60,46 @@ $id = JRequest::getVar('id');
         				<td><?php echo $item->path; ?>
         					<?php echo $item->link;?></td>
         				<td><?php echo $item->title; ?></td>
-        			</tr>
+        				<td class="order">
+							<?php 
+							if ($saveOrder)
+							{
+							?>
+								<?php 
+								if ($listDirn == 'asc')
+								{
+								?>
+									<span>
+										<?php echo $this->pagination->orderUpIcon($i, 1, 'entities.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+									</span>
+									<span>
+										<?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?>
+									</span>
+								<?php 
+								}
+								elseif ($listDirn == 'desc')
+								{
+								?>
+									<span>
+										<?php echo $this->pagination->orderUpIcon($i, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+									</span>
+									<span>
+										<?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'entities.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering);
+										?>
+									</span>
+								<?php 
+								}
+								?>
+							<?php 
+							}
+							?>
+							<?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
+							<input type="text" name="order[]" size="5" 
+							value="<?php echo $item->ordering;?>" 
+							<?php echo $disabled; ?> class="text-area-order" />
+						</td>       				
+        				
+         			</tr>
 				<?php endforeach; ?>
 			</tbody>
 			<tfoot>

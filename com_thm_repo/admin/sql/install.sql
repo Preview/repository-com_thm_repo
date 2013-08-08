@@ -40,7 +40,7 @@ CREATE TABLE #__thm_repo_entity (
 	parent_id int(10) UNSIGNED NOT NULL,
 	asset int(10) UNSIGNED NOT NULL,
 	viewlevel int(10) UNSIGNED NOT NULL,
-	created timestamp NOT NULL,
+	created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	created_by int(11) NOT NULL,
 	ordering int(12),
 	PRIMARY KEY(id),

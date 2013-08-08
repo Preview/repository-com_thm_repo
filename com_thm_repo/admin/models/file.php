@@ -99,8 +99,7 @@ class THM_RepoModelFile extends JModelAdmin
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
 		if ($pk > 0)
-		{
-				
+		{	
 			// Get Data from #__thm_repo_version table and assign it to $item
 			$data = $this->getData($item->id);
 			$item->name = $data->name;
@@ -193,6 +192,16 @@ class THM_RepoModelFile extends JModelAdmin
 		// New File is uploaded
 		if ($entitydata->id == 0)
 		{
+			// Get Ordering count
+			$query = $db->getQuery(true);
+			$query->select('ordering');
+			$query->from('#__thm_repo_entity');
+			$query->where('parent_id = ' . $entitydata->parent_id);
+			$db->setQuery($query);
+			$ordering = $db->loadResultArray();
+			
+			// Increment Order Number and add to entitydata
+			$entitydata->ordering = max($ordering) + 1;
 				
 			if (!($db->insertObject('#__thm_repo_entity', $entitydata, 'id')))
 			{
@@ -217,11 +226,28 @@ class THM_RepoModelFile extends JModelAdmin
 		}
 		// Old File is updated
 		else
-		{		
+		{	
+			// Get Ordering and add to entitydata
+			$query = $db->getQuery(true);
+			$query->select('ordering');
+			$query->from('#__thm_repo_entity');
+			$query->where('id = ' . $entitydata->id);
+			$db->setQuery($query);
+			$ordering = $db->loadResultArray();
+			$entitydata->ordering = ($ordering);
+				
+			// Increment Order Number and add to entitydata
+
+			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+			{
+				return false;
+			}
+			
 			if (!($db->updateObject('#__thm_repo_file', $filedata, 'id')))
 			{
 				return false;
 			}
+
 			// A New File is uploaded
 			if ($filename)
 			{

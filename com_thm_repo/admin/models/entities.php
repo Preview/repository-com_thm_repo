@@ -40,7 +40,7 @@ class THM_RepoModelEntities extends JModelList
 		
 		
 		// Select some fields
-		$query->select('e.id AS id, ve.name as vename, l.link, l.name as lname, ve.path, vi.title');
+		$query->select('e.id AS id, ve.name as vename, l.link, l.name as lname, ve.path, vi.title, e.ordering');
 		
 		// From the entity table
 		$query->from('#__thm_repo_entity AS e');
@@ -88,8 +88,134 @@ class THM_RepoModelEntities extends JModelList
 				'e.id',
 				'name',
 				'path',
-				'vi.title'
+				'vi.title',
+				'e.ordering'
 		);
 		parent::__construct($config);
 	}
+	
+	/**
+	 * Method to reorder
+	 *
+	 * @param   String  $direction  null
+	 *
+	 * @return	Bool true on sucess
+	 */
+	public function reorder($direction = null)
+	{
+		$db =& JFactory::getDBO();
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		$order = JRequest::getVar('order', array(), 'post', 'array');
+		$err = 0;
+	
+		if (isset($direction))
+		{
+			/*
+				$query = "SELECT e.order FROM #__thm_repo_entities as e WHERE `id` = " . $cid[0] . ";
+			*/
+			$query = $db->getQuery(true);
+			$query->select('e.ordering');
+			$query->from('#__thm_repo_entity AS e');
+			$query->where('id = ' . (int) $cid[0]);
+			$db->setQuery($query);
+			$itemOrder = $db->loadObject();
+	
+			if ($direction == -1)
+			{
+				/*
+					$query = "UPDATE #__thm_groups_structure as a SET"
+				. " a.order=" . $itemOrder->order
+				. " WHERE a.order=" . ($itemOrder->order - 1);
+				*/
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_entity AS e');
+				$query->set('e.ordering = ' . $itemOrder->ordering);
+				$query->where('e.ordering = ' . ($itemOrder->ordering - 1));
+	
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+				/*
+					$query = "UPDATE #__thm_groups_structure as a SET"
+				. " a.order=" . ($itemOrder->order - 1)
+				. " WHERE a.id=" . $cid[0];
+				*/
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_entity AS e');
+				$query->set('e.ordering = ' . ($itemOrder->ordering - 1));
+				$query->where('e.id = ' . $cid[0]);
+	
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+			}
+			elseif ($direction == 1)
+			{
+				/*
+					$query = "UPDATE #__thm_groups_structure as a SET"
+				. " a.order=" . $itemOrder->order
+				. " WHERE a.order=" . ($itemOrder->order + 1);
+				*/
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_entity AS e');
+				$query->set('e.ordering = ' . $itemOrder->ordering);
+				$query->where('e.ordering = ' . ($itemOrder->ordering + 1));
+	
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+				/*
+					$query = "UPDATE #__thm_groups_structure as a SET"
+				. " a.order=" . ($itemOrder->order + 1)
+				. " WHERE a.id=" . $cid[0];
+				*/
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_entity AS e');
+				$query->set('e.ordering = ' . ($itemOrder->ordering + 1));
+				$query->where('e.id = ' . $cid[0]);
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+			}
+		}
+		else
+		{
+			$i = 0;
+			foreach ($order as $itemOrder)
+			{
+				/*
+					$query = "UPDATE #__thm_groups_structure as a SET"
+				. " a.order=" . ($itemOrder)
+				. " WHERE a.id=" . $cid[$i];
+				*/
+				$query = $db->getQuery(true);
+				$query->update('#__thm_repo_entity AS e');
+				$query->set('e.ordering = ' . ($itemOrder));
+				$query->where('e.id = ' . $cid[$i]);
+	
+				$db->setQuery($query);
+				if (!$db->query())
+				{
+					$err = 1;
+				}
+				$i++;
+			}
+		}
+		if (!$err)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}	
 }

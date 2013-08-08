@@ -12,7 +12,10 @@
 defined('_JEXEC') or die;
  
 // Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
+jimport('joomla.application.component.controllerform');
+
+$id = JRequest::getVar('id');
+
  
 /**
  * Entities Controller
@@ -21,7 +24,7 @@ jimport('joomla.application.component.controlleradmin');
  * @package   thm_repo
  * 
  */
-class THM_RepoControllerEntities extends JControllerAdmin
+class THM_RepoControllerEntities extends JControllerForm
 {
 /**
  * Returns the Model (proxy)
@@ -31,10 +34,72 @@ class THM_RepoControllerEntities extends JControllerAdmin
  *
  * @return  JModel
  */
-	public function getModel($name = 'Entity', $prefix = 'THM_RepoModel')
+// 	public function getModel($name = 'Entity', $prefix = 'THM_RepoModel')
+// 	{
+// 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+// 		return $model;
+// 	}
+	
+	
+	/**
+	 * Save order
+	 *
+	 * @return void
+	 */
+	public function saveorder()
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		return $model;
+ 		$model = $this->getModel('entities');
+	
+		if ($model->reorder())
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
+	}
+	
+	/**
+	 * Order up
+	 *
+	 * @return void
+	 */
+	public function orderup()
+	{
+ 		$model = $this->getModel('entities');
+	
+		if ($model->reorder(-1))
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=6', $msg);
+	}
+	
+	/**
+	 * Order down
+	 *
+	 * @return void
+	 */
+	public function orderdown()
+	{
+ 		$model = $this->getModel('entities');
+	
+		if ($model->reorder(1))
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
+	
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=6', $msg);
 	}
 	
 }
