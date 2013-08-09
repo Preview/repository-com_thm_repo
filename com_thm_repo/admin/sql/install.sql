@@ -14,7 +14,7 @@ START TRANSACTION;
 
 CREATE TABLE #__thm_repo_folder (
 	id int(10) UNSIGNED AUTO_INCREMENT,
-	asset int(10) UNSIGNED NOT NULL,
+	asset_id int(10) UNSIGNED NOT NULL,
 	lft int(12) NULL,
 	rgt int(12) NULL,
 	parent_id int(10) UNSIGNED NULL,
