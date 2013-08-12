@@ -14,8 +14,6 @@ defined('_JEXEC') or die;
 // Import Joomla controlleradmin library
 jimport('joomla.application.component.controllerform');
 
-$id = JRequest::getVar('id');
-
  
 /**
  * Entities Controller
@@ -26,21 +24,6 @@ $id = JRequest::getVar('id');
  */
 class THM_RepoControllerEntities extends JControllerForm
 {
-/**
- * Returns the Model (proxy)
- *
- * @param   string  $name    Model name
- * @param   string  $prefix  Model prefix
- *
- * @return  JModel
- */
-// 	public function getModel($name = 'Entity', $prefix = 'THM_RepoModel')
-// 	{
-// 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-// 		return $model;
-// 	}
-	
-	
 	/**
 	 * Save order
 	 *
@@ -49,6 +32,8 @@ class THM_RepoControllerEntities extends JControllerForm
 	public function saveorder()
 	{
  		$model = $this->getModel('entities');
+ 		$id = JRequest::getVar('id');
+ 			
 	
 		if ($model->reorder())
 		{
@@ -69,6 +54,7 @@ class THM_RepoControllerEntities extends JControllerForm
 	public function orderup()
 	{
  		$model = $this->getModel('entities');
+ 		$id = JRequest::getVar('id');
 	
 		if ($model->reorder(-1))
 		{
@@ -78,7 +64,7 @@ class THM_RepoControllerEntities extends JControllerForm
 		{
 			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
 		}
-		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=6', $msg);
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
 	}
 	
 	/**
@@ -89,6 +75,8 @@ class THM_RepoControllerEntities extends JControllerForm
 	public function orderdown()
 	{
  		$model = $this->getModel('entities');
+ 		$id = JRequest::getVar('id');
+ 			
 	
 		if ($model->reorder(1))
 		{
@@ -99,7 +87,7 @@ class THM_RepoControllerEntities extends JControllerForm
 			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
 		}
 	
-		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=6', $msg);
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
 	}
 	
 }

@@ -81,9 +81,7 @@ class THM_RepoModelFile extends JModelAdmin
 		}
 		return $data;
 	}
-	
-	
-  
+	  
 
   	/**
   	 * Method to get a single record.
@@ -149,14 +147,17 @@ class THM_RepoModelFile extends JModelAdmin
 	}
 	
 	/**
-	 * Function to save an entry and create a version 
-	 * 
-	 * @param   unknown  $data  Data from the saved file
+	 * Method to save the form data.
 	 *
-	 * @return boolean
+	 * @param   array  $data  The form data.
+	 *
+	 * @return	boolean	True on success.
 	 */
 	public function save($data)
 	{
+		$table = JTable::getInstance('Entity', 'THM_RepoTable');
+		$table->save($data);
+		
 		// Retrieve file details from uploaded file, sent from adminForm form
 		$file = JRequest::getVar('file', null, 'files', 'array');
 		
@@ -202,15 +203,16 @@ class THM_RepoModelFile extends JModelAdmin
 			
 			// Increment Order Number and add to entitydata
 			$entitydata->ordering = max($ordering) + 1;
+			$entitydata->id = $table->id;
 				
-			if (!($db->insertObject('#__thm_repo_entity', $entitydata, 'id')))
+			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
 			{
 				return false;
 			}
 				
 			// Insert created entity id to version dataid and filedata id
-			$versiondata->id = $db->insertID();
-			$filedata->id = $db->insertID();
+			$versiondata->id = $table->id;
+			$filedata->id = $table->id;
 			
 			if (!($db->insertObject('#__thm_repo_file', $filedata, 'id')))
 			{
@@ -326,18 +328,26 @@ class THM_RepoModelFile extends JModelAdmin
 	}
 	
 	/**
-	 * Function to delete file including all versions
-	 * 
-	 * @param   unknown  $data  Data from the deleted file
+	 * Method to delete one or more records.
 	 *
-	 * @return boolean
+	 * @param   array  &$pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
-	public function delete($data)
+	public function delete(&$pks)
 	{
-		$id = $data[0];
+		$id = $pks[0];
 	
 		// GetDBO
 		$db = JFactory::getDBO();
+		
+		// Get Data
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__thm_repo_entity');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$filedata = $db->loadObject();
 		
 		// Delete Version files
 		$query = $db->getQuery(true);
@@ -375,11 +385,17 @@ class THM_RepoModelFile extends JModelAdmin
 		{
 			return false;
 		}
+		
+		$table = JTable::getInstance('Entity', 'THM_RepoTable');
+		if (!$table->delete($id))
+		{
+			return false;
+		}
 	
-		// Delete Entity record
+		// Delete asset entry
 		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_entity'));
-		$query->where('id = ' . $id);
+		$query->delete($db->quoteName('#__assets'));
+		$query->where('id = ' . (int) $filedata->asset_id);
 		$db->setQuery($query);
 		if (!($db->query()))
 		{

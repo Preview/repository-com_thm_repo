@@ -1,8 +1,10 @@
 <?php
 
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -11,12 +13,16 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import Joomla view library
+// Import Joomla view library
 jimport('joomla.application.component.view');
 
 /**
- * Folders View
-*/
+ * THM_ReposViewFolders class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ */
 class THM_RepoViewFolders extends JView
 {
 	/**
@@ -55,9 +61,21 @@ class THM_RepoViewFolders extends JView
 	 */
 	protected function addToolBar()
 	{
+		$user = JFactory::getUser();
+
 		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_FOLDERS'));
-		JToolBarHelper::deleteList('', 'folders.delete');
-		JToolBarHelper::editList('folder.edit');
-		JToolBarHelper::addNew('folder.add');
+		if ($user->authorise('core.delete', 'com_thm_repo'))
+		{
+			JToolBarHelper::deleteList('', 'folders.delete');
+		}
+		if ($user->authorise('core.edit', 'com_thm_repo'))
+		{
+			JToolBarHelper::editList('folder.edit');
+		}
+		if ($user->authorise('core.create', 'com_thm_repo'))
+		{
+			JToolBarHelper::addNew('folder.add');
+		}		
+		JToolBarHelper::preferences('com_thm_repo');
 	}
 }

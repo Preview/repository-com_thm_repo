@@ -84,19 +84,18 @@ class THM_RepoModelFolder extends JModelAdmin
 	
 	
 	/**
-	 * Function to save a folder
+	 * Method to save the form data.
 	 *
-	 * @param   unknown  $data  Data from saved folder
+	 * @param   array  $data  The form data.
 	 *
-	 * @return boolean
+	 * @return	boolean	True on success.
 	 */
 	public function save($data)
 	{
-
 		$folderdata = (object) $data;
-		
-		// TODO: asset
-		$folderdata->asset = 1;
+
+		$table = JTable::getInstance('Folder', 'THM_RepoTable');
+ 		$table->save($data);
 		
 		// GetDBO
 		$db = JFactory::getDBO();
@@ -107,9 +106,10 @@ class THM_RepoModelFolder extends JModelAdmin
 		// Root create
 		if ($folderdata->parent_id == null)
 		{
+			$folderdata->id = $table->id;
 			$folderdata->lft = 1;
 			$folderdata->rgt = 2;
-			if (!($db->insertObject('#__thm_repo_folder', $folderdata, 'id')))
+			if (!($db->updateObject('#__thm_repo_folder', $folderdata, 'id')))
 			{
 				return false;
 			}
@@ -148,9 +148,11 @@ class THM_RepoModelFolder extends JModelAdmin
 					
 				$folderdata->lft = (int) $parent->rgt;
 				$folderdata->rgt = (int) $parent->rgt + 1;
+				$folderdata->id = (int) $table->id;
+				$folderdata->asset_id = $table->asset_id;
 				
 	
-				if (!($db->insertObject('#__thm_repo_folder', $folderdata, 'id')))
+				if (!($db->updateObject('#__thm_repo_folder', $folderdata, 'id')))
 				{
 					return false;
 				}
@@ -236,10 +238,7 @@ class THM_RepoModelFolder extends JModelAdmin
 				$db->setQuery($query);
 				$db->query();
 				
-				
-				
-	
-				
+							
 			}
 		
 		}
@@ -250,15 +249,15 @@ class THM_RepoModelFolder extends JModelAdmin
 
 	
 	/**
-	 * Function to delete a folder
+	 * Method to delete one or more records.
 	 *
-	 * @param   unknown  $data  Data from folder
+	 * @param   array  &$pks  An array of record primary keys.
 	 *
-	 * @return boolean
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
-	public function delete($data)
+	public function delete(&$pks)
 	{
-		$id = $data[0];
+		$id = $pks[0];
 			
 		// GetDBO
 		$db = JFactory::getDBO();
@@ -271,18 +270,24 @@ class THM_RepoModelFolder extends JModelAdmin
 		$db->setQuery($query);
 		$folderdata = $db->loadObject();
 		
-		/* DELETE FROM tree WHERE id=$id;
-		 * UPDATE tree SET lft=lft-2 WHERE lft>$lft;
-		 * UPDATE tree SET rgt=rgt-2 WHERE rgt>$rgt;
-		 */		
+ 		$table = JTable::getInstance('Folder', 'THM_RepoTable');
+ 		if (!$table->delete($id))
+ 		{
+ 			return false;
+ 		}
+		
+		
+		// Delete asset entry
 		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_folder'));
-		$query->where('id = ' . (int) $folderdata->id);
+		$query->delete($db->quoteName('#__assets'));
+		$query->where('id = ' . (int) $folderdata->asset_id);
 		$db->setQuery($query);
 		if (!($db->query()))
 		{
 			return false;
-		}
+		}	
+	
+		
 		
 		$query = $db->getQuery(true);
 		$query->update('#__thm_repo_folder');

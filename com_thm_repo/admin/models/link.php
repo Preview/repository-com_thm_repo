@@ -78,20 +78,19 @@ class THM_RepoModelLink extends JModelAdmin
 		return $data;
 	}
 	
-	/**
-	 * @param   string $pk
-	 * 
-	 * @return unknown
-	 */
+  	/**
+  	 * Method to get a single record.
+  	 * 
+  	 * @param   integer  $pk  The id of the primary key.
+  	 * 
+  	 * @return  mixed    Object on success, false on failure.
+  	 */
 	public function getItem($pk = null)
 	{
 		$item = parent::getItem($pk);
-
 		
 		// Initialise variables.
-
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
-		
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');		
 		if ($pk > 0) 
 		{
 			
@@ -113,10 +112,7 @@ class THM_RepoModelLink extends JModelAdmin
 			$item->name = null;
 			$item->description = null;
 			$item->modified = null;
-			$item->modified_by = null;
-			var_dump($item);
-			die;
-				
+			$item->modified_by = null;		
 		}
 		return $item;
 	}
@@ -144,13 +140,16 @@ class THM_RepoModelLink extends JModelAdmin
 	}
 	
 	/**
-	 * 
-	 * @param   unknown $data
-	 * 
-	 * @return boolean
+	 * Method to save the form data.
+	 *
+	 * @param   array  $data  The form data.
+	 *
+	 * @return	boolean	True on success.
 	 */
 	public function save($data)
 	{
+		$table = JTable::getInstance('Entity', 'THM_RepoTable');
+		$table->save($data);
 		
 		// Assign linkdata
 		$linkdata->id  = $data['id'];
@@ -184,15 +183,15 @@ class THM_RepoModelLink extends JModelAdmin
 		
 		// Insert New Link
 		if ($linkdata->id == 0)
-		{
-			
-			if (!($db->insertObject('#__thm_repo_entity', $entitydata, 'id')))
+		{		
+			$entitydata->id = $table->id;
+			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
 			{
 				return false;
 			}
 			
 			// Insert created entity id to linkdata id 
-			$linkdata->id = $db->insertID();
+			$linkdata->id = $table->id;
 			if (!($db->insertObject('#__thm_repo_link', $linkdata, 'id'))) 
 			{
 				return false;
@@ -216,23 +215,39 @@ class THM_RepoModelLink extends JModelAdmin
 	}
 
 	/**
-	 * 
-	 * @param   unknown $data
-	 * 
-	 * @return boolean
+	 * Method to delete one or more records.
+	 *
+	 * @param   array  &$pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
-	public function delete($data)
+	public function delete(&$pks)
 	{
-		$id = $data[0];
-
+		$id = $pks[0];
+		
 		// GetDBO
 		$db = JFactory::getDBO();
 		
-		
-		// Delete Link record
+		// Get Data
 		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_link'));
+		$query->select('*');
+		$query->from('#__thm_repo_entity');
 		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$linkdata = $db->loadObject();
+		
+		$table = JTable::getInstance('Entity', 'THM_RepoTable');
+		if (!$table->delete($id))
+		{
+			return false;
+		}
+		
+		
+
+		// Delete asset entry
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__assets'));
+		$query->where('id = ' . (int) $linkdata->asset_id);
 		$db->setQuery($query);
 		if (!($db->query()))
 		{

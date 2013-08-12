@@ -48,6 +48,20 @@ JHtml::_('behavior.tooltip');
       		</li>
 		</ul>
 	</fieldset>
+	
+	<div class="clr"></div>
+	<div class="width-100 fltlft">
+	<?php echo JHtml::_('sliders.panel', JText::_('COM_THM_REPO_ACCESS'), 'accesscontrol'); ?>
+	<fieldset class="panelform">
+		<ul class="adminformlist">
+			<li>
+				<?php echo $this->form->getLabel('rules'); ?>
+				<?php echo $this->form->getInput('rules'); ?>
+			</li>
+		</ul>
+	</fieldset>
+	<?php echo JHtml::_('sliders.end'); ?>
+	</div>
 	<div>
 		<input type="hidden" name="task" value="folder.edit" />
         <?php echo JHtml::_('form.token'); ?>

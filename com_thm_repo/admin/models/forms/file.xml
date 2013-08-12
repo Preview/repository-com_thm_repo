@@ -42,6 +42,7 @@
 			name="parent_id"		
 			type="allfolder"		
 			size="10"
+			default="1"
 			label="COM_THM_REPO_FILE_PARENT_ID"
 			description="COM_THM_REPO_FILE_PARENT_ID_DESC"
 		/>
@@ -72,7 +73,22 @@
 			type="file" 
 			label="COM_THM_REPO_FILE_UPLOAD" 
 			description="COM_THM_REPO_FILE_UPLOAD_DESC" 
+		/>		
+	</fieldset>
+		<fieldset name="accesscontrol">
+		<field 
+			name="asset_id" 
+			type="hidden" 
+			filter="unset" 
 		/>
-		
+		<field
+			name="rules"
+			type="rules"
+			label="JFIELD_RULES_LABEL"
+			validate="rules"
+			class="inputbox"
+			component="com_thm_repo"
+			section="entity" 
+		/>
 	</fieldset>
 </form>

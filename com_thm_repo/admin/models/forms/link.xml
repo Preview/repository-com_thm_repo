@@ -49,7 +49,8 @@
 		/>
 		<field
 			name="parent_id"		
-			type="allfolder"		
+			type="allfolder"	
+			default="1"	
 			size="10"
 			label="COM_THM_REPO_LINK_PARENT_ID"
 			description="COM_THM_REPO_LINK_PARENT_ID_DESC"
@@ -77,4 +78,20 @@
 			description="COM_THM_REPO_LINK_VIEWLEVEL_DESC"
 		/>
 	</fieldset>
+		<fieldset name="accesscontrol">
+		<field 
+			name="asset_id" 
+			type="hidden" 
+			filter="unset" 
+		/>
+		<field
+			name="rules"
+			type="rules"
+			label="JFIELD_RULES_LABEL"
+			validate="rules"
+			class="inputbox"
+			component="com_thm_repo"
+			section="entity" 
+		/>
+	</fieldset>		
 </form>

@@ -33,6 +33,8 @@
 		</submenu>
 		<files folder="admin">
 			<filename>index.html</filename>
+			<filename>access.xml</filename>	
+			<filename>config.xml</filename>		
 			<filename>controller.php</filename>
 			<filename>thm_repo.php</filename>
 			<folder>controllers</folder>
