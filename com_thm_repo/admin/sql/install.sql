@@ -14,7 +14,7 @@ START TRANSACTION;
 
 CREATE TABLE #__thm_repo_folder (
 	id int(10) UNSIGNED AUTO_INCREMENT,
-	asset_id int(10) UNSIGNED NOT NULL,
+	asset_id int(10) UNSIGNED NULL,
 	lft int(12) NULL,
 	rgt int(12) NULL,
 	parent_id int(10) UNSIGNED NULL,
@@ -28,7 +28,7 @@ CREATE TABLE #__thm_repo_folder (
 	PRIMARY KEY(id),
 	KEY thm_repo_folder_lft (lft),
 	KEY thm_repo_folder_rgt (rgt),
-	FOREIGN KEY(asset) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY(asset_id) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(parent_id) REFERENCES #__thm_repo_folder(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(created_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -38,14 +38,14 @@ CREATE TABLE #__thm_repo_folder (
 CREATE TABLE #__thm_repo_entity (
 	id int (10) UNSIGNED AUTO_INCREMENT,
 	parent_id int(10) UNSIGNED NOT NULL,
-	asset int(10) UNSIGNED NOT NULL,
+	asset_id int(10) UNSIGNED NULL,
 	viewlevel int(10) UNSIGNED NOT NULL,
 	created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	created_by int(11) NOT NULL,
 	ordering int(12),
 	PRIMARY KEY(id),
 	FOREIGN KEY(parent_id) REFERENCES #__thm_repo_folder(id) ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY(asset) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY(asset_id) REFERENCES #__assets(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(viewlevel) REFERENCES #__viewlevels(id) ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY(created_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
