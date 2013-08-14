@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
  
 // Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
+jimport('joomla.application.component.controllerform');
  
 /**
  * Folders Controller
@@ -21,20 +21,50 @@ jimport('joomla.application.component.controlleradmin');
  * @package   thm_repo
  * 
  */
-class THM_RepoControllerFolders extends JControllerAdmin
-{
+class THM_RepoControllerFolders extends JControllerForm
+{	
 	/**
-	 * Returns the Model (proxy)
+	 * Order up
 	 *
-	 * @param   string  $name    Model name
-	 * @param   string  $prefix  Model prefix
-	 *
-	 * @return  JModel
+	 * @return void
 	 */
-	public function getModel($name = 'Folder', $prefix = 'THM_RepoModel')
+	public function orderup()
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		return $model;
+ 		$model = $this->getModel('folders');
+ 		$id = JRequest::getVar('id');
+	
+		if ($model->reorder(-1))
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
+		$this->setRedirect('index.php?option=com_thm_repo&view=folders', $msg);
+	}
+	
+	/**
+	 * Order down
+	 *
+	 * @return void
+	 */
+	public function orderdown()
+	{
+ 		$model = $this->getModel('folders');
+ 		$id = JRequest::getVar('id');
+ 			
+	
+		if ($model->reorder(1))
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
+	
+		$this->setRedirect('index.php?option=com_thm_repo&view=folders', $msg);
 	}
 	
 }

@@ -48,6 +48,15 @@ class THM_RepoViewFolders extends JView
 		// Assign data to the view
 		$this->items = $items;
 		$this->pagination = $pagination;
+		$this->sortDirection = $state->get('list.direction');
+		$this->sortColumn = $state->get('list.ordering');
+		
+		// Preprocess the list of items to find ordering divisions.
+		foreach ($this->items as &$item) 
+		{
+			$this->ordering[$item->parent_id][] = $item->id;
+		}
+		
 
 		// Set the toolbar
 		$this->addToolBar();
@@ -58,6 +67,8 @@ class THM_RepoViewFolders extends JView
 
 	/**
 	 * Setting the toolbar
+	 * 
+	 * @return nothing
 	 */
 	protected function addToolBar()
 	{

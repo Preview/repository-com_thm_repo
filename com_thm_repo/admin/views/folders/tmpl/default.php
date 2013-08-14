@@ -15,6 +15,11 @@ defined('_JEXEC') or die;
 // Span layout
 $span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
 
+$listOrder	= $this->sortColumn;
+$listDirn	= $this->sortDirection;
+$ordering 	= ($listOrder == 'f.lft');
+
+
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
 ?>
@@ -26,11 +31,14 @@ JHtml::_('behavior.tooltip');
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVEL'); ?></th>
+        			<th width="10%"><?php echo JText::_('JGRID_HEADING_ORDERING'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>  
         		</tr>
         	</thead>
        		<tbody>
+       			<?php $originalOrders = array(); ?>     		
 	        	<?php foreach ($this->items as $i => $item) : ?>
+	        		<?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
 	        		<?php $count = 0; ?>
 	        		<tr class="row<?php echo $i % 2; ?>">
 		        		<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
@@ -42,7 +50,16 @@ JHtml::_('behavior.tooltip');
 			        		<a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
 			        		<?php echo $item->name; ?></a></td>
 			        	<td><?php echo $item->title; ?></td>
-			        	<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'></td>		        				
+						<td class="order">
+							<span><?php echo $this->pagination->orderUpIcon($i, isset($this->ordering[$item->parent_id][$orderkey - 1]), 'folders.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
+							<span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, isset($this->ordering[$item->parent_id][$orderkey + 1]), 'folders.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
+							<input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" disabled="disabled class="text-area-order" />
+							<?php $originalOrders[] = $orderkey + 1; ?>
+						</td>
+			        	<td><input type=button 
+			        		onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" 
+			        		value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'>
+			        	</td>		        				
 		        	</tr>
 					<?php endforeach; ?>
 			</tbody>
@@ -53,8 +70,10 @@ JHtml::_('behavior.tooltip');
         	</tfoot>
         </table>
         <div>
-                <input type="hidden" name="task" value="" />
-                <input type="hidden" name="boxchecked" value="0" />
-                <?php echo JHtml::_('form.token'); ?>
+        	<input type="hidden" name="task" value="" />
+			<input type="hidden" name="boxchecked" value="0" />
+			<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+			<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+			<?php echo JHtml::_('form.token'); ?>
         </div>
 </form>
