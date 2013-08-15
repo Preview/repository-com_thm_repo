@@ -10,7 +10,10 @@
 -- Auth: Andrej Sajenko <Andrej.Sajenko@mni.thm.de>
 -- =============================================
 
-START TRANSACTION;
+
+ALTER TABLE #__assets ENGINE = InnoDB;
+ALTER TABLE #__users ENGINE = InnoDB;
+ALTER TABLE #__viewlevels ENGINE = InnoDB;
 
 CREATE TABLE #__thm_repo_folder (
 	id int(10) UNSIGNED AUTO_INCREMENT,
@@ -85,4 +88,3 @@ CREATE TABLE #__thm_repo_link (
 	FOREIGN KEY(modified_by) REFERENCES #__users(id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-COMMIT;
