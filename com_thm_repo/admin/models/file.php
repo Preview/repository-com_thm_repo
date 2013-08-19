@@ -231,7 +231,7 @@ class THM_RepoModelFile extends JModelAdmin
 			}
 						
 			// Add Path to Versiondata
-			$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $filename;
+			$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
 			if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
 			{
 				return false;
@@ -263,39 +263,9 @@ class THM_RepoModelFile extends JModelAdmin
 
 			// A New File is uploaded
 			if ($filename)
-			{
-				// Get needed Data for Version Update
-				$db = $this->getDbo();
-				$query = $db->getQuery(true);
-				$query->select('v.name, v.description, v.modified, v.modified_by, v.path, v.size, v.mimetype, v.version');
-				$query->from('#__thm_repo_file AS f');
-				$query->where('f.id = ' . $data['id']);
-				$query->join('INNER', '#__thm_repo_version AS v ON f.id = v.id AND v.version = ' . $data['current_version']);
-				$db->setQuery($query);
-				$oldversiondata = $db->loadObject();
-				
-				// Create a Version of File
-				$versionsrc = $oldversiondata->path;
-				$versiondest = $oldversiondata->path . "_" . $oldversiondata->version;
-			
-				if (!JFile::move($versionsrc, $versiondest))
-				{
-					return false;
-				}
-					
-				// Add Versionnumber to Path
-// 				$oldversiondata->path = $versiondest;
-					
-				// Update Path on Version with same File
-				$query = $db->getQuery(true);
-				$query->update($db->quoteName('#__thm_repo_version'));
-				$query->set('path = ' . $db->quote($versiondest));
-				$query->where('path = ' . $db->quote($versionsrc));
-				$db->setQuery($query);
-				$db->query();
-				
+			{				
 				// Add Path to Versiondata
-				$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $filename;
+				$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
 				if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
 				{
 					return false;
@@ -327,7 +297,7 @@ class THM_RepoModelFile extends JModelAdmin
 		if ($filename)
 		{
 			$src = $file['tmp_name'];
-			$dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $filename;
+			$dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
 			
 			if (!JFile::upload($src, $dest))
 			{
