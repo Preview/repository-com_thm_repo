@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 
 // Get Model Functions
-$model = JModel::getInstance('folders', 'THM_RepoModel');
+$model = JModel::getInstance('versions', 'THM_RepoModel');
 
 // Get ID from URL
 $id = JRequest::getVar('id');
@@ -27,13 +27,13 @@ $id = JRequest::getVar('id');
         	<thead>
         		<tr>
         			<th></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'id', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VERSIONNUMBER', 'versionnumber', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 'path', $this->sortDirection, $this->sortColumn); ?></th>
-        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_SIZE', 'size', $this->sortDirection, $this->sortColumn); ?></th>
-         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MIMETYPE', 'mimetype', $this->sortDirection, $this->sortColumn); ?></th>
-         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED', 'modified', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VERSIONNUMBER', 'id', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'v.name', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JTEXT::_('COM_THM_REPO_VIEW_CURRENT_VERSION')?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 'v.path', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_SIZE', 'v.size', $this->sortDirection, $this->sortColumn); ?></th>
+         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MIMETYPE', 'v.mimetype', $this->sortDirection, $this->sortColumn); ?></th>
+         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED', 'v.modified', $this->sortDirection, $this->sortColumn); ?></th>
         			
         		</tr>
         	</thead>
@@ -43,7 +43,10 @@ $id = JRequest::getVar('id');
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
         				<td><?php echo $item->name; ?></td>
-        				<td><?php echo $item->version; ?></td>
+        				<td align="center"><?php echo $item->current_version ? 
+        					JHtml::_('jgrid.published', 1, 'versions.', 1) : 
+        					JHtml::_('jgrid.published', $item->current_version, $i, 'versions.', 1) ?>
+           				</td>
         				<td><?php echo $item->path; ?></td>
         				<td><?php echo $item->size; ?></td>
         				<td><?php echo $item->mimetype; ?></td>

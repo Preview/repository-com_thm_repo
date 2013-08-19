@@ -23,18 +23,27 @@ jimport('joomla.application.component.controlleradmin');
  */
 class THM_RepoControllerVersions extends JControllerAdmin
 {
-/**
- * Returns the Model (proxy)
- *
- * @param   string  $name    Model name
- * @param   string  $prefix  Model prefix
- *
- * @return  JModel
- */
-	public function getModel($name = 'Version', $prefix = 'THM_RepoModel')
+	
+	/**
+	 * Set current version
+	 *
+	 * @return void
+	 */
+	public function publish()
 	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		return $model;
+		
+ 		$model = $this->getModel('versions');
+ 		$id = JRequest::getVar('id'); 		
+ 			
+		if ($model->setversion())
+		{
+			$msg = JText::_('COM_THM_REPO_SET_VERSION_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_SET_VERSION_ERROR');
+		}
+		$this->setRedirect('index.php?option=com_thm_repo&view=versions&id=' . (int) $id, $msg);
 	}
 	
 }

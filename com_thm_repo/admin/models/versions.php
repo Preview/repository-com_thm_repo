@@ -40,14 +40,16 @@ class THM_RepoModelVersions extends JModelList
 		$query = $db->getQuery(true);
 		
 		// Select some fields
-		$query->select('*');
+		$query->select('v.path, v.name, v.size, v.mimetype, v.modified, v.version AS id, f.current_version');
 		
 		// From the links table
-		$query->from('#__thm_repo_version');
+		$query->from('#__thm_repo_version as v');
 		if ($id != null)
 		{
-			$query->where('id = ' . $id);
+			$query->where('v.id = ' . $id);
 		}
+		$query->join('LEFT', '#__thm_repo_file AS f on v.version = f.current_version and v.id = f.id');
+		
 		
 		$query->order($db->escape($this->getState('list.ordering', 'id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
@@ -79,13 +81,37 @@ class THM_RepoModelVersions extends JModelList
 	{
 		$config['filter_fields'] = array(
 				'id',
-				'version',
-				'path',
-				'name',
-				'size',
-				'mimetype',
-				'modified'
+				'v.version',
+				'v.path',
+				'v.name',
+				'v.size',
+				'v.mimetype',
+				'v.modified'
 		);
 		parent::__construct($config);
+	}
+	
+	/**
+	 * Updates the current Version on file table
+	 * 
+	 * @return boolean true or false
+	 */
+	public function setversion()
+	{
+		$version = JRequest::getVar('cid', array(), 'post', 'array');
+		$version = $version[0];
+		$id = JRequest::getVar('id');
+		
+		$db = JFactory::getDBO();
+		$query = $db->getQuery(true);
+		$query->update('#__thm_repo_file AS f');
+		$query->set('f.current_version = ' . $version);
+		$query->where('f.id = ' . $id);
+		$db->setQuery($query);
+		if (!$db->query())
+		{
+			return false;
+		}
+		return true;
 	}
 }

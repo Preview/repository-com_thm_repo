@@ -163,11 +163,24 @@ class THM_RepoModelFile extends JModelAdmin
 		
 		// Clean up filename to get rid of strange characters like spaces etc
 		$filename = JFile::makeSafe($file['name']);
+
+		
+		// GetDBO
+		$db = JFactory::getDBO();
+		
+		// Get Maximum Versionsnumber
+		$query = $db->getQuery(true);
+		$query->select('version');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $data['id']);
+		$db->setQuery($query);
+		$version = $db->loadResultArray();
+		$version = max($version);
 		
 
 		// Assign filedata
 		$filedata->id = $data['id'];
-		$filedata->current_version = $data['current_version'] + 1;
+		$filedata->current_version = $version + 1;
 			
 		// Assign entity data
 		$entitydata->id = $data['id'];
@@ -178,7 +191,7 @@ class THM_RepoModelFile extends JModelAdmin
 		
 		// Assign version data
 		$versiondata->id = $data['id'];
-		$versiondata->version = $data['current_version'] + 1;
+		$versiondata->version = $version + 1;
 		$versiondata->name = $data['name'];
 		$versiondata->description = $data['description'];
 		$versiondata->modified = $data['modified'];
@@ -186,9 +199,7 @@ class THM_RepoModelFile extends JModelAdmin
 		$versiondata->path = $data['path'];
 		$versiondata->size = $file['size'];
 		$versiondata->mimetype = $file['type'];
-	
-		// GetDBO
-		$db = JFactory::getDBO();
+
 	
 		// New File is uploaded
 		if ($entitydata->id == 0)
