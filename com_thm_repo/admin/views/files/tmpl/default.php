@@ -15,7 +15,11 @@ defined('_JEXEC') or die;
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
 
+// Get Model Functions
+$model = JModel::getInstance('files', 'THM_RepoModel');
 ?>
+
+
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=files'); ?>" method="post" name="adminForm" id="adminForm">
         <table class="adminlist">
         	<thead>
@@ -26,6 +30,7 @@ JHtml::_('behavior.tooltip');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'fo.parent', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 've.path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'vi.title', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_DOWNLOAD'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?></th>
         		</tr>
         	</thead>
@@ -39,6 +44,16 @@ JHtml::_('behavior.tooltip');
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=file.edit&id=' . (int) $item->id); ?>">
         					<?php echo $item->path; ?></a></td>
         				<td><?php echo $item->title; ?></td>
+        				<td align="center">
+        					<input name="download" type="image" width="16" height="16" src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
+ 							<?php 
+							if (isset($_POST['download']))
+							{
+								$id = $_POST['download'];
+								$model->download($id);
+							}
+							?>       				
+        				</td>
         				<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?>'></td>
         			</tr>
 				<?php endforeach; ?>

@@ -38,13 +38,12 @@
 			<filename>controller.php</filename>
 			<filename>thm_repo.php</filename>
 			<folder>controllers</folder>
-			<folder>language</folder>
 			<folder>models</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
 			<folder>sql</folder>
 		</files>
-		<languages folder="admin">
+		<languages>
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_repo.ini</language>
 			<language tag="en-GB">language/en-GB/en-GB.com_thm_repo.sys.ini</language>
 			<language tag="de-DE">language/de-DE/de-DE.com_thm_repo.ini</language>
