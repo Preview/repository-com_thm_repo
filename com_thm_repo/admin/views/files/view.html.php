@@ -1,8 +1,9 @@
 <?php
-
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -11,21 +12,26 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
-// import Joomla view library
+// Import Joomla view library
 jimport('joomla.application.component.view');
 
 /**
- * Files View
-*/
+ * THM_RepoViewFiles class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
+ */
 class THM_RepoViewFiles extends JView
 {
 	/**
 	 * Files view display method
+	 * 
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
 		// Get data from the model
 		$items = $this->get('Items');
@@ -53,6 +59,8 @@ class THM_RepoViewFiles extends JView
 
 	/**
 	 * Setting the toolbar
+	 * 
+	 * @return void
 	 */
 	protected function addToolBar()
 	{

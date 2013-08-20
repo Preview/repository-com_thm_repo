@@ -1,11 +1,12 @@
 <?php
-
 /**
- * @package    THM_Repo
- * @author     Stefan Schneider, <stefan.schneider@mni.thm.de>
- * @copyright  2013 TH Mittelhessen
- * @license    GNU GPL v.2
- * @link       www.mni.thm.de
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
  */
 
 // No direct access to this file
@@ -15,7 +16,11 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 /**
- * Versions View
+ * THM_RepoViewVersions class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
 */
 class THM_RepoViewVersions extends JView
 {
@@ -54,13 +59,12 @@ class THM_RepoViewVersions extends JView
 
 	/**
 	 * Setting the toolbar
+	 * 
+	 * @return void
 	 */
 	protected function addToolBar()
 	{
 		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_VERSIONS'));
-// 		JToolBarHelper::deleteList('', 'folders.delete');
-// 		JToolBarHelper::editList('folder.edit');
-// 		JToolBarHelper::addNew('folder.add');
 		JToolBarHelper::back();
 	}
 }

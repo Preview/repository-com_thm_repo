@@ -81,6 +81,9 @@ class THM_RepoTableEntity extends JTable
 	
 	/**
 	 * Method to get the asset-parent-id of the item
+	 * 
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 *
 	 * @return      int
 	 */

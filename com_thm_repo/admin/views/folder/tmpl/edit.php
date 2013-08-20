@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_thm_repo&layout=edit&id='.(int) $this->item->id); ?>"
+<form action="<?php echo JRoute::_('index.php?option=com_thm_repo&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="folder-form">
 	<fieldset class="adminform">
       	<legend><?php echo JText::_( 'COM_THM_REPO_FOLDER_DETAILS' ); ?></legend>

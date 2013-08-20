@@ -17,6 +17,10 @@ JFormHelper::loadFieldClass('list');
 
 /**
  * Folder Form Field class for the THM Repo component
+ * 
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
 */
 class JFormFieldallFolder extends JFormFieldList
 {
@@ -44,7 +48,7 @@ class JFormFieldallFolder extends JFormFieldList
 		$messages = $this->parentChildSort_r('id', 'parent_id', $messages);
 		if ($messages)
 		{
-			foreach($messages as $message)
+			foreach ($messages as $message)
 			{	
 				$count = 0;
 				$prefix = '';

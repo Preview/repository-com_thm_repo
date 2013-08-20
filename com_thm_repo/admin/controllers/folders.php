@@ -22,7 +22,7 @@ jimport('joomla.application.component.controllerform');
  * 
  */
 class THM_RepoControllerFolders extends JControllerForm
-{	
+{
 	/**
 	 * Order up
 	 *

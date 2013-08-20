@@ -54,42 +54,45 @@ class THM_RepoTableFolder extends JTable
 		return parent::bind($array, $ignore);
 	}
 	
-        /**
-         * Method to compute the default name of the asset.
-         * The default name is in the form `table_name.id`
-         * where id is the value of the primary key of the table.
-         *
-         * @return      string
-         * 
-         * @since       2.5
-         */
-        protected function _getAssetName()
-        {
-                $k = $this->_tbl_key;
-                return 'com_thm_repo.folder.' . (int) $this->$k;
-        }
+	/**
+	 * Method to compute the default name of the asset.
+     * The default name is in the form `table_name.id`
+     * where id is the value of the primary key of the table.
+     *
+     * @return      string
+     * 
+     * @since       2.5
+     */
+     protected function _getAssetName()
+     {
+     	$k = $this->_tbl_key;
+     	return 'com_thm_repo.folder.' . (int) $this->$k;
+     }
  
-        /**
-         * Method to return the title to use for the asset table.
-         *
-         * @return      string
-         * 
-         * @since       2.5
-         */
-        protected function _getAssetTitle()
-        {
-                return $this->name;
-        }
+ 	/**
+     * Method to return the title to use for the asset table.
+     *
+     * @return      string
+     * 
+     * @since       2.5
+     */
+     protected function _getAssetTitle()
+     {
+     	return $this->name;
+     }
  
-        /**
-         * Method to get the asset-parent-id of the item
-         *
-         * @return      int
-         */
-		protected function _getAssetParentId($table = null, $id = null)
-		{
-			$asset = JTable::getInstance('asset');
-			$asset->loadByName('com_thm_repo');
-			return $asset->id;
-		}
+ 	/**
+   	 * Method to get the asset-parent-id of the item
+     *
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
+	 * 
+     * @return      int
+     */
+     protected function _getAssetParentId($table = null, $id = null)
+     {
+     	$asset = JTable::getInstance('asset');
+		$asset->loadByName('com_thm_repo');
+		return $asset->id;
+     }
 }

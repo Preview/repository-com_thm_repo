@@ -1,8 +1,9 @@
 <?php
-
 /**
- * @package  	com_thm_repo
- * @author      Stefan Schneider	<stefan.schneider@mni.thm.de>
+ * @category    Joomla component
+ * @package	    THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -15,7 +16,11 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 /**
- * Links View
+ * THM_RepoViewLinks class for component com_thm_repo
+ *
+ * @category  Joomla.Component.Admin
+ * @package   com_thm_repo.admin
+ * @link      www.mni.thm.de
 */
 class THM_RepoViewLinks extends JView
 {
@@ -54,6 +59,8 @@ class THM_RepoViewLinks extends JView
 
 	/**
 	 * Setting the toolbar
+	 * 
+	 * @return void
 	 */
 	protected function addToolBar()
 	{

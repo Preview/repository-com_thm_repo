@@ -21,7 +21,6 @@ jimport('joomla.application.component.modellist');
  * @category  Joomla.Component.Admin
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
  */
 class THM_RepoModelEntities extends JModelList
 {
