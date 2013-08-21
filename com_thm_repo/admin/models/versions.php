@@ -114,4 +114,47 @@ class THM_RepoModelVersions extends JModelList
 		}
 		return true;
 	}
+	
+	/**
+	 * Function to download a version of a file
+	 *
+	 * @param   int  $version  Version of the file
+	 *
+	 * @return  void
+	 */
+	public function download($version)
+	{
+		$id = JRequest::getVar('id');
+		
+		// GetDBO
+		$db = JFactory::getDBO();
+	
+		// Get Data from the Version
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id . ' AND version = ' . $version);
+		$db->setQuery($query);
+		$versiondata = $db->loadObject();
+		
+		// Clean the output buffer
+		ob_end_clean();
+		
+		/* create the header */
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+	
+		// Required for certain browsers
+		header("Content-Type: " . filetype($versiondata->path));
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=\"" . $versiondata->name . "\";");
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Length: " . $versiondata->size);
+	
+		/* download file */
+// 		flush();
+		readfile($versiondata->path);
+	}
 }

@@ -34,7 +34,7 @@ $id = JRequest::getVar('id');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_SIZE', 'v.size', $this->sortDirection, $this->sortColumn); ?></th>
          			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MIMETYPE', 'v.mimetype', $this->sortDirection, $this->sortColumn); ?></th>
          			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_MODIFIED', 'v.modified', $this->sortDirection, $this->sortColumn); ?></th>
-        			
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_DOWNLOAD'); ?></th>
         		</tr>
         	</thead>
        		<tbody>
@@ -51,6 +51,16 @@ $id = JRequest::getVar('id');
         				<td><?php echo $item->size; ?></td>
         				<td><?php echo $item->mimetype; ?></td>
         				<td><?php echo $item->modified; ?></td>
+        				<td align="center">
+        					<input name="download" type="image" width="16" height="16" src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
+ 							<?php 
+							if (isset($_POST['download']))
+							{
+								$id = $_POST['download'];
+								$model->download($id);
+							}
+							?>       				
+        				</td>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>

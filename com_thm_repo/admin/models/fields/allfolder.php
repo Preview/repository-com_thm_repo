@@ -71,9 +71,9 @@ class JFormFieldallFolder extends JFormFieldList
 	 *
 	 * @param   string  $idField      The item's ID identifier (required)
 	 * @param   string  $parentField  The item's parent identifier (required)
-	 * @param   array	$els          The array (required)
-	 * @param   string  $parentID	  The parent ID for which to sort (internal)
-	 * @param   array   &$result	  The result set (internal)
+	 * @param   array   $els          The array (required)
+	 * @param   string  $parentID     The parent ID for which to sort (internal)
+	 * @param   array   &$result      The result set (internal)
 	 * @param   number  &$depth		  The depth (internal)
 	 *
 	 * @return array sorted array

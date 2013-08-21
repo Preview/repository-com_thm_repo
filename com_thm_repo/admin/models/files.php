@@ -113,6 +113,9 @@ class THM_RepoModelFiles extends JModelList
 		$db->setQuery($query);
 		$versiondata = $db->loadObject();
 		
+		// Clean the output buffer
+		ob_end_clean();
+		
 		/* create the header */
 		header("Pragma: public");
 		header("Expires: 0");
@@ -120,14 +123,14 @@ class THM_RepoModelFiles extends JModelList
 		header("Cache-Control: private", false); 
 		
 		// Required for certain browsers
-		header("Content-Type: " . $versiondata->mimetype);
+		header("Content-Type: " . filetype($versiondata->path));
 		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . basename($versiondata->path) . "\";");
+		header("Content-Disposition: attachment; filename=\"" . $versiondata->name . "\";");
 		header("Content-Transfer-Encoding: binary");
 		header("Content-Length: " . $versiondata->size);
 		
 		/* download file */
-		flush();
+// 		flush();
 		readfile($versiondata->path);
 	}
 	
