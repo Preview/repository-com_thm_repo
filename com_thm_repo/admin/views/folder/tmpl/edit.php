@@ -15,7 +15,7 @@ JHtml::_('behavior.tooltip');
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&layout=edit&id=' . (int) $this->item->id); ?>"
       method="post" name="adminForm" id="folder-form">
 	<fieldset class="adminform">
-      	<legend><?php echo JText::_( 'COM_THM_REPO_FOLDER_DETAILS' ); ?></legend>
+      	<legend><?php echo JText::_('COM_THM_REPO_FOLDER_DETAILS'); ?></legend>
       	<ul class="adminformlist">
       		<li><?php echo $this->form->getLabel('name'); ?>
       			<?php echo $this->form->getInput('name'); ?>
@@ -32,7 +32,7 @@ JHtml::_('behavior.tooltip');
 		</ul>
 	</fieldset>
 		<fieldset class="adminform">
-      	<legend><?php echo JText::_( 'COM_THM_REPO_FOLDER_INFOS' ); ?></legend>
+      	<legend><?php echo JText::_('COM_THM_REPO_FOLDER_INFOS'); ?></legend>
       	<ul class="adminformlist">
       		<li><?php echo $this->form->getLabel('created_by'); ?>
       			<?php echo $this->form->getInput('created_by'); ?>

@@ -19,12 +19,12 @@ defined('_JEXEC') or die();
  * @category  Joomla.Component.Admin
  * @package   com_thm_repo.admin
  */
-class COM_THM_RepoInstallerScript
+class THM_RepoInstallerScript
 {
 	/**
 	 * method to install the component
 	 * 
-	 * @param  parent
+	 * @param   object  $parent  class calling this method
      *
      * @return void
      */

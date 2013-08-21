@@ -42,6 +42,9 @@ $saveOrder	= $listOrder == 'e.ordering';
 						{
 							echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'entities.saveorder');
 						}
+						else 
+						{	
+						}
 						?>
 					</th>
 					<th><?php echo JText::_('COM_THM_REPO_VIEW_DOWNLOAD'); ?></th>
