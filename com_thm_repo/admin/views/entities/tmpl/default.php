@@ -15,6 +15,9 @@ defined('_JEXEC') or die;
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
 
+// Get Model Functions
+$model = JModel::getInstance('entities', 'THM_RepoModel');
+
 // Get ID from URL
 $id = JRequest::getVar('id');
 $listOrder	= $this->sortColumn;
@@ -41,6 +44,7 @@ $saveOrder	= $listOrder == 'e.ordering';
 						}
 						?>
 					</th>
+					<th><?php echo JText::_('COM_THM_REPO_VIEW_DOWNLOAD'); ?></th>
         			
         		</tr>
         	</thead>
@@ -56,9 +60,17 @@ $saveOrder	= $listOrder == 'e.ordering';
         					: JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
         					<?php echo $item->lname; ?>
         					<?php echo $item->vename; ?></a></td>
-        				<td><?php echo $item->path ? JTEXT::_('FILE') : JTEXT::_('LINK');?>
-        				<td><?php echo $item->path; ?>
-        					<?php echo $item->link;?></td>
+        				<td align="center">
+        					<?php if ($item->path) : ?>
+        						<img src="components/com_thm_repo/img/file.png" >
+        					<?php else : ?>
+        						<img src="components/com_thm_repo/img/link.png" >
+        					<?php endif ?>
+        				</td>
+        				<td>
+        					<?php echo $item->path; ?>
+        					<?php echo $item->link;?>
+        				</td>
         				<td><?php echo $item->title; ?></td>
         				<td class="order">
 							<?php 
@@ -98,7 +110,18 @@ $saveOrder	= $listOrder == 'e.ordering';
 							value="<?php echo $item->ordering;?>" 
 							<?php echo $disabled; ?> class="text-area-order" />
 						</td>       				
-        				
+        				<td align="center">
+        					<?php if ($item->path) : ?>
+								<input name="download" type="image" width="16" height="16" src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
+	 							<?php 
+								if (isset($_POST['download']))
+								{
+									$id = $_POST['download'];
+									$model->download($id);
+								}
+								?> 
+        					<?php endif ?>
+        				</td>
          			</tr>
 				<?php endforeach; ?>
 			</tbody>

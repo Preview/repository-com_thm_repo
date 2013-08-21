@@ -39,6 +39,7 @@
 			<filename>thm_repo.php</filename>
 			<folder>controllers</folder>
 			<folder>models</folder>
+			<folder>img</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
 			<folder>sql</folder>

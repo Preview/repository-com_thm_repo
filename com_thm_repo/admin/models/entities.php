@@ -217,4 +217,53 @@ class THM_RepoModelEntities extends JModelList
 			return false;
 		}
 	}	
+	
+	/**
+	 * Function to download a file
+	 *
+	 * @param   int  $id  ID of the file
+	 *
+	 * @return  void
+	 */
+	public function download($id)
+	{
+		// GetDBO
+		$db = JFactory::getDBO();
+	
+		// Get current Versionnumber of file
+		$query = $db->getQuery(true);
+		$query->select('current_version');
+		$query->from('#__thm_repo_file');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$version = $db->loadResult();
+	
+		// Get Data from the Version
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id . ' AND version = ' . $version);
+		$db->setQuery($query);
+		$versiondata = $db->loadObject();
+	
+		// Clean the output buffer
+		ob_end_clean();
+	
+		/* create the header */
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+	
+		// Required for certain browsers
+		header("Content-Type: " . filetype($versiondata->path));
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=\"" . $versiondata->name . "\";");
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Length: " . $versiondata->size);
+	
+		/* download file */
+		// 		flush();
+		readfile($versiondata->path);
+	}
 }
