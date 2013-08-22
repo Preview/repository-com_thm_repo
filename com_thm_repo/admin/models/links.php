@@ -2,7 +2,7 @@
 
 /**
  * @category    Joomla component
- * @package	    THM_Repo
+ * @package     THM_Repo
  * @subpackage  com_thm_repo.admin
  * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
