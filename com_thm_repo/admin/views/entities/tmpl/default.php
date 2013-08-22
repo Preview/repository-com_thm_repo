@@ -70,7 +70,7 @@ $saveOrder	= $listOrder == 'e.ordering';
         					?>
         						<img src="components/com_thm_repo/img/file.png" >
         					<?php
-							}
+        					}
         					else 
         					{ 
         					?>
@@ -152,8 +152,8 @@ $saveOrder	= $listOrder == 'e.ordering';
         					?>
         				</td>
          			</tr>
-				<?php 
-				}
+				<?php
+        		}
         		?>
 			</tbody>
 			<tfoot>

@@ -147,8 +147,8 @@ class JFormFieldFolder extends JFormFieldList
 		$query->select('id,parent_id,name');
 		$query->from('#__thm_repo_folder');
 		$db->setQuery((string) $query);
-		return $result = $db->loadObjectList();
-		
+		$result = $db->loadObjectList();
+		return $result;
 	}
 	
 	/**

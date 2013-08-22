@@ -31,7 +31,6 @@ class THM_RepoControllerFolders extends JControllerForm
 	public function orderup()
 	{
  		$model = $this->getModel('folders');
- 		$id = JRequest::getVar('id');
 	
 		if ($model->reorder(-1))
 		{
@@ -51,9 +50,7 @@ class THM_RepoControllerFolders extends JControllerForm
 	 */
 	public function orderdown()
 	{
- 		$model = $this->getModel('folders');
- 		$id = JRequest::getVar('id');
- 			
+ 		$model = $this->getModel('folders'); 			
 	
 		if ($model->reorder(1))
 		{
