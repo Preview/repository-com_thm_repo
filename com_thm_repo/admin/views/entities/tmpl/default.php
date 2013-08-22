@@ -123,6 +123,8 @@ $saveOrder	= $listOrder == 'e.ordering';
 									$model->download($id);
 								}
 								?> 
+							<?php else : ?>
+								<a href="<?php echo $item->link;?>" target="_blank"><img src="components/com_thm_repo/img/link.png" />
         					<?php endif ?>
         				</td>
          			</tr>

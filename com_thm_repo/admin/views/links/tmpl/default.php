@@ -27,6 +27,7 @@ JHtml::_('behavior.tooltip');
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'f.parent', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_LINK', 'l.link', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'v.title', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th width="5%"><?php echo JText::_('COM_THM_REPO_VIEW_OPENLINK');?></th>
         		</tr>
         	</thead>
        		<tbody>
@@ -39,6 +40,7 @@ JHtml::_('behavior.tooltip');
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
         				<?php echo $item->link; ?></a></td>
         				<td><?php echo $item->title; ?></td>
+        				<td align="center"><a href="<?php echo $item->link;?>" target="_blank"><img src="components/com_thm_repo/img/link.png" /></a>
         			</tr>
 				<?php endforeach; ?>
 			</tbody>
