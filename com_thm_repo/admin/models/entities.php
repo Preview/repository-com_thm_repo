@@ -69,9 +69,9 @@ class THM_RepoModelEntities extends JModelList
 	 * @access  protected
 	 * @return	populatestate
 	 */
-	protected function populateState($ordering = null, $direction = null) 
+	protected function populateState($ordering = 'e.id', $direction = 'ASC') 
 	{
-		parent::populateState('e.id', 'ASC');
+		parent::populateState($ordering, $direction);
 	}
 	
 	/**
@@ -109,9 +109,7 @@ class THM_RepoModelEntities extends JModelList
 	
 		if (isset($direction))
 		{
-			/*
-				$query = "SELECT e.order FROM #__thm_repo_entities as e WHERE `id` = " . $cid[0] . ";
-			*/
+			// Get ordering number of selected entity
 			$query = $db->getQuery(true);
 			$query->select('e.ordering');
 			$query->from('#__thm_repo_entity AS e');
@@ -121,11 +119,8 @@ class THM_RepoModelEntities extends JModelList
 	
 			if ($direction == -1)
 			{
-				/*
-					$query = "UPDATE #__thm_groups_structure as a SET"
-				. " a.order=" . $itemOrder->order
-				. " WHERE a.order=" . ($itemOrder->order - 1);
-				*/
+
+				// Move down neighbor entity one up
 				$query = $db->getQuery(true);
 				$query->update('#__thm_repo_entity AS e');
 				$query->set('e.ordering = ' . $itemOrder->ordering);
@@ -136,11 +131,8 @@ class THM_RepoModelEntities extends JModelList
 				{
 					$err = 1;
 				}
-				/*
-					$query = "UPDATE #__thm_groups_structure as a SET"
-				. " a.order=" . ($itemOrder->order - 1)
-				. " WHERE a.id=" . $cid[0];
-				*/
+
+				// Move selected entity one up
 				$query = $db->getQuery(true);
 				$query->update('#__thm_repo_entity AS e');
 				$query->set('e.ordering = ' . ($itemOrder->ordering - 1));
@@ -154,11 +146,7 @@ class THM_RepoModelEntities extends JModelList
 			}
 			elseif ($direction == 1)
 			{
-				/*
-					$query = "UPDATE #__thm_groups_structure as a SET"
-				. " a.order=" . $itemOrder->order
-				. " WHERE a.order=" . ($itemOrder->order + 1);
-				*/
+				// Move upper neighbor entity one up
 				$query = $db->getQuery(true);
 				$query->update('#__thm_repo_entity AS e');
 				$query->set('e.ordering = ' . $itemOrder->ordering);
@@ -169,11 +157,8 @@ class THM_RepoModelEntities extends JModelList
 				{
 					$err = 1;
 				}
-				/*
-					$query = "UPDATE #__thm_groups_structure as a SET"
-				. " a.order=" . ($itemOrder->order + 1)
-				. " WHERE a.id=" . $cid[0];
-				*/
+
+				// Move selected entity one down
 				$query = $db->getQuery(true);
 				$query->update('#__thm_repo_entity AS e');
 				$query->set('e.ordering = ' . ($itemOrder->ordering + 1));
@@ -190,11 +175,7 @@ class THM_RepoModelEntities extends JModelList
 			$i = 0;
 			foreach ($order as $itemOrder)
 			{
-				/*
-					$query = "UPDATE #__thm_groups_structure as a SET"
-				. " a.order=" . ($itemOrder)
-				. " WHERE a.id=" . $cid[$i];
-				*/
+				// Set new ordering number
 				$query = $db->getQuery(true);
 				$query->update('#__thm_repo_entity AS e');
 				$query->set('e.ordering = ' . ($itemOrder));

@@ -46,7 +46,7 @@ class THM_RepoController extends JController
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');
 	
 		// Call parent behavior
-		parent::display($cachable);
+		parent::display($cachable, $urlparams);
 	}
 }
 

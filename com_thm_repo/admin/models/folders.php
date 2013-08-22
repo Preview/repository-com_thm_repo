@@ -35,9 +35,9 @@ class THM_RepoModelFolders extends JModelList
 	 * @access  protected
 	 * @return	populatestate
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'f.lft', $direction = 'ASC')
 	{
-		parent::populateState('f.lft', 'ASC');
+		parent::populateState($ordering, $direction);
 	}
 	
 	/**
@@ -87,10 +87,6 @@ class THM_RepoModelFolders extends JModelList
 	{
 		$db = JFactory::getDBO();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
-		$order = JRequest::getVar('order', array(), 'post', 'array');
-		$err = 0;
-		
-
 		
 		if (isset($direction))
 		{
@@ -163,8 +159,7 @@ class THM_RepoModelFolders extends JModelList
 					if (!$db->query())
 					{
 						return false;
-					}
-				
+					}		
 				}
 				// Commit Transaction
 				$db->transactionCommit();		
@@ -228,8 +223,7 @@ class THM_RepoModelFolders extends JModelList
 					if (!$db->query())
 					{
 						return false;
-					}
-				
+					}	
 				}
 				$db->transactionCommit();			
 			}
@@ -237,5 +231,4 @@ class THM_RepoModelFolders extends JModelList
 		}
 		return true;
 	}
-	
 }

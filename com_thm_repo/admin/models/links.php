@@ -60,9 +60,9 @@ class THM_RepoModelLinks extends JModelList
 	 * @access  protected
 	 * @return	populatestate
 	 */
-	protected function populateState($ordering = null, $direction = null) 
+	protected function populateState($ordering = 'e.id', $direction = 'ASC') 
 	{
-		parent::populateState('e.id', 'ASC');
+		parent::populateState($ordering, $direction);
 	}
 	
 	/**

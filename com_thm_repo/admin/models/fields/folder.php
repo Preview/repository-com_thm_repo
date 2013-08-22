@@ -55,7 +55,7 @@ class JFormFieldFolder extends JFormFieldList
 		$result = $db->loadObjectList();
 		
 		// $allData => All Folders
-		$allData = $this->getAll($id);
+		$allData = $this->getAll();
 		
 		// $childData => Child Folders of the needed id
 		$childData = $this->getChilds($result);
@@ -136,11 +136,9 @@ class JFormFieldFolder extends JFormFieldList
 	/**
 	 * Creates a List with all Folders
 	 * 
-	 * @param   unknown  $id  The Current id
-	 * 
 	 * @return Returns an Array with all Folder elements
 	 */
-	protected function getAll($id)
+	protected function getAll()
 	{
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
