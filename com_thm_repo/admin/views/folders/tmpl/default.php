@@ -37,7 +37,8 @@ JHtml::_('behavior.tooltip');
         	</thead>
        		<tbody>
        			<?php $originalOrders = array(); ?>     		
-	        	<?php foreach ($this->items as $i => $item) 
+	        	<?php 
+	        	foreach ($this->items as $i => $item) 
 	        	{
 	        	?>
 	        		<?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
@@ -45,7 +46,8 @@ JHtml::_('behavior.tooltip');
 	        		<tr class="row<?php echo $i % 2; ?>">
 		        		<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
 			        	<td><?php echo $item->id; ?></td>
-			        	<td><?php while ($count < $item->level) 
+			        	<td><?php 
+			        		while ($count < $item->level) 
 			        		{
 			        		?>
 			        			<?php echo $span; ?>

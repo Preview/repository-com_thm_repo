@@ -42,9 +42,6 @@ $saveOrder	= $listOrder == 'e.ordering';
 						{
 							echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'entities.saveorder');
 						}
-						else 
-						{	
-						}
 						?>
 					</th>
 					<th><?php echo JText::_('COM_THM_REPO_VIEW_DOWNLOAD'); ?></th>
@@ -52,7 +49,8 @@ $saveOrder	= $listOrder == 'e.ordering';
         		</tr>
         	</thead>
        		<tbody>
-        		<?php foreach ($this->items as $i => $item)
+        		<?php 
+        		foreach ($this->items as $i => $item)
         		{
         		?>
         			<?php $ordering	= $listOrder == 'e.ordering'; ?>
@@ -66,7 +64,8 @@ $saveOrder	= $listOrder == 'e.ordering';
         					<?php echo $item->lname; ?>
         					<?php echo $item->vename; ?></a></td>
         				<td align="center">
-        					<?php if ($item->path)
+        					<?php 
+        					if ($item->path)
         					{ 
         					?>
         						<img src="components/com_thm_repo/img/file.png" >

@@ -32,7 +32,7 @@ class THM_RepoViewFolders extends JView
 	 *
 	 * @return  mixed  A string if successful, otherwise a JError object.
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
 		// Get data from the model
 		$items = $this->get('Items');

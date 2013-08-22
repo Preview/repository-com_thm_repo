@@ -38,7 +38,8 @@ $id = JRequest::getVar('id');
         		</tr>
         	</thead>
        		<tbody>
-        		<?php foreach ($this->items as $i => $item) 
+        		<?php 
+        		foreach ($this->items as $i => $item) 
         		{
         		?>
         			<tr class="row<?php echo $i % 2; ?>">
