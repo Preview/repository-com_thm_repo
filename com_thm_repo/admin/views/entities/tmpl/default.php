@@ -52,7 +52,9 @@ $saveOrder	= $listOrder == 'e.ordering';
         		</tr>
         	</thead>
        		<tbody>
-        		<?php foreach ($this->items as $i => $item) : ?>
+        		<?php foreach ($this->items as $i => $item)
+        		{
+        		?>
         			<?php $ordering	= $listOrder == 'e.ordering'; ?>
         		
         			<tr class="row<?php echo $i % 2; ?>">
@@ -64,11 +66,19 @@ $saveOrder	= $listOrder == 'e.ordering';
         					<?php echo $item->lname; ?>
         					<?php echo $item->vename; ?></a></td>
         				<td align="center">
-        					<?php if ($item->path) : ?>
+        					<?php if ($item->path)
+        					{ 
+        					?>
         						<img src="components/com_thm_repo/img/file.png" >
-        					<?php else : ?>
+        					<?php
+}
+        					else 
+        					{ 
+        					?>
         						<img src="components/com_thm_repo/img/link.png" >
-        					<?php endif ?>
+        					<?php
+        					} 
+        					?>
         				</td>
         				<td>
         					<?php echo $item->path; ?>
@@ -88,7 +98,9 @@ $saveOrder	= $listOrder == 'e.ordering';
 										<?php echo $this->pagination->orderUpIcon($i, 1, 'entities.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
 									</span>
 									<span>
-										<?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?>
+										<?php echo $this->pagination->orderDownIcon(
+												$i, $this->pagination->total, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering
+												); ?>
 									</span>
 								<?php 
 								}
@@ -96,16 +108,25 @@ $saveOrder	= $listOrder == 'e.ordering';
 								{
 								?>
 									<span>
-										<?php echo $this->pagination->orderUpIcon($i, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+										<?php echo $this->pagination->orderUpIcon(
+												$i, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_UP', $ordering
+												); ?>
 									</span>
 									<span>
-										<?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, 1, 'entities.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering);
-										?>
+										<?php echo $this->pagination->orderDownIcon(
+												$i, $this->pagination->total, 1, 'entities.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering
+												);?>
 									</span>
 								<?php 
 								}
+								else
+								{
+								}
 								?>
 							<?php 
+							}
+							else
+							{
 							}
 							?>
 							<?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
@@ -114,8 +135,12 @@ $saveOrder	= $listOrder == 'e.ordering';
 							<?php echo $disabled; ?> class="text-area-order" />
 						</td>       				
         				<td align="center">
-        					<?php if ($item->path) : ?>
-								<input name="download" type="image" width="16" height="16" src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
+        					<?php 
+        					if ($item->path)
+        					{
+        					 ?>
+								<input name="download" type="image" width="16" height="16" 
+									src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
 	 							<?php 
 								if (isset($_POST['download']))
 								{
@@ -123,12 +148,20 @@ $saveOrder	= $listOrder == 'e.ordering';
 									$model->download($id);
 								}
 								?> 
-							<?php else : ?>
-								<a href="<?php echo $item->link;?>" target="_blank"><img src="components/com_thm_repo/img/link.png" />
-        					<?php endif ?>
+							<?php 
+        					}
+        					else
+        					{
+        					?>
+								<a href="<?php echo $item->link;?>" target="_blank"><img src="components/com_thm_repo/img/link.png" /></a>
+        					<?php
+        					}
+        					?>
         				</td>
          			</tr>
-				<?php endforeach; ?>
+				<?php 
+}
+        		?>
 			</tbody>
 			<tfoot>
         		<tr>

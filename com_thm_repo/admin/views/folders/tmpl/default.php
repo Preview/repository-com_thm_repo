@@ -1,7 +1,7 @@
 <?php
 /**
  * @category    Joomla component
- * @package     THM_Repo
+ * @package	    THM_Repo
  * @subpackage  com_thm_repo.admin
  * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
@@ -37,30 +37,30 @@ JHtml::_('behavior.tooltip');
         	</thead>
        		<tbody>
        			<?php $originalOrders = array(); ?>     		
-         	<?php foreach ($this->items as $i => $item) : ?>
-         		<?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
-         		<?php $count = 0; ?>
-         		<tr class="row<?php echo $i % 2; ?>">
-	         		<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
-		         	<td><?php echo $item->id; ?></td>
-		         	<td><?php while ($count < $item->level) :?>
-		         			<?php echo $span; ?>
-		         			<?php $count++;?>
-		         		<?php endwhile; ?>
-		         		<a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
-		         		<?php echo $item->name; ?></a></td>
-		         	<td><?php echo $item->title; ?></td>
+	        	<?php foreach ($this->items as $i => $item) : ?>
+	        		<?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
+	        		<?php $count = 0; ?>
+	        		<tr class="row<?php echo $i % 2; ?>">
+		        		<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
+			        	<td><?php echo $item->id; ?></td>
+			        	<td><?php while ($count < $item->level) :?>
+			        			<?php echo $span; ?>
+			        			<?php $count++;?>
+			        		<?php endwhile; ?>
+			        		<a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
+			        		<?php echo $item->name; ?></a></td>
+			        	<td><?php echo $item->title; ?></td>
 						<td class="order">
 							<span><?php echo $this->pagination->orderUpIcon($i, isset($this->ordering[$item->parent_id][$orderkey - 1]), 'folders.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
 							<span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, isset($this->ordering[$item->parent_id][$orderkey + 1]), 'folders.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
 							<input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" disabled="disabled class="text-area-order" />
 							<?php $originalOrders[] = $orderkey + 1; ?>
 						</td>
-		         	<td><input type=button 
-		         		onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" 
-		         		value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'>
-		         	</td>	         				
-	         	</tr>
+			        	<td><input type=button 
+			        		onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" 
+			        		value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'>
+			        	</td>		        				
+		        	</tr>
 					<?php endforeach; ?>
 			</tbody>
 			<tfoot>

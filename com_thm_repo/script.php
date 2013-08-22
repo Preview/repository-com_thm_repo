@@ -28,12 +28,9 @@ class THM_RepoInstallerScript
      *
      * @return void
      */
-	public function install($parent) 
-    {
-    	
-    	// $parent is the class calling this method
-    	$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
+	public function install($parent)
+	{	
+		$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
     	JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
-    	 
     }        
 }
