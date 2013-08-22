@@ -31,7 +31,9 @@ JHtml::_('behavior.tooltip');
         		</tr>
         	</thead>
        		<tbody>
-        		<?php foreach ($this->items as $i => $item) : ?>
+        		<?php foreach ($this->items as $i => $item) 
+        		{
+				?>
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
@@ -42,7 +44,9 @@ JHtml::_('behavior.tooltip');
         				<td><?php echo $item->title; ?></td>
         				<td align="center"><a href="<?php echo $item->link;?>" target="_blank"><img src="components/com_thm_repo/img/link.png" /></a>
         			</tr>
-				<?php endforeach; ?>
+				<?php 
+        		}
+        		?>
 			</tbody>
 			<tfoot>
         		<tr>

@@ -35,7 +35,8 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         		</tr>
         	</thead>
        		<tbody>
-        		<?php foreach ($this->items as $i => $item) : ?>
+        		<?php foreach ($this->items as $i => $item)
+        		{ ?>
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
@@ -45,7 +46,8 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         					<?php echo $item->path; ?></a></td>
         				<td><?php echo $item->title; ?></td>
         				<td align="center">
-        					<input name="download" type="image" width="16" height="16" src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
+        					<input name="download" type="image" width="16" height="16" 
+        						src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
  							<?php 
 							if (isset($_POST['download']))
 							{
@@ -54,9 +56,14 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
 							}
 							?>       				
         				</td>
-        				<td><input type=button onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id); ?>'" value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?>'></td>
+        				<td><input type=button 
+        						onClick=
+        							"location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id); ?>'" 
+        						value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?>'></td>
         			</tr>
-				<?php endforeach; ?>
+				<?php
+        		}
+        		 ?>
 			</tbody>
 			<tfoot>
         		<tr>

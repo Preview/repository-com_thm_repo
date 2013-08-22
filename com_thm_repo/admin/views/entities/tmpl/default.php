@@ -71,7 +71,7 @@ $saveOrder	= $listOrder == 'e.ordering';
         					?>
         						<img src="components/com_thm_repo/img/file.png" >
         					<?php
-}
+							}
         					else 
         					{ 
         					?>
@@ -119,14 +119,8 @@ $saveOrder	= $listOrder == 'e.ordering';
 									</span>
 								<?php 
 								}
-								else
-								{
-								}
 								?>
 							<?php 
-							}
-							else
-							{
 							}
 							?>
 							<?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
@@ -160,7 +154,7 @@ $saveOrder	= $listOrder == 'e.ordering';
         				</td>
          			</tr>
 				<?php 
-}
+				}
         		?>
 			</tbody>
 			<tfoot>

@@ -34,7 +34,7 @@ class THM_RepoModelFolder extends JModelAdmin
 	 *
 	 * @param   type    $type    The table type to instantiate
 	 * @param   string  $prefix  A prefix for the table class name. Optional.
-	 * @param   array   $config	 Configuration array for model. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
 	 * 
 	 * @return  JTable  A database object
 	 * 
