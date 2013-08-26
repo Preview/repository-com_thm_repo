@@ -132,15 +132,17 @@ $saveOrder	= $listOrder == 'e.ordering';
         					if ($item->path)
         					{
         					 ?>
-								<input name="download" type="image" width="16" height="16" 
-									src="..\media\media\images\success.png" value="<?php echo $item->id?>" />
-	 							<?php 
-								if (isset($_POST['download']))
+		        				<a href="<?php echo JRoute::_(
+		        						'index.php?option=com_thm_repo&view=entities&id=' . $id . '&downloadid=' . $item->id
+		        						); ?>">
+		        					<img src="components/com_thm_repo/img/download.png"></a>
+		 						<?php 
+								if (isset($_GET['downloadid']))
 								{
-									$id = $_POST['download'];
+									$id = $_GET['downloadid'];
 									$model->download($id);
 								}
-								?> 
+								?>  
 							<?php 
         					}
         					else

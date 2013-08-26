@@ -40,7 +40,7 @@ class THM_RepoModelFile extends JModelAdmin
 	 * 
 	 * @since   2.5
 	 */
-	public function getTable($type = 'File', $prefix = 'THM_RepoTable', $config = array())
+	public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -93,7 +93,7 @@ class THM_RepoModelFile extends JModelAdmin
 	public function getItem($pk = null)
 	{
 		$item = parent::getItem($pk);
-	
+		
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
 		if ($pk > 0)
@@ -231,7 +231,8 @@ class THM_RepoModelFile extends JModelAdmin
 			}
 						
 			// Add Path to Versiondata
-			$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
+			$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS .
+				$versiondata->id . "_" . $versiondata->version . "_" . $filename;
 			if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
 			{
 				return false;
@@ -265,7 +266,8 @@ class THM_RepoModelFile extends JModelAdmin
 			if ($filename)
 			{				
 				// Add Path to Versiondata
-				$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
+				$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS .
+					$versiondata->id . "_" . $versiondata->version . "_" . $filename;
 				if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
 				{
 					return false;

@@ -104,7 +104,7 @@ class THM_RepoModelFolder extends JModelAdmin
 		$db->transactionStart();
 		
 		// Root create
-		if ($folderdata->parent_id == null)
+		if ($folderdata->parent_id == null && $folderdata->id == null)
 		{
 			$folderdata->id = $table->id;
 			$folderdata->lft = 1;
@@ -302,5 +302,7 @@ class THM_RepoModelFolder extends JModelAdmin
 		$query->where("rgt > " . (int) $folderdata->rgt);
 		$db->setQuery($query);
 		$db->query();	
+		
+		return true;
 	}
 }

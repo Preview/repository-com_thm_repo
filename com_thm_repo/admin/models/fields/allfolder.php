@@ -38,21 +38,26 @@ class JFormFieldallFolder extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
+		// Create a new query object.
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('id,parent_id,name');
-		$query->from('#__thm_repo_folder');
+		
+		// Select all folders from folder table
+		$query->select('f.id, f.parent_id, f.name, COUNT(*)-1 AS level');
+		$query->from('#__thm_repo_folder AS f, #__thm_repo_folder AS p');
+		$query->where('f.lft BETWEEN p.lft AND p.rgt');
+		$query->group('f.lft');
+		$query->order('f.lft', 'ASC');
 		$db->setQuery((string) $query);
 		$messages = $db->loadObjectList();
 		$options = array();
-		$messages = $this->parentChildSort_r('id', 'parent_id', $messages);
 		if ($messages)
 		{
 			foreach ($messages as $message)
 			{	
 				$count = 0;
 				$prefix = '';
-				while ($count < $message->depth)
+				while ($count < $message->level)
 				{
 					$prefix .= '-';	
 					$count++;
@@ -64,36 +69,5 @@ class JFormFieldallFolder extends JFormFieldList
 		}
 		$options = array_merge(parent::getOptions(), $options);
 		return $options;
-	}
-
-	/**
-	 * sorts an array after parent, child, grandchild,...
-	 *
-	 * @param   string  $idField      The item's ID identifier (required)
-	 * @param   string  $parentField  The item's parent identifier (required)
-	 * @param   array   $els          The array (required)
-	 * @param   string  $parentID     The parent ID for which to sort (internal)
-	 * @param   array   &$result      The result set (internal)
-	 * @param   number  &$depth       The depth (internal)
-	 *
-	 * @return array sorted array
-	 */
-	public function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
-	{
-		foreach ($els as $key => $value):
-		if ($value->$parentField == $parentID)
-		{
-			$value->depth = $depth;
-			array_push($result, $value);
-			unset($els[$key]);
-			$oldParent = $parentID;
-			$parentID = $value->$idField;
-			$depth++;
-			$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
-			$parentID = $oldParent;
-			$depth--;
-		}
-		endforeach;
-		return $result;
 	}
 }

@@ -12,6 +12,7 @@
 // No direct access to this file
 defined('_JEXEC') or die();
 
+
  
 /**
  * Script file of THM_Repo component
@@ -19,7 +20,7 @@ defined('_JEXEC') or die();
  * @category  Joomla.Component.Admin
  * @package   com_thm_repo.admin
  */
-class THM_RepoInstallerScript
+class Com_THM_RepoInstallerScript
 {
 	/**
 	 * method to install the component
@@ -30,6 +31,7 @@ class THM_RepoInstallerScript
      */
 	public function install($parent)
 	{	
+		JFactory::getLanguage()->load('com_thm_repo');
 		$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
     	JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
 	}        

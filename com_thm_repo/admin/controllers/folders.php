@@ -24,6 +24,25 @@ jimport('joomla.application.component.controllerform');
 class THM_RepoControllerFolders extends JControllerForm
 {
 	/**
+	 * Call delete function
+	 * 
+	 * @return void
+	 */
+	public function delete()
+	{
+		$cid = JRequest::getVar('cid', array(), 'post', 'array');
+		$model = $this->getModel('folder');
+		if ($model->delete($cid))
+		{
+			$msg = JText::_('COM_THM_REPO_DELETE_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_DELETE_ERROR');
+		}
+		$this->setRedirect('index.php?option=com_thm_repo&view=folders', $msg);	
+	}
+	/**
 	 * Order up
 	 *
 	 * @return void

@@ -45,39 +45,28 @@ class JFormFieldFolder extends JFormFieldList
 		// Get current id
 		$id = JFactory::getApplication()->input->getInt('id');
 		
-		// Gets an entry with the current id
+		// Get lft and rgt from current id
 		$db = JFactory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('id,parent_id,name');
+		$query->select('lft, rgt');
 		$query->from('#__thm_repo_folder');
 		$query->where('id = ' . $id);
 		$db->setQuery((string) $query);
-		$result = $db->loadObjectList();
+		$currentfolder = $db->loadObject();
 		
-		// $allData => All Folders
-		$allData = $this->getAll();
-		
-		// $childData => Child Folders of the needed id
-		$childData = $this->getChilds($result);
-		
-		// Remove the childs that are in $childData from $allData
- 		if ($allData && $childData)
- 		{
-	 		foreach ($allData as $key => $allDat)
-	 		{
-	 			foreach ($childData as $childDat) 
-	 			{
-	 				if ($childDat->id == $allDat->id)
-	 				{
-	 					unset($allData[$key]);
-	 				}
-	 			}
-	 		}
- 		}
-
-		$messages = $this->parentChildSort_r('id', 'parent_id', $allData);
-		
-
+		// Select all folders from folder table
+		$query = $db->getQuery(true);
+		$query->select('f.id, f.parent_id, f.name, COUNT(*)-1 AS level');
+		$query->from('#__thm_repo_folder AS f, #__thm_repo_folder AS p');
+		$query->where('f.lft BETWEEN p.lft AND p.rgt');
+		if ($currentfolder != null)
+		{
+			$query->where('f.lft NOT BETWEEN ' . $currentfolder->lft . ' AND ' . $currentfolder->rgt);
+		}
+		$query->group('f.lft');
+		$query->order('f.lft', 'ASC');
+		$db->setQuery((string) $query);
+		$messages = $db->loadObjectList();
 
 		if ($messages)
 		{
@@ -88,7 +77,7 @@ class JFormFieldFolder extends JFormFieldList
 				{
 					$count = 0;
 					$prefix = '';
-					while ($count < $message->depth)
+					while ($count < $message->level)
 					{
 						$prefix .= '-';
 						$count++;
@@ -102,83 +91,4 @@ class JFormFieldFolder extends JFormFieldList
 		
 		return $options;
 	}
-	
-	/**
-	 * Creates a list with all childs, grandchilds, grandgrand..
-	 * 
-	 * @param   unknown  $parents  Childs of an id
-	 * 
-	 * @return multitype:|NULL
-	 */
-	public function getChilds($parents)
-	{
-		$results = array();
-
-		if ($parents)
-		{
-			foreach ($parents as $parent)
-			{
-				$db = JFactory::getDBO();
-				$query = $db->getQuery(true);
-				$query->select('id,parent_id,name');
-				$query->from('#__thm_repo_folder');
-				$query->where('parent_id = ' . $parent->id);
-				$db->setQuery((string) $query);
-				$childs = $db->loadObjectList();
-				$result = $this->getChilds($childs);
-				$results = array_merge((array) $results, (array) $childs, (array) $result);
-			}
-			return $results;
-		}
-		return null;
-	}	
-	
-	/**
-	 * Creates a List with all Folders
-	 * 
-	 * @return Returns an Array with all Folder elements
-	 */
-	protected function getAll()
-	{
-		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('id,parent_id,name');
-		$query->from('#__thm_repo_folder');
-		$db->setQuery((string) $query);
-		$result = $db->loadObjectList();
-		return $result;
-	}
-	
-	/**
-	 * sorts an array after parent, child, grandchild,...
-	 *
-	 * @param   string  $idField      The item's ID identifier (required)
-	 * @param   string  $parentField  The item's parent identifier (required)
-	 * @param   array   $els          The array (required)
-	 * @param   string  $parentID     The parent ID for which to sort (internal)
-	 * @param   array   &$result      The result set (internal)
-	 * @param   number  &$depth       The depth (internal)
-	 *
-	 * @return array sorted array
-	 */
-	public function parentChildSort_r($idField, $parentField, $els, $parentID = null, &$result = array(), &$depth = 0)
-	{
-		foreach ($els as $key => $value)
-		{
-			if ($value->$parentField == $parentID)
-			{
-				$value->depth = $depth;
-				array_push($result, $value);
-				unset($els[$key]);
-				$oldParent = $parentID;
-				$parentID = $value->$idField;
-				$depth++;
-				$this->parentChildSort_r($idField, $parentField, $els, $parentID, $result, $depth);
-				$parentID = $oldParent;
-				$depth--;
-			}
-		}
-		return $result;
-	}
-	
 }

@@ -239,7 +239,7 @@ class THM_RepoModelEntities extends JModelList
 		// Required for certain browsers
 		header("Content-Type: " . filetype($versiondata->path));
 		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=\"" . $versiondata->name . "\";");
+		header('Content-Disposition: attachment; filename=' . $versiondata->name . "." . JFile::getExt($versiondata->path));
 		header("Content-Transfer-Encoding: binary");
 		header("Content-Length: " . $versiondata->size);
 	
