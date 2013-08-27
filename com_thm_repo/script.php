@@ -35,4 +35,16 @@ class Com_THM_RepoInstallerScript
 		$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
     	JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
 	}        
+	
+	/**
+	 * Method to uninstall the component
+	 * 
+	 * @param   object  $parent  class calling this method
+	 * 
+	 * @return void
+	 */
+	public function uninstall($parent)
+	{
+		JFolder::delete(JPATH_ROOT . DS . "media" . DS . "com_thm_repo");	
+	}
 }
