@@ -67,6 +67,6 @@ class THM_RepoViewEntities extends JView
 	protected function addToolBar()
 	{
 		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_ENTITIES'));
-		JToolBarHelper::back();
+		JToolBarHelper::back('Back', 'index.php?option=com_thm_repo&view=folders');
 	}
 }

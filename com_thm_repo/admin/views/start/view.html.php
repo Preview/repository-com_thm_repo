@@ -16,16 +16,16 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 /**
- * THM_RepoViewVersions class for component com_thm_repo
+ * THM_RepoViewStart class for component com_thm_repo
  *
  * @category  Joomla.Component.Admin
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
 */
-class THM_RepoViewVersions extends JView
+class THM_RepoViewStart extends JView
 {
 	/**
-	 * Folders view display method
+	 * Links view display method
 	 * 
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
@@ -33,23 +33,6 @@ class THM_RepoViewVersions extends JView
 	 */
 	public function display($tpl = null)
 	{
-		// Get data from the model
-		$items = $this->get('Items');
-		$pagination = $this->get('Pagination');
-		$state = $this->get('State');
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
-		// Assign data to the view
-		$this->items = $items;
-		$this->pagination = $pagination;
-		$this->sortDirection = $state->get('list.direction');
-		$this->sortColumn = $state->get('list.ordering');
-
 		// Set the toolbar
 		$this->addToolBar();
 
@@ -64,7 +47,6 @@ class THM_RepoViewVersions extends JView
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_VERSIONS'));
-		JToolBarHelper::back('Back', 'index.php?option=com_thm_repo&view=files');
+		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_START'));
 	}
 }
