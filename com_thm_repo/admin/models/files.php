@@ -145,4 +145,27 @@ class THM_RepoModelFiles extends JModelList
 		readfile($versiondata->path);
 	}
 	
+	/**
+	 * Counts the versions of a file
+	 *
+	 * @param   int  $id  ID of the file
+	 *
+	 * @return string The number of Versions
+	 */
+	public function countVersions($id)
+	{
+		// GetDBO
+		$db = JFactory::getDBO();
+	
+		// Get current Versionnumber of file
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*) AS versions');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadResult();
+	
+		return $result;
+	}
+	
 }

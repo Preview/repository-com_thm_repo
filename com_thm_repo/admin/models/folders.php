@@ -231,4 +231,27 @@ class THM_RepoModelFolders extends JModelList
 		}
 		return true;
 	}
+	
+	/**
+	 * Counts the entities in a folder
+	 * 
+	 * @param   int  $id  ID of the folder
+	 * 
+	 * @return string The number of Entities in a Folder
+	 */
+	public function countEntities($id)
+	{
+		// GetDBO
+		$db = JFactory::getDBO();
+	
+		// Get current Versionnumber of file
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*) AS entities');
+		$query->from('#__thm_repo_entity');
+		$query->where('parent_id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadResult();
+	
+		return $result;
+	}
 }

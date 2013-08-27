@@ -73,7 +73,7 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         				<td><input type=button 
         						onClick=
         							"location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=versions&id=' . (int) $item->id); ?>'" 
-        						value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS'); ?>'></td>
+        						value='<?php echo JText::_('COM_THM_REPO_VIEW_VERSIONS') . " (" . $model->countVersions($item->id) . ")"; ?>'></td>
         			</tr>
 				<?php
         		}
