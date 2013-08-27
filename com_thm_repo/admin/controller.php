@@ -35,12 +35,13 @@ class THM_RepoController extends JController
 	{
 		// Set default view if not set
 		$input = JFactory::getApplication()->input;
-		$input->set('view', $input->getCmd('view', 'folders'));
+		$input->set('view', $input->getCmd('view', 'start'));
 		
 		
 		// Submenu
 		$vName = JRequest::getWord('view', 'thm_repo');
 		
+		JsubMenuHelper::addEntry(JText::_('COM_THM_REPO_START'), 'index.php?option=com_thm_repo&view=start', $vName == 'start');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FOLDERMANAGER'), 'index.php?option=com_thm_repo&view=folders', $vName == 'folders');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FILEMANAGER'),  'index.php?option=com_thm_repo&view=files', $vName == 'files');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');

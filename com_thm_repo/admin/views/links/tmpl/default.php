@@ -18,6 +18,19 @@ JHtml::_('behavior.tooltip');
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=links'); ?>" method="post" name="adminForm" id="adminForm">
+	<fieldset id="filter-bar">
+    	<div class="filter-search fltlft">
+        	<input type="text" name="filter_search" id="filter_search" 
+        		value="<?php echo $this->escape($this->searchterms); ?>" 
+        		title="<?php echo JText::_('COM_THM_REPO_SEARCH_NAME'); ?>" />
+            <button type="submit">
+            	<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>
+			</button>
+            <button type="button" onclick="document.id('filter_search').value='';this.form.submit();">
+                <?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>
+            </button>
+        </div>   
+	</fieldset> 
        <table class="adminlist">
         	<thead>
         		<tr>

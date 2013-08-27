@@ -49,6 +49,8 @@ class THM_RepoViewLinks extends JView
 		$this->pagination = $pagination;
 		$this->sortDirection = $state->get('list.direction');
 		$this->sortColumn = $state->get('list.ordering');
+		$this->searchterms = $state->get('filter.search');
+		
 
 		// Set the toolbar
 		$this->addToolBar();

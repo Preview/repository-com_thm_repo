@@ -46,6 +46,13 @@ class THM_RepoModelLinks extends JModelList
 		$query->join('INNER', '#__viewlevels AS v on e.viewlevel = v.id');
 		$query->join('LEFT', '#__thm_repo_folder AS f on e.parent_id = f.id');
 		
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			$s = $db->quote('%' . $db->escape($search, true) . '%');
+			$query->where('l.name LIKE' . $s);
+		}
+		
 		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 		
 		return $query;
@@ -62,6 +69,12 @@ class THM_RepoModelLinks extends JModelList
 	 */
 	protected function populateState($ordering = 'e.id', $direction = 'ASC') 
 	{
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context . ' . filter.search', 'filter_search');
+		
+		// Omit double (white-)spaces and set state
+		$this->setState('filter.search', preg_replace('/\s+/', ' ', $search));
+		
 		parent::populateState($ordering, $direction);
 	}
 	

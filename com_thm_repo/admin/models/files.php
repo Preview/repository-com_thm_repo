@@ -53,7 +53,13 @@ class THM_RepoModelFiles extends JModelList
 	 * @return	populatestate
 	 */
 	protected function populateState($ordering = 'e.id', $direction = 'ASC')
-	{
+	{		
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context . ' . filter.search', 'filter_search');
+		
+		// Omit double (white-)spaces and set state
+		$this->setState('filter.search', preg_replace('/\s+/', ' ', $search));
+		
 		// List state information.
 		parent::populateState($ordering, $direction);
 	}
@@ -79,8 +85,14 @@ class THM_RepoModelFiles extends JModelList
 		$query->join('INNER', '#__viewlevels AS vi on e.viewlevel = vi.id');
 		$query->join('LEFT', '#__thm_repo_folder AS fo on e.parent_id = fo.id');
 		
+		$search = $this->getState('filter.search');
+		if (!empty($search)) 
+		{
+			$s = $db->quote('%' . $db->escape($search, true) . '%');
+			$query->where('ve.name LIKE' . $s);
+		}
 		
-		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));		
 		
 		return $query;
 	}

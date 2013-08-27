@@ -53,6 +53,12 @@ class THM_RepoModelEntities extends JModelList
 		{
 			$query->where('e.parent_id = ' . $id);
 		}
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			$s = $db->quote('%' . $db->escape($search, true) . '%');
+			$query->where('ve.name LIKE' . $s . 'OR l.name LIKE' . $s);
+		}
 
 		
 		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
@@ -71,6 +77,13 @@ class THM_RepoModelEntities extends JModelList
 	 */
 	protected function populateState($ordering = 'e.id', $direction = 'ASC') 
 	{
+		
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context . ' . filter.search', 'filter_search');
+		
+		// Omit double (white-)spaces and set state
+		$this->setState('filter.search', preg_replace('/\s+/', ' ', $search));
+		
 		parent::populateState($ordering, $direction);
 	}
 	

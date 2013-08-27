@@ -25,11 +25,12 @@
 
 
 	<administration>
-		<menu>COM_THM_REPO</menu>
+		<menu img="components/com_thm_repo/img/icon-16-staff.png">COM_THM_REPO</menu>
 		<submenu>
-			<menu link="option=com_thm_repo&amp;view=files" view="files" alt="THM_repo/files">COM_THM_FILES</menu>
-			<menu link="option=com_thm_repo&amp;view=folders" view="folders" alt="THM_repo/folders">COM_THM_FOLDERS</menu>
-			<menu link="option=com_thm_repo&amp;view=links" view="links" alt="THM_repo/links">COM_THM_LINKS</menu>
+			<menu link="option=com_thm_repo&amp;view=start" img="components/com_thm_repo/img/icon-16-staff.png" view="start" alt="THM_repo/start">COM_THM_REPO_START</menu>
+			<menu link="option=com_thm_repo&amp;view=folders" img="components/com_thm_repo/img/icon-16-staff.png" view="folders" alt="THM_repo/folders">COM_THM_REPO_FOLDERMANAGER</menu>
+			<menu link="option=com_thm_repo&amp;view=files" img="components/com_thm_repo/img/icon-16-staff.png" view="files" alt="THM_repo/files">COM_THM_REPO_FILEMANAGER</menu>
+			<menu link="option=com_thm_repo&amp;view=links" img="components/com_thm_repo/img/icon-16-staff.png" view="links" alt="THM_repo/links">COM_THM_REPO_LINKMANAGER</menu>
 		</submenu>
 		<files folder="admin">
 			<filename>index.html</filename>
@@ -38,6 +39,7 @@
 			<filename>controller.php</filename>
 			<filename>thm_repo.php</filename>
 			<folder>controllers</folder>
+			<folder>css</folder>
 			<folder>models</folder>
 			<folder>img</folder>
 			<folder>tables</folder>

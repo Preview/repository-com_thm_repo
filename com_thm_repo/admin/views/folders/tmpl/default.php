@@ -74,7 +74,7 @@ JHtml::_('behavior.tooltip');
 								disabled="disabled" class="text-area-order" />
 							<?php $originalOrders[] = $orderkey + 1; ?>
 						</td>
-			        	<td><input type=button 
+			        	<td align="center"><input type=button 
 			        		onClick="location.href='<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $item->id); ?>'" 
 			        		value='<?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?>'>
 			        	</td>		        				
