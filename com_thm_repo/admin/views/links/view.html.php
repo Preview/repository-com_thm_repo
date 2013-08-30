@@ -66,7 +66,10 @@ class THM_RepoViewLinks extends JView
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_LINKS'));
+		$document = JFactory::getDocument();
+		$document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
+		
+		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_LINKS'), 'links.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-links.png');
 		JToolBarHelper::deleteList('', 'links.delete');
 		JToolBarHelper::editList('link.edit');
 		JToolBarHelper::addNew('link.add');

@@ -72,9 +72,15 @@ class THM_RepoViewFolders extends JView
 	 */
 	protected function addToolBar()
 	{
+		
+		$document = JFactory::getDocument();
+		$document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
+		
 		$user = JFactory::getUser();
 
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_FOLDERS'));
+		JToolBarHelper::title(
+			JText::_('COM_THM_REPO_MANAGER_FOLDERS'), 'folders.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-folders.png'
+		);
 		if ($user->authorise('core.delete', 'com_thm_repo'))
 		{
 			JToolBarHelper::deleteList('', 'folders.delete');

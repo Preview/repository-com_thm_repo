@@ -25,12 +25,12 @@
 
 
 	<administration>
-		<menu img="components/com_thm_repo/img/icon-16-staff.png">COM_THM_REPO</menu>
+		<menu img="components/com_thm_repo/img/icon-16-repo.png">COM_THM_REPO</menu>
 		<submenu>
-			<menu link="option=com_thm_repo&amp;view=start" img="components/com_thm_repo/img/icon-16-staff.png" view="start" alt="THM_repo/start">COM_THM_REPO_START</menu>
-			<menu link="option=com_thm_repo&amp;view=folders" img="components/com_thm_repo/img/icon-16-staff.png" view="folders" alt="THM_repo/folders">COM_THM_REPO_FOLDERMANAGER</menu>
-			<menu link="option=com_thm_repo&amp;view=files" img="components/com_thm_repo/img/icon-16-staff.png" view="files" alt="THM_repo/files">COM_THM_REPO_FILEMANAGER</menu>
-			<menu link="option=com_thm_repo&amp;view=links" img="components/com_thm_repo/img/icon-16-staff.png" view="links" alt="THM_repo/links">COM_THM_REPO_LINKMANAGER</menu>
+			<menu link="option=com_thm_repo&amp;view=start" img="components/com_thm_repo/img/icon-16-repo.png" view="start" alt="THM_repo/start">COM_THM_REPO_START</menu>
+			<menu link="option=com_thm_repo&amp;view=folders" img="components/com_thm_repo/img/icon-16-folders.png" view="folders" alt="THM_repo/folders">COM_THM_REPO_FOLDERMANAGER</menu>
+			<menu link="option=com_thm_repo&amp;view=files" img="components/com_thm_repo/img/icon-16-files.png" view="files" alt="THM_repo/files">COM_THM_REPO_FILEMANAGER</menu>
+			<menu link="option=com_thm_repo&amp;view=links" img="components/com_thm_repo/img/icon-16-links.png" view="links" alt="THM_repo/links">COM_THM_REPO_LINKMANAGER</menu>
 		</submenu>
 		<files folder="admin">
 			<filename>index.html</filename>

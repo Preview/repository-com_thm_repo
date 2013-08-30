@@ -66,7 +66,10 @@ class THM_RepoViewFiles extends JView
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_FILES'));
+		$document = JFactory::getDocument();
+		$document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
+		
+		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_FILES'), 'files.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-files.png');
 		JToolBarHelper::deleteList('', 'files.delete');
 		JToolBarHelper::editList('file.edit');
 		JToolBarHelper::addNew('file.add');

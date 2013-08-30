@@ -47,6 +47,9 @@ class THM_RepoViewStart extends JView
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_START'));
+		$document = JFactory::getDocument();
+		$document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
+		
+		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_START'), 'repo.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-repo.png');	
 	}
 }
