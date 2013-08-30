@@ -32,8 +32,15 @@ class Com_THM_RepoInstallerScript
 	public function install($parent)
 	{
 		$uploadPath = JPATH_ROOT . DS . 'media' . DS . 'com_thm_repo';
+		$htAccessPath = $uploadPath . DS . '.htaccess';
 
 		JFolder::create($uploadPath);
+
+		$htContent = 'deny from all';
+
+		JFile::write($htAccessPath, $htContent, true);
+
+
 		JFactory::getLanguage()->load('com_thm_repo');
 		$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
     		JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
@@ -51,4 +58,5 @@ class Com_THM_RepoInstallerScript
 		$uploadPath = JPATH_ROOT . DS . 'media' . DS . 'com_thm_repo';
 		JFolder::delete($uploadPath);
 	}
+
 }
