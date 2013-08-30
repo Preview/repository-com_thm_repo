@@ -26,7 +26,7 @@ $ordering 	= ($listOrder == 'f.lft');
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_thm_repo'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=folders'); ?>" method="post" name="adminForm" id="adminForm">
         <table class="adminlist">
         	<thead>
         		<tr>
