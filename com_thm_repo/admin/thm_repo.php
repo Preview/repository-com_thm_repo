@@ -13,6 +13,8 @@
 // No direct access to this file
 defined('_JEXEC') or die;
 
+JError::$legacy = false;
+
 // Include dependancies
 jimport('joomla.application.component.controller');
 
