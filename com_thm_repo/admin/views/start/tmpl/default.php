@@ -42,7 +42,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 
 	<div class="menuitem">
 		<div class="icon"
-			onclick="location.href='index.php?option=com_thm_groups&view=files';">
+			onclick="location.href='index.php?option=com_thm_repo&view=files';">
 			<div class="picture2">
 				<img src="components/com_thm_repo/img/icon-48-files.png"
 					alt="File Manager" />
@@ -52,7 +52,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 	</div>
 	<div class="menuitem">
 		<div class="icon"
-			onclick="location.href='index.php?option=com_thm_groups&view=links';">
+			onclick="location.href='index.php?option=com_thm_repo&view=links';">
 			<div class="picture2">
 				<img src="components/com_thm_repo/img/icon-48-links.png"
 					alt="Link Manager" />
