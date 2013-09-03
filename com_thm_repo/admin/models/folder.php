@@ -291,7 +291,21 @@ class THM_RepoModelFolder extends JModelAdmin
 			
 		// GetDBO
 		$db = JFactory::getDBO();
-		
+
+		// Check have child
+		$entitiesQuery = $db->getQuery(true);
+		$entitiesQuery
+			->select('e.id')
+			->from('#__thm_repo_entity e')
+			->where("e.parent_id = $id");
+		$entityResult = $db->setQuery($entitiesQuery)->loadAssoc();
+
+		if (!empty($entityResult))
+		{
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_FOLDER_CONTAINS_ENTITIES'));
+			return false;
+		}
+
 		// Get Data
 		$query = $db->getQuery(true);
 		$query->select('*');
