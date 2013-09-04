@@ -82,6 +82,13 @@ class THM_RepoModelFolder extends JModelAdmin
 		return $data;
 	}
 
+	/**
+	 * @param JForm $form
+	 * @param array $data
+	 * @param null  $group
+	 *
+	 * @return bool|mixed
+	 */
 	public function validate($form, $data, $group = null)
 	{
 		$folderData = (object) $data;
