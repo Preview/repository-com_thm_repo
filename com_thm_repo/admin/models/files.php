@@ -142,7 +142,7 @@ class THM_RepoModelFiles extends JModelList
 		header("Content-Length: " . $versiondata->size);
 		
 		/* download file */
-		readfile($versiondata->path);
+		readfile(JPATH_ROOT . $versiondata->path);
 	}
 	
 	/**

@@ -258,6 +258,6 @@ class THM_RepoModelEntities extends JModelList
 	
 		/* download file */
 		// 		flush();
-		readfile($versiondata->path);
+		readfile(JPATH_ROOT . $versiondata->path);
 	}
 }

@@ -155,6 +155,6 @@ class THM_RepoModelVersions extends JModelList
 	
 		/* download file */
 // 		flush();
-		readfile($versiondata->path);
+		readfile(JPATH_ROOT . $versiondata->path);
 	}
 }

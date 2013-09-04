@@ -231,7 +231,7 @@ class THM_RepoModelFile extends JModelAdmin
 			}
 						
 			// Add Path to Versiondata
-			$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS .
+			$versiondata->path = DS . "media" . DS . "com_thm_repo" . DS .
 				$versiondata->id . "_" . $versiondata->version . "_" . $filename;
 			if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
 			{
@@ -266,7 +266,7 @@ class THM_RepoModelFile extends JModelAdmin
 			if ($filename)
 			{				
 				// Add Path to Versiondata
-				$versiondata->path = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS .
+				$versiondata->path = DS . "media" . DS . "com_thm_repo" . DS .
 					$versiondata->id . "_" . $versiondata->version . "_" . $filename;
 				if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
 				{
