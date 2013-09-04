@@ -44,15 +44,23 @@ class JFormFieldFolder extends JFormFieldList
 		
 		// Get current id
 		$id = JFactory::getApplication()->input->getInt('id');
-		
-		// Get lft and rgt from current id
 		$db = JFactory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select('lft, rgt');
-		$query->from('#__thm_repo_folder');
-		$query->where('id = ' . $id);
-		$db->setQuery((string) $query);
-		$currentfolder = $db->loadObject();
+
+		if ($id != null)
+		{
+			// Get lft and rgt from current id
+			$query = $db->getQuery(true);
+			$query->select('lft, rgt');
+			$query->from('#__thm_repo_folder');
+			$query->where('id = ' . $id);
+			$db->setQuery((string) $query);
+			$currentfolder = $db->loadObject();
+		}
+		else
+		{
+			$currentfolder = null;
+		}
+
 		
 		// Select all folders from folder table
 		$query = $db->getQuery(true);
