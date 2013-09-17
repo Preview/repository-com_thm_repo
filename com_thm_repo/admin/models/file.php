@@ -324,14 +324,6 @@ class THM_RepoModelFile extends JModelAdmin
 		// GetDBO
 		$db = JFactory::getDBO();
 		
-		// Get Data
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__thm_repo_entity');
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		$filedata = $db->loadObject();
-		
 		// Delete Version files
 		$query = $db->getQuery(true);
 		$query->select('path');
@@ -345,7 +337,7 @@ class THM_RepoModelFile extends JModelAdmin
 			foreach ($versions as $version)
 			{	
 				// Delete every Version File from deleted File
-				JFile::delete($version->path);
+				JFile::delete(JPATH_ROOT . $version->path);
 			}
 		}
 		
@@ -369,18 +361,19 @@ class THM_RepoModelFile extends JModelAdmin
 			return false;
 		}
 		
-		$table = JTable::getInstance('Entity', 'THM_RepoTable');
-		if (!$table->delete($id))
+		// Delete Entity record
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__thm_repo_entity'));
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		if (!($db->query()))
 		{
 			return false;
 		}
-	
+		
 		// Delete asset entry
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__assets'));
-		$query->where('id = ' . (int) $filedata->asset_id);
-		$db->setQuery($query);
-		if (!($db->query()))
+		$table = JTable::getInstance('Entity', 'THM_RepoTable');
+		if (!$table->delete($id))
 		{
 			return false;
 		}

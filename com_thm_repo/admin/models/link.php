@@ -228,26 +228,10 @@ class THM_RepoModelLink extends JModelAdmin
 		// GetDBO
 		$db = JFactory::getDBO();
 		
-		// Get Data
+		// Delete link record
 		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__thm_repo_entity');
+		$query->delete($db->quoteName('#__thm_repo_link'));
 		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		$linkdata = $db->loadObject();
-		
-		$table = JTable::getInstance('Entity', 'THM_RepoTable');
-		if (!$table->delete($id))
-		{
-			return false;
-		}
-		
-		
-
-		// Delete asset entry
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__assets'));
-		$query->where('id = ' . (int) $linkdata->asset_id);
 		$db->setQuery($query);
 		if (!($db->query()))
 		{
@@ -263,6 +247,14 @@ class THM_RepoModelLink extends JModelAdmin
 		{
 			return false;
 		}
+		
+		// Delete asset entry
+		$table = JTable::getInstance('Entity', 'THM_RepoTable');
+		if (!$table->delete($id))
+		{
+			return false;
+		}
+		
 		return true;
 	}
 }
