@@ -321,25 +321,24 @@ class THM_RepoModelFolder extends JModelAdmin
 		$db->setQuery($query);
 		$folderdata = $db->loadObject();
 		
+		// Delete folder entry
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__thm_repo_folder'));
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		if (!($db->query()))
+		{
+			return false;
+		}
+		
+		// Delete asset entry
  		$table = JTable::getInstance('Folder', 'THM_RepoTable');
  		if (!$table->delete($id))
  		{
  			return false;
  		}
-		
-		
-		// Delete asset entry
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__assets'));
-		$query->where('id = ' . (int) $folderdata->asset_id);
-		$db->setQuery($query);
-		if (!($db->query()))
-		{
-			return false;
-		}	
-	
-		
-		
+				
+		// Update nested set
 		$query = $db->getQuery(true);
 		$query->update('#__thm_repo_folder');
 		$query->set('lft = lft - 2');
