@@ -23,6 +23,7 @@ $id = JRequest::getVar('id');
 $listOrder	= $this->sortColumn;
 $listDirn	= $this->sortDirection;
 $saveOrder	= $listOrder == 'e.ordering';
+$user = JFactory::getUser();
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $id); ?>" method="post" name="adminForm" id="adminForm">
@@ -45,6 +46,7 @@ $saveOrder	= $listOrder == 'e.ordering';
         			<th></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'e.id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'name', $this->sortDirection, $this->sortColumn); ?></th>
+         			<th><?php echo JText::_('COM_THM_REPO_VIEW_PUBLISHED'); ?></th>        			
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_TYPE', 'path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ENTITIES', 'path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'v.title', $this->sortDirection, $this->sortColumn); ?></th>
@@ -66,6 +68,7 @@ $saveOrder	= $listOrder == 'e.ordering';
         		foreach ($this->items as $i => $item)
         		{
         		?>
+   					<?php $canChange = $user->authorise('core.edit', 'com_content.entity.' . $item->id);?>     		
         			<?php $ordering	= $listOrder == 'e.ordering'; ?>
         		
         			<tr class="row<?php echo $i % 2; ?>">
@@ -76,6 +79,9 @@ $saveOrder	= $listOrder == 'e.ordering';
         					: JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
         					<?php echo $item->lname; ?>
         					<?php echo $item->vename; ?></a></td>
+        				<td align="center">
+        					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'entities.', $canChange); ?>					
+        				</td>        					
         				<td align="center">
         					<?php 
         					if ($item->path)

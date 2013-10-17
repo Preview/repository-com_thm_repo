@@ -39,6 +39,7 @@ class THM_RepoModelFile extends JModelAdmin
 	 * @return  JTable  A database object
 	 * 
 	 * @since   2.5
+
 	 */
 	public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
 	{
@@ -188,6 +189,7 @@ class THM_RepoModelFile extends JModelAdmin
 		$entitydata->viewlevel = $data['viewlevel'];
 		$entitydata->created = $data['created'];
 		$entitydata->created_by = $data['created_by'];
+		$entitydata->published = $data['published'];
 		
 		// Assign version data
 		$versiondata->id = $data['id'];

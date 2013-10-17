@@ -73,7 +73,15 @@
 			type="file" 
 			label="COM_THM_REPO_FILE_UPLOAD" 
 			description="COM_THM_REPO_FILE_UPLOAD_DESC" 
-		/>		
+		/>	
+		<field 
+			name="published" 
+			type="checkbox" 
+			value="1"
+			default="1"
+			label="COM_THM_REPO_FILE_PUBLISHED" 
+			description="COM_THM_REPO_FILE_PUBLISHED_DESC" 
+		/>	
 	</fieldset>
 		<fieldset name="accesscontrol">
 		<field 

@@ -21,7 +21,7 @@ $span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&m
 $listOrder	= $this->sortColumn;
 $listDirn	= $this->sortDirection;
 $ordering 	= ($listOrder == 'f.lft');
-
+$user = JFactory::getUser();
 
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
@@ -33,6 +33,7 @@ JHtml::_('behavior.tooltip');
         			<th></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ID'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_NAME'); ?></th>
+          			<th><?php echo JText::_('COM_THM_REPO_VIEW_PUBLISHED'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_VIEWLEVEL'); ?></th>
         			<th width="10%"><?php echo JText::_('JGRID_HEADING_ORDERING'); ?></th>
         			<th><?php echo JText::_('COM_THM_REPO_VIEW_ENTITIES'); ?></th>  
@@ -44,6 +45,7 @@ JHtml::_('behavior.tooltip');
 	        	foreach ($this->items as $i => $item) 
 	        	{
 	        	?>
+					<?php $canChange = $user->authorise('core.edit', 'com_content.folder.' . $item->id);?>  
 	        		<?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
 	        		<?php $count = 0; ?>
 	        		<tr class="row<?php echo $i % 2; ?>">
@@ -60,6 +62,9 @@ JHtml::_('behavior.tooltip');
 			        		?>
 			        		<a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=folder.edit&id=' . (int) $item->id); ?>">
 			        		<?php echo $item->name; ?></a></td>
+        				<td align="center">
+        					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'folders.', $canChange); ?>					
+        				</td>
 			        	<td><?php echo $item->title; ?></td>
 						<td class="order">
 							<span>

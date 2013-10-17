@@ -83,4 +83,49 @@ class THM_RepoControllerFolders extends JControllerForm
 		$this->setRedirect('index.php?option=com_thm_repo&view=folders', $msg);
 	}
 	
+	/**
+	 * Publish folder
+	 * 
+	 * @return void
+	 */
+	public function publish()
+	{
+		global $option;
+		$cid = JRequest::getVar('cid', array(), 'request', 'array');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_repo' . DS . 'tables');		
+		$row =& JTable::getInstance('folder', 'THM_RepoTable');
+		
+		if ($this->getTask() == 'publish')
+		{
+			$publish = 1;
+		}
+		$row->publish($cid, $publish);		
+		$msg = JText::_('COM_THM_REPO_N_ITEMS_PUBLISHED');
+		
+		$this->setRedirect('index.php?option=com_thm_repo&view=folders', $msg);
+	}
+	
+	/**
+	 * Unpublish folder
+	 * 
+	 * @return void
+	 */
+	public function unpublish()
+	{
+		global $option;
+		$cid = JRequest::getVar('cid', array(), 'request', 'array');
+		JTable::addIncludePath(JPATH_ADMINISTRATOR . DS . 'components' . DS . 'com_thm_repo' . DS . 'tables');
+		$row =& JTable::getInstance('folder', 'THM_RepoTable');
+	
+		if ($this->getTask() == 'unpublish')
+		{
+			$publish = 0;
+		}
+		$row->publish($cid, $publish);
+		$msg = JText::_('COM_THM_REPO_N_ITEMS_PUBLISHED');
+		
+	
+		$this->setRedirect('index.php?option=com_thm_repo&view=folders', $msg);
+	}
+	
 }

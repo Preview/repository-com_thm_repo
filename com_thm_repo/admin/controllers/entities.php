@@ -12,7 +12,7 @@
 defined('_JEXEC') or die;
  
 // Import Joomla controlleradmin library
-jimport('joomla.application.component.controllerform');
+jimport('joomla.application.component.controlleradmin');
 
  
 /**
@@ -22,8 +22,22 @@ jimport('joomla.application.component.controllerform');
  * @package   thm_repo
  * 
  */
-class THM_RepoControllerEntities extends JControllerForm
+class THM_RepoControllerEntities extends JControllerAdmin
 {
+	/**
+	 * Returns the Model (proxy)
+	 *
+	 * @param   string  $name    Model name
+	 * @param   string  $prefix  Model prefix
+	 *
+	 * @return  JModel
+	 */
+	public function getModel($name = 'Entity', $prefix = 'THM_RepoModel')
+	{
+		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+		return $model;
+	}
+	
 	/**
 	 * Save order
 	 *

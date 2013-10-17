@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 // Load tooltip behavior
 JHtml::_('behavior.tooltip');
 
-
+$user = JFactory::getUser();
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=links'); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
@@ -37,6 +37,7 @@ JHtml::_('behavior.tooltip');
         			<th></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'e.id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 'l.name', $this->sortDirection, $this->sortColumn); ?></th>
+         			<th><?php echo JText::_('COM_THM_REPO_VIEW_PUBLISHED'); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'f.parent', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_LINK', 'l.link', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'v.title', $this->sortDirection, $this->sortColumn); ?></th>
@@ -48,10 +49,14 @@ JHtml::_('behavior.tooltip');
         		foreach ($this->items as $i => $item) 
         		{
 				?>
+					<?php $canChange = $user->authorise('core.edit', 'com_content.entity.' . $item->id);?>
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
            				<td><?php echo $item->name; ?></td>
+        				<td align="center">
+        					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'links.', $canChange); ?>					
+        				</td>
             			<td><?php echo $item->parent; ?></td>
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=link.edit&id=' . (int) $item->id); ?>">
         				<?php echo $item->link; ?></a></td>

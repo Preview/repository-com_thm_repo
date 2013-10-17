@@ -17,6 +17,8 @@ JHtml::_('behavior.tooltip');
 
 // Get Model Functions
 $model = JModel::getInstance('files', 'THM_RepoModel');
+
+$user = JFactory::getUser();
 ?>
 
 
@@ -40,6 +42,7 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         			<th></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_ID', 'e.id', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_NAME', 've.name', $this->sortDirection, $this->sortColumn); ?></th>
+        			<th><?php echo JText::_('COM_THM_REPO_VIEW_PUBLISHED'); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_FOLDER', 'fo.parent', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_PATH', 've.path', $this->sortDirection, $this->sortColumn); ?></th>
         			<th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'vi.title', $this->sortDirection, $this->sortColumn); ?></th>
@@ -51,10 +54,14 @@ $model = JModel::getInstance('files', 'THM_RepoModel');
         		<?php 
         		foreach ($this->items as $i => $item)
         		{ ?>
+        			<?php $canChange = $user->authorise('core.edit', 'com_content.entity.' . $item->id);?>
         			<tr class="row<?php echo $i % 2; ?>">
         				<td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
         				<td><?php echo $item->id; ?></td>
         				<td><?php echo $item->name; ?></td>
+        				<td align="center">
+        					<?php echo JHtml::_('jgrid.published', $item->published, $i, 'files.', $canChange); ?>					
+        				</td>
          				<td><?php echo $item->parent; ?></td>
         				<td><a href="<?php echo JRoute::_('index.php?option=com_thm_repo&task=file.edit&id=' . (int) $item->id); ?>">
         					<?php echo $item->path; ?></a></td>

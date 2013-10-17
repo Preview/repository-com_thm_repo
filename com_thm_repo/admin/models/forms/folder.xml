@@ -80,5 +80,13 @@
 			component="com_thm_repo"
 			section="folder" 
 		/>
+		<field 
+			name="published" 
+			type="checkbox" 
+			value="1"
+			default="1"
+			label="COM_THM_REPO_FOLDER_PUBLISHED" 
+			description="COM_THM_REPO_FOLDER_PUBLISHED_DESC" 
+		/>
 	</fieldset>
 </form>

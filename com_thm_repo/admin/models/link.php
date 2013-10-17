@@ -165,6 +165,7 @@ class THM_RepoModelLink extends JModelAdmin
 		$entitydata->viewlevel = $data['viewlevel'];
 		$entitydata->created = $data['created'];
 		$entitydata->created_by = $data['created_by'];
+		$entitydata->published = $data['published'];
 			
 		// GetDBO
 		$db = JFactory::getDBO();

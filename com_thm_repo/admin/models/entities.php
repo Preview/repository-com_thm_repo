@@ -39,7 +39,7 @@ class THM_RepoModelEntities extends JModelList
 		
 		
 		// Select some fields
-		$query->select('e.id AS id, ve.name as vename, l.link, l.name as lname, ve.path, vi.title, e.ordering');
+		$query->select('e.id AS id, ve.name as vename, l.link, l.name as lname, ve.path, vi.title, e.ordering, e.published');
 		
 		// From the entity table
 		$query->from('#__thm_repo_entity AS e');

@@ -26,6 +26,9 @@ JHtml::_('behavior.tooltip');
       		<li><?php echo $this->form->getLabel('parent_id'); ?>
       			<?php echo $this->form->getInput('parent_id'); ?>
       		</li>
+       		<li><?php echo $this->form->getLabel('published'); ?>
+      			<?php echo $this->form->getInput('published'); ?>
+      		</li>
       		<li><?php echo $this->form->getLabel('viewlevel'); ?>
       			<?php echo $this->form->getInput('viewlevel'); ?>
       		</li>
