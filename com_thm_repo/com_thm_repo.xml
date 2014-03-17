@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="0.1" method="upgrade">
 	<name>COM_THM_Repo</name>
-	<author>Stefan Schneider</author>
+	<author>THM ICampus</author>
 	<creationDate>2013-06-03</creationDate>
 	<copyright>TH Mittelhessen 2013</copyright>
 	<licence>GNU GPL v.2</licence>
