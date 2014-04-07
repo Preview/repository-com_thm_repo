@@ -21,7 +21,7 @@ jimport('joomla.application.component.view');
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
 */
-class THM_RepoViewLink extends JView
+class THM_RepoViewLink extends JViewLegacy
 {
 	/**
 	 * Files view display method
@@ -39,7 +39,7 @@ class THM_RepoViewLink extends JView
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
-			JError::raiseError(500, implode('<br />', $errors));
+            JFactory::getApplication()->enqueueMessage(implode('<br />', $errors), 'error');
 			return false;
 		}
 		// Assign the Data

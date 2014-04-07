@@ -22,7 +22,7 @@ jimport('joomla.application.component.view');
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
 */
-class THM_RepoViewStart extends JView
+class THM_RepoViewStart extends JViewLegacy
 {
 	/**
 	 * Links view display method

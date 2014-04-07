@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 // Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
+jimport('joomla.filesystem.file');
 
 /**
  * THM_RepoModelFile class for component com_thm_repo
@@ -39,7 +40,6 @@ class THM_RepoModelFile extends JModelAdmin
 	 * @return  JTable  A database object
 	 * 
 	 * @since   2.5
-
 	 */
 	public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
 	{
@@ -82,7 +82,6 @@ class THM_RepoModelFile extends JModelAdmin
 		}
 		return $data;
 	}
-	  
 
   	/**
   	 * Method to get a single record.
@@ -160,8 +159,10 @@ class THM_RepoModelFile extends JModelAdmin
 		$table->save($data);
 		
 		// Retrieve file details from uploaded file, sent from adminForm form
-		$file = JRequest::getVar('file', null, 'files', 'array');
-		
+		// $file = JRequest::getVar('file', null, 'files', 'array'); // TODO: remove
+
+        $file = JFactory::getApplication()->input->files->get('file', null);;
+
 		// Clean up filename to get rid of strange characters like spaces etc
 		$filename = JFile::makeSafe($file['name']);
 
@@ -180,10 +181,14 @@ class THM_RepoModelFile extends JModelAdmin
 		
 
 		// Assign filedata
+        $filedata = new stdClass;
+
 		$filedata->id = $data['id'];
 		$filedata->current_version = $version + 1;
 			
 		// Assign entity data
+        $entitydata = new stdClass;
+
 		$entitydata->id = $data['id'];
 		$entitydata->parent_id = $data['parent_id'];
 		$entitydata->viewlevel = $data['viewlevel'];
@@ -192,6 +197,8 @@ class THM_RepoModelFile extends JModelAdmin
 		$entitydata->published = $data['published'];
 		
 		// Assign version data
+        $versiondata = new stdClass;
+
 		$versiondata->id = $data['id'];
 		$versiondata->version = $version + 1;
 		$versiondata->name = $data['name'];
@@ -348,7 +355,7 @@ class THM_RepoModelFile extends JModelAdmin
 		$query->delete($db->quoteName('#__thm_repo_version'));
 		$query->where('id = ' . $id);
 		$db->setQuery($query);
-		if (!($db->query()))
+		if (!($db->execute()))
 		{
 			return false;
 		}
@@ -358,7 +365,7 @@ class THM_RepoModelFile extends JModelAdmin
 		$query->delete($db->quoteName('#__thm_repo_file'));
 		$query->where('id = ' . $id);
 		$db->setQuery($query);
-		if (!($db->query()))
+		if (!($db->execute()))
 		{
 			return false;
 		}
@@ -368,7 +375,7 @@ class THM_RepoModelFile extends JModelAdmin
 		$query->delete($db->quoteName('#__thm_repo_entity'));
 		$query->where('id = ' . $id);
 		$db->setQuery($query);
-		if (!($db->query()))
+		if (!($db->execute()))
 		{
 			return false;
 		}

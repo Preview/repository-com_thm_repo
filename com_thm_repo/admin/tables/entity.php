@@ -76,7 +76,7 @@ class THM_RepoTableEntity extends JTable
 	 */
 	protected function _getAssetTitle()
 	{
-		return $this->name;
+		return 'entity'; // TODO: check: is necessary to return a asset title for this entity.
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class THM_RepoTableEntity extends JTable
 	 *
 	 * @return      int
 	 */
-	protected function _getAssetParentId($table = null, $id = null)
+	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
 		$asset = JTable::getInstance('asset');
 		$asset->loadByName('com_thm_repo');

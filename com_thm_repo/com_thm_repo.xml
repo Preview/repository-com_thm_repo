@@ -23,7 +23,6 @@
 		</sql>
 	</uninstall>
 
-
 	<administration>
 		<menu img="components/com_thm_repo/img/icon-16-repo.png">COM_THM_REPO</menu>
 		<submenu>

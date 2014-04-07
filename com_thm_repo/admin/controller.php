@@ -21,7 +21,7 @@ defined('_JEXEC') or die;
  * @link      www.mni.thm.de
  * @since     Class available since Release 2.0
  */
-class THM_RepoController extends JController
+class THM_RepoController extends JControllerLegacy
 {
 	/**
 	 * Method to display admincenter
@@ -39,9 +39,10 @@ class THM_RepoController extends JController
 		
 		
 		// Submenu
-		$vName = JRequest::getWord('view', 'thm_repo');
-		
-		JsubMenuHelper::addEntry(JText::_('COM_THM_REPO_START'), 'index.php?option=com_thm_repo&view=start', $vName == 'start');
+        $vName = JFactory::getApplication()->input->getWord('view', 'thm_repo');
+
+        // TODO: replace deprecated call
+		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_START'), 'index.php?option=com_thm_repo&view=start', $vName == 'start');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FOLDERMANAGER'), 'index.php?option=com_thm_repo&view=folders', $vName == 'folders');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FILEMANAGER'),  'index.php?option=com_thm_repo&view=files', $vName == 'files');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');

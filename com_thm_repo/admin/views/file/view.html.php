@@ -21,7 +21,7 @@ jimport('joomla.application.component.view');
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
  */
-class THM_RepoViewFile extends JView
+class THM_RepoViewFile extends JViewLegacy
 {
 	/**
 	 * File view display method

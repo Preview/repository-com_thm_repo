@@ -89,7 +89,7 @@ class THM_RepoTableFolder extends JTable
 	 * 
      * @return      int
      */
-     protected function _getAssetParentId($table = null, $id = null)
+     protected function _getAssetParentId(JTable $table = null, $id = null)
      {
      	$asset = JTable::getInstance('asset');
 		$asset->loadByName('com_thm_repo');

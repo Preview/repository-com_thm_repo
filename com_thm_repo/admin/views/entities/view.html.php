@@ -22,7 +22,7 @@ jimport('joomla.application.component.view');
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
  */
-class THM_RepoViewEntities extends JView
+class THM_RepoViewEntities extends JViewLegacy
 {
 	/**
 	 * Entities view display method

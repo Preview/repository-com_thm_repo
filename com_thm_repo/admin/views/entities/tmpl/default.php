@@ -16,10 +16,10 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.tooltip');
 
 // Get Model Functions
-$model = JModel::getInstance('entities', 'THM_RepoModel');
+$model = JModelLegacy::getInstance('entities', 'THM_RepoModel');
 
 // Get ID from URL
-$id = JRequest::getVar('id');
+$id = JFactory::getApplication()->input->getInt('id', 0);
 $listOrder	= $this->sortColumn;
 $listDirn	= $this->sortDirection;
 $saveOrder	= $listOrder == 'e.ordering';
@@ -161,7 +161,7 @@ $user = JFactory::getUser();
 									$id = $_GET['downloadid'];
 									$model->download($id);
 								}
-								?>  
+								?>
 							<?php 
         					}
         					else
