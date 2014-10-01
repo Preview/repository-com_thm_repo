@@ -12,7 +12,7 @@
 // No direct access to this file
 defined('_JEXEC') or die();
 
-
+jimport('joomla.filesystem.file');
  
 /**
  * Script file of THM_Repo component
@@ -31,8 +31,8 @@ class Com_THM_RepoInstallerScript
      */
 	public function install($parent)
 	{
-		$uploadPath = JPATH_ROOT . DS . 'media' . DS . 'com_thm_repo';
-		$htAccessPath = $uploadPath . DS . '.htaccess';
+		$uploadPath = JPATH_ROOT . '/media/com_thm_repo';
+		$htAccessPath = $uploadPath . '/.htaccess';
 
 		JFolder::create($uploadPath);
 
@@ -40,12 +40,11 @@ class Com_THM_RepoInstallerScript
 
 		JFile::write($htAccessPath, $htContent, true);
 
-
 		JFactory::getLanguage()->load('com_thm_repo');
 		$parent->getParent()->setRedirectURL('index.php?option=com_thm_repo&task=folder.edit');
-    		JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
-	}        
-	
+        JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_INSTALL_NOTICE'), 'warning');
+	}
+
 	/**
 	 * Method to uninstall the component
 	 * 
@@ -55,7 +54,7 @@ class Com_THM_RepoInstallerScript
 	 */
 	public function uninstall($parent)
 	{
-		$uploadPath = JPATH_ROOT . DS . 'media' . DS . 'com_thm_repo';
+		$uploadPath = JPATH_ROOT . '/media/com_thm_repo';
 		JFolder::delete($uploadPath);
 	}
 

@@ -50,13 +50,12 @@ class THM_RepoViewEntities extends JViewLegacy
 		$this->sortDirection = $state->get('list.direction');
 		$this->sortColumn = $state->get('list.ordering');
 		$this->searchterms = $state->get('filter.search');
-		
 
 		// Set the toolbar
 		$this->addToolBar();
 
 		// Display the template
-		parent::display($tpl);
+		parent::display();
 	}
 
 	/**
