@@ -138,82 +138,88 @@ class THM_RepoModelLink extends JModelAdmin
 		return $result;
 		
 	}
-	
-	/**
-	 * Method to save the form data.
-	 *
-	 * @param   array  $data  The form data.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function save($data)
-	{
-		$table = JTable::getInstance('Entity', 'THM_RepoTable');
-		$table->save($data);
-		
-		// Assign linkdata
-		$linkdata->id  = $data['id'];
-		$linkdata->name = $data['name'];
-		$linkdata->description = $data['description'];
-		$linkdata->modified = $data['modified'];
-		$linkdata->modified_by = $data['modified_by'];
-		$linkdata->link = $data['link'];
-			
-		// Assign entitydata
-		$entitydata->id = $data['id'];
-		$entitydata->parent_id = $data['parent_id'];
-		$entitydata->viewlevel = $data['viewlevel'];
-		$entitydata->created = $data['created'];
-		$entitydata->created_by = $data['created_by'];
-		$entitydata->published = $data['published'];
-			
-		// GetDBO
-		$db = JFactory::getDBO();
-		
-		// Get Ordering count
-		$query = $db->getQuery(true);
-		$query->select('ordering');
-		$query->from('#__thm_repo_entity');
-		$query->where('parent_id = ' . $entitydata->parent_id);
-		$db->setQuery($query);
-		$ordering = $db->loadResultArray();
-		
-		// Increment Version Number and add to Versiondata
-		$entitydata->ordering = max($ordering) + 1;
-		
-		
-		// Insert New Link
-		if ($linkdata->id == 0)
-		{		
-			$entitydata->id = $table->id;
-			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
-			{
-				return false;
-			}
-			
-			// Insert created entity id to linkdata id 
-			$linkdata->id = $table->id;
-			if (!($db->insertObject('#__thm_repo_link', $linkdata, 'id'))) 
-			{
-				return false;
-			}		
-		} 
-		else
-		{
-			// Update #__thm_repo_entity table
-			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
-			{
-				return false;
-			}
-			
-			// Update #__thm_repo_link table
-			if (!($db->updateObject('#__thm_repo_link', $linkdata, 'id')))
-			{
-				return false;
-			}
-		}		
-		return true;
-	}
+
+    /**
+     * Method to save the form data.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return	boolean	True on success.
+     */
+    public function save($data)
+    {
+        $table = JTable::getInstance('Entity', 'THM_RepoTable');
+        $table->save($data);
+
+        // GetDBO
+        $db = JFactory::getDBO();
+
+        // Assign linkdata
+        $linkdata = new stdClass;
+        $linkdata->id  = $data['id'];
+        $linkdata->name = $data['name'];
+        $linkdata->description = $data['description'];
+        $linkdata->modified = $data['modified'];
+        $linkdata->modified_by = $data['modified_by'];
+        $linkdata->link = $data['link'];
+
+        // Assign entitydata
+        $entitydata = new stdClass;
+        $entitydata->id = $data['id'];
+        $entitydata->parent_id = $data['parent_id'];
+        $entitydata->viewlevel = $data['viewlevel'];
+        $entitydata->created = $data['created'];
+        $entitydata->created_by = $data['created_by'];
+        $entitydata->published = $data['published'];
+
+
+        if (empty($entitydata->id))
+        {
+            $query = $db->getQuery(true);
+            $query
+                ->select('MAX(e.ordering)')
+                ->from('#__thm_repo_entity e')
+                ->where("e.parent_id = {$entitydata->parent_id}");
+            $lastOrderingValue = $db->setQuery($query)->loadResult();
+
+            $nextOrderingValue = (empty($lastOrderingValue)) ? 1 : $lastOrderingValue + 1;
+            $data['ordering'] = (array_key_exists('ordering', $data)) ? $data['ordering'] : $nextOrderingValue;
+        }
+        $entitydata->ordering = $data['ordering'];
+
+
+        // Insert New Link
+        if ($linkdata->id == 0)
+        {
+            $entitydata->id = $table->id;
+            if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+            {
+                return false;
+            }
+
+            // Insert created entity id to linkdata id
+            $linkdata->id = $table->id;
+            if (!($db->insertObject('#__thm_repo_link', $linkdata, 'id')))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            // Update #__thm_repo_entity table
+            if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+            {
+                return false;
+            }
+
+            // Update #__thm_repo_link table
+            if (!($db->updateObject('#__thm_repo_link', $linkdata, 'id')))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
 	/**
 	 * Method to delete one or more records.

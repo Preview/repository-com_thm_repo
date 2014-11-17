@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension type="component" version="3.2" method="upgrade">
-	<name>THM Repo</name>
+<extension type="component" version="3" method="upgrade">
+	<name>COM_THM_REPO</name>
 	<author>THM iCampus</author>
 	<creationDate>2013-06-03</creationDate>
 	<copyright>TH Mittelhessen 2013</copyright>
@@ -8,10 +8,14 @@
 	<authorEMail>Stefan.Schneider@mni.thm.de</authorEMail>
 	<authorEMail>Andrej.Sajenko@mni.thm.de</authorEMail>
 	<authorUrl>www.mni.thm.de</authorUrl>
-	<version>0.0.1</version>
-	<description></description>
+	<version>0.0.2</version>
+	<description>Filemanagement Tool</description>
 	
 	<scriptfile>script.php</scriptfile>
+
+    <files>
+        <filename>CHANGELOG.php</filename>
+    </files>
 
 	<install>
 		<sql>

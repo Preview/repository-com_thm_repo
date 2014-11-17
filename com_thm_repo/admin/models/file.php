@@ -29,16 +29,16 @@ class THM_RepoModelFile extends JModelAdmin
 	 * @var array messages
 	 */
 	protected $messages;
-	
+
 	/**
 	 * Returns a reference to the a Table object, always creating it.
 	 *
 	 * @param   type    $type    The table type to instantiate
 	 * @param   string  $prefix  A prefix for the table class name. Optional.
 	 * @param   array   $config  Configuration array for model. Optional.
-	 * 
+	 *
 	 * @return  JTable  A database object
-	 * 
+	 *
 	 * @since   2.5
 	 */
 	public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
@@ -50,9 +50,9 @@ class THM_RepoModelFile extends JModelAdmin
 	 *
 	 * @param   array    $data      Data for the form.
 	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 * 
+	 *
 	 * @return  mixed    A JForm object on success, false on failure
-	 * 
+	 *
 	 * @since   2.5
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -69,7 +69,7 @@ class THM_RepoModelFile extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return      mixed   The data for the form.
-	 * 
+	 *
 	 * @since       2.5
 	 */
 	protected function loadFormData()
@@ -85,19 +85,19 @@ class THM_RepoModelFile extends JModelAdmin
 
   	/**
   	 * Method to get a single record.
-  	 * 
+  	 *
   	 * @param   integer  $pk  The id of the primary key.
-  	 * 
+  	 *
   	 * @return  mixed    Object on success, false on failure.
   	 */
 	public function getItem($pk = null)
 	{
 		$item = parent::getItem($pk);
-		
+
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
 		if ($pk > 0)
-		{	
+		{
 			// Get Data from #__thm_repo_version table and assign it to $item
 			$data = $this->getData($item->id);
 			$item->name = $data->name;
@@ -119,10 +119,10 @@ class THM_RepoModelFile extends JModelAdmin
 			$item->mimetype = null;
 			$item->current_version = null;
 		}
-		
+
 		return $item;
 	}
-	
+
 	/**
 	 * Method to get the needed data from entity table
 	 *
@@ -141,184 +141,189 @@ class THM_RepoModelFile extends JModelAdmin
 		$query->where('v.id = ' . $id);
 		$db->setQuery($query);
 		$result = $db->loadObject();
-	
+
 		return $result;
-	
+
 	}
-	
-	/**
-	 * Method to save the form data.
-	 *
-	 * @param   array  $data  The form data.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function save($data)
-	{
-		$table = JTable::getInstance('Entity', 'THM_RepoTable');
-		$table->save($data);
-		
-		// Retrieve file details from uploaded file, sent from adminForm form
-		// $file = JRequest::getVar('file', null, 'files', 'array'); // TODO: remove
+
+    /**
+     * Method to save the form data.
+     *
+     * @param   array  $data  The form data.
+     *
+     * @return	boolean	True on success.
+     */
+    public function save($data)
+    {
+        $table = JTable::getInstance('Entity', 'THM_RepoTable');
+        $table->save($data);
+
+        // Retrieve file details from uploaded file, sent from adminForm form
+        // $file = JRequest::getVar('file', null, 'files', 'array'); // TODO: remove
 
         $file = JFactory::getApplication()->input->files->get('file', null);;
 
-		// Clean up filename to get rid of strange characters like spaces etc
-		$filename = JFile::makeSafe($file['name']);
+        // Clean up filename to get rid of strange characters like spaces etc
+        $filename = JFile::makeSafe($file['name']);
 
-		
-		// GetDBO
-		$db = JFactory::getDBO();
-		
-		// Get Maximum Versionsnumber
-		$query = $db->getQuery(true);
-		$query->select('version');
-		$query->from('#__thm_repo_version');
-		$query->where('id = ' . $data['id']);
-		$db->setQuery($query);
-		$version = $db->loadResultArray();
-		$version = max($version);
-		
 
-		// Assign filedata
+        // GetDBO
+        $db = JFactory::getDBO();
+
+        // Get Maximum Versionsnumber
+        $query = $db->getQuery(true);
+        $query->select('version');
+        $query->from('#__thm_repo_version');
+        $query->where('id = ' . $data['id']);
+        $db->setQuery($query);
+        $version = $db->loadResultArray();
+        $version = max($version);
+
+
+        // Assign filedata
         $filedata = new stdClass;
 
-		$filedata->id = $data['id'];
-		$filedata->current_version = $version + 1;
-			
-		// Assign entity data
+        $filedata->id = $data['id'];
+        $filedata->current_version = $version + 1;
+
+        // Assign entity data
         $entitydata = new stdClass;
 
-		$entitydata->id = $data['id'];
-		$entitydata->parent_id = $data['parent_id'];
-		$entitydata->viewlevel = $data['viewlevel'];
-		$entitydata->created = $data['created'];
-		$entitydata->created_by = $data['created_by'];
-		$entitydata->published = $data['published'];
-		
-		// Assign version data
+        $entitydata->id = $data['id'];
+        $entitydata->parent_id = $data['parent_id'];
+        $entitydata->viewlevel = $data['viewlevel'];
+        $entitydata->created = $data['created'];
+        $entitydata->created_by = $data['created_by'];
+        $entitydata->published = $data['published'];
+
+        if (empty($entitydata->id))
+        {
+            $query = $db->getQuery(true);
+            $query
+                ->select('MAX(e.ordering)')
+                ->from('#__thm_repo_entity e')
+                ->where("e.parent_id = {$entitydata->parent_id}");
+            $lastOrderingValue = $db->setQuery($query)->loadResult();
+
+            $nextOrderingValue = (empty($lastOrderingValue)) ? 1 : $lastOrderingValue + 1;
+            $data['ordering'] = (array_key_exists('ordering', $data)) ? $data['ordering'] : $nextOrderingValue;
+        }
+        $entitydata->ordering = $data['ordering'];
+
+
+        // Assign version data
         $versiondata = new stdClass;
 
-		$versiondata->id = $data['id'];
-		$versiondata->version = $version + 1;
-		$versiondata->name = $data['name'];
-		$versiondata->description = $data['description'];
-		$versiondata->modified = $data['modified'];
-		$versiondata->modified_by = $data['modified_by'];
-		$versiondata->path = $data['path'];
-		$versiondata->size = $file['size'];
-		$versiondata->mimetype = $file['type'];
+        $versiondata->id = $data['id'];
+        $versiondata->version = $version + 1;
+        $versiondata->name = $data['name'];
+        $versiondata->description = $data['description'];
+        $versiondata->modified = $data['modified'];
+        $versiondata->modified_by = $data['modified_by'];
+        $versiondata->path = $data['path'];
+        $versiondata->size = $file['size'];
+        $versiondata->mimetype = $file['type'];
 
-	
-		// New File is uploaded
-		if ($entitydata->id == 0)
-		{
-			// Get Ordering count
-			$query = $db->getQuery(true);
-			$query->select('ordering');
-			$query->from('#__thm_repo_entity');
-			$query->where('parent_id = ' . $entitydata->parent_id);
-			$db->setQuery($query);
-			$ordering = $db->loadResultArray();
-			
-			// Increment Order Number and add to entitydata
-			$entitydata->ordering = max($ordering) + 1;
-			$entitydata->id = $table->id;
-				
-			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
-			{
-				return false;
-			}
-				
-			// Insert created entity id to version dataid and filedata id
-			$versiondata->id = $table->id;
-			$filedata->id = $table->id;
-			
-			if (!($db->insertObject('#__thm_repo_file', $filedata, 'id')))
-			{
-				return false;
-			}
-						
-			// Add Path to Versiondata
-			$versiondata->path = DS . "media" . DS . "com_thm_repo" . DS .
-				$versiondata->id . "_" . $versiondata->version . "_" . $filename;
-			if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
-			{
-				return false;
-			}
-		}
-		// Old File is updated
-		else
-		{	
-			// Get Ordering and add to entitydata
-			$query = $db->getQuery(true);
-			$query->select('ordering');
-			$query->from('#__thm_repo_entity');
-			$query->where('id = ' . $entitydata->id);
-			$db->setQuery($query);
-			$ordering = $db->loadResultArray();
-			$entitydata->ordering = ($ordering);
-				
-			// Increment Order Number and add to entitydata
 
-			if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
-			{
-				return false;
-			}
-			
-			if (!($db->updateObject('#__thm_repo_file', $filedata, 'id')))
-			{
-				return false;
-			}
+        // New File is uploaded
+        if ($entitydata->id == 0)
+        {
+            $entitydata->id = $table->id;
 
-			// A New File is uploaded
-			if ($filename)
-			{				
-				// Add Path to Versiondata
-				$versiondata->path = DS . "media" . DS . "com_thm_repo" . DS .
-					$versiondata->id . "_" . $versiondata->version . "_" . $filename;
-				if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
-				{
-					return false;
-				}		
-			}
-			// No New File is uploaded
-			else 
-			{
-				// Create a new query object.
-				$query = $db->getQuery(true);
-				$query->select('path, size, mimetype');
-				$query->from('#__thm_repo_version');
-				$query->where('id = ' . (int) $data['id'] . ' AND version=' . (int) $data['current_version']);
-				$db->setQuery($query);
-				$result = $db->loadObject();
+            if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+            {
+                return false;
+            }
 
-				$versiondata->path = $result->path;
-				$versiondata->size = $result->size;
-				$versiondata->mimetype = $result->mimetype;
+            // Insert created entity id to version dataid and filedata id
+            $versiondata->id = $table->id;
+            $filedata->id = $table->id;
 
-				// Add Version without new file
-				if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
-				{
-					return false;
-				}
-			}
-		}						
-		// Set up the source and destination of the file
-		if ($filename)
-		{
-			$src = $file['tmp_name'];
-			$dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
-			
-			if (!JFile::upload($src, $dest))
-			{
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
+            if (!($db->insertObject('#__thm_repo_file', $filedata, 'id')))
+            {
+                return false;
+            }
+
+            // Add Path to Versiondata
+            $versiondata->path = DS . "media" . DS . "com_thm_repo" . DS .
+                $versiondata->id . "_" . $versiondata->version . "_" . $filename;
+            if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
+            {
+                return false;
+            }
+        }
+        // Old File is updated
+        else
+        {
+            // Get Ordering and add to entitydata
+            $query = $db->getQuery(true);
+            $query->select('ordering');
+            $query->from('#__thm_repo_entity');
+            $query->where('id = ' . $entitydata->id);
+            $db->setQuery($query);
+            $ordering = $db->loadResultArray();
+            $entitydata->ordering = ($ordering);
+
+            // Increment Order Number and add to entitydata
+
+            if (!($db->updateObject('#__thm_repo_entity', $entitydata, 'id')))
+            {
+                return false;
+            }
+
+            if (!($db->updateObject('#__thm_repo_file', $filedata, 'id')))
+            {
+                return false;
+            }
+
+            // A New File is uploaded
+            if ($filename)
+            {
+                // Add Path to Versiondata
+                $versiondata->path = DS . "media" . DS . "com_thm_repo" . DS .
+                    $versiondata->id . "_" . $versiondata->version . "_" . $filename;
+                if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
+                {
+                    return false;
+                }
+            }
+            // No New File is uploaded
+            else
+            {
+                // Create a new query object.
+                $query = $db->getQuery(true);
+                $query->select('path, size, mimetype');
+                $query->from('#__thm_repo_version');
+                $query->where('id = ' . (int) $data['id'] . ' AND version=' . (int) $data['current_version']);
+                $db->setQuery($query);
+                $result = $db->loadObject();
+
+                $versiondata->path = $result->path;
+                $versiondata->size = $result->size;
+                $versiondata->mimetype = $result->mimetype;
+
+                // Add Version without new file
+                if (!($db->insertObject('#__thm_repo_version', $versiondata, 'id')))
+                {
+                    return false;
+                }
+            }
+        }
+        // Set up the source and destination of the file
+        if ($filename)
+        {
+            $src = $file['tmp_name'];
+            $dest = JPATH_ROOT . DS . "media" . DS . "com_thm_repo" . DS . $versiondata->id . "_" . $versiondata->version . "_" . $filename;
+
+            if (!JFile::upload($src, $dest))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 	/**
 	 * Method to delete one or more records.
 	 *
@@ -329,10 +334,10 @@ class THM_RepoModelFile extends JModelAdmin
 	public function delete(&$pks)
 	{
 		$id = $pks[0];
-	
+
 		// GetDBO
 		$db = JFactory::getDBO();
-		
+
 		// Delete Version files
 		$query = $db->getQuery(true);
 		$query->select('path');
@@ -340,16 +345,16 @@ class THM_RepoModelFile extends JModelAdmin
 		$query->where('id = ' . $id);
 		$db->setQuery((string) $query);
 		$versions = $db->loadObjectList();
-	
+
 		if ($versions)
 		{
 			foreach ($versions as $version)
-			{	
+			{
 				// Delete every Version File from deleted File
 				JFile::delete(JPATH_ROOT . $version->path);
 			}
 		}
-		
+
 		// Delete Version record
 		$query = $db->getQuery(true);
 		$query->delete($db->quoteName('#__thm_repo_version'));
@@ -359,7 +364,7 @@ class THM_RepoModelFile extends JModelAdmin
 		{
 			return false;
 		}
-	
+
 		// Delete File record
 		$query = $db->getQuery(true);
 		$query->delete($db->quoteName('#__thm_repo_file'));
@@ -369,7 +374,7 @@ class THM_RepoModelFile extends JModelAdmin
 		{
 			return false;
 		}
-		
+
 		// Delete Entity record
 		$query = $db->getQuery(true);
 		$query->delete($db->quoteName('#__thm_repo_entity'));
@@ -379,7 +384,7 @@ class THM_RepoModelFile extends JModelAdmin
 		{
 			return false;
 		}
-		
+
 		// Delete asset entry
 		$table = JTable::getInstance('Entity', 'THM_RepoTable');
 		if (!$table->delete($id))

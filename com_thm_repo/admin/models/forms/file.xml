@@ -66,6 +66,7 @@
 		<field
 			name="viewlevel"
 			type="viewlevel"
+            default="1"
 			label="COM_THM_REPO_FILE_VIEWLEVEL"
 			description="COM_THM_REPO_FILE_VIEWLEVEL_DESC"
 		/>
@@ -93,7 +94,7 @@
 		<field
 			name="rules"
 			type="rules"
-			label="JFIELD_RULES_LABEL"
+			label="JCONFIG_PERMISSIONS_LABEL"
 			validate="rules"
 			class="inputbox"
 			component="com_thm_repo"
