@@ -1,0 +1,86 @@
+/**
+ * @category    Joomla component
+ * @package     THM_Repo
+ * @subpackage  com_thm_repo.admin
+ * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
+ * @copyright   2013 TH Mittelhessen
+ * @license     GNU GPL v.2
+ * @link        www.mni.thm.de
+ */
+@CHARSET "ISO-8859-1";
+.logo2 {
+	float: left;
+}
+
+#gimenu1 {
+	border: 0px solid #ABB1C0;
+	margin-bottom: 30px;
+	padding: 5px;
+}
+
+.icon {
+	border: 1px solid #ABB1C0;
+	margin: 3px;
+	margin-right: 10px;
+	width: 106px;
+	padding-bottom: 5px;
+	float: left;
+}
+
+.menuitem {
+	float: left;
+}
+
+#gimenu1 div.icon:hover{
+	background-color: lightgray;
+	border-color: blue;
+}
+
+.picture2 {
+	height: 4em;
+	padding-left: 25px;
+	background-color: white;
+}
+
+.description1 {
+	margin-left: 10px;
+	text-align: center;
+	font-size: 1.3em;
+	font-style: normal;
+	font-weight: bold;
+	color: black;
+}
+
+.description2 {
+	margin-top: 1em;
+	padding-left: 5px;
+	padding-top: .1em;
+	padding-bottom: .2em;
+	text-align: center;
+	font-size: .8em;
+	font-style: normal;
+	font-weight: bold;
+	color: black;
+}
+
+img {border: none;}
+
+a:link {
+	color: black;
+	text-decoration: none;
+}
+
+a:visited {
+	color: black;
+	text-decoration: none;
+}
+
+a:active {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	color: black;
+	text-decoration: none;
+}

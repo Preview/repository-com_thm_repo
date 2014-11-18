@@ -1,0 +1,9 @@
+# IDE
+.buildpath
+.project
+.settings
+
+.*~
+Thumbs.db
+*~
+.directory
