@@ -9,14 +9,14 @@
  */
 @CHARSET "ISO-8859-1";
 .icon-48-repo {
-	background-image: url(../../img/icon-48-repo.png);
+    background-image: url(../../img/icon-48-repo.png);
 }
 .icon-48-folders {
-	background-image: url(../../img/icon-48-folders.png);
+    background-image: url(../../img/icon-48-folders.png);
 }
 .icon-48-files {
-	background-image: url(../../img/icon-48-files.png);
+    background-image: url(../../img/icon-48-files.png);
 }
 .icon-48-links {
-	background-image: url(../../img/icon-48-links.png);
+    background-image: url(../../img/icon-48-links.png);
 }

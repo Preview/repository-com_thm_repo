@@ -1,60 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="component" version="3" method="upgrade">
-	<name>COM_THM_REPO</name>
-	<author>THM iCampus</author>
-	<creationDate>2013-06-03</creationDate>
-	<copyright>TH Mittelhessen 2013</copyright>
-	<licence>GNU GPL v.2</licence>
-	<authorEMail>Stefan.Schneider@mni.thm.de</authorEMail>
-	<authorEMail>Andrej.Sajenko@mni.thm.de</authorEMail>
-	<authorUrl>www.mni.thm.de</authorUrl>
-	<version>0.0.2</version>
-	<description>Filemanagement Tool</description>
-	
-	<scriptfile>script.php</scriptfile>
+    <name>COM_THM_REPO</name>
+    <author>THM iCampus</author>
+    <creationDate>2013-06-03</creationDate>
+    <copyright>TH Mittelhessen 2013</copyright>
+    <licence>GNU GPL v.2</licence>
+    <authorEMail>Stefan.Schneider@mni.thm.de</authorEMail>
+    <authorEMail>Andrej.Sajenko@mni.thm.de</authorEMail>
+    <authorUrl>www.mni.thm.de</authorUrl>
+    <version>0.0.2</version>
+    <description>Filemanagement Tool</description>
+
+    <scriptfile>script.php</scriptfile>
 
     <files>
         <filename>CHANGELOG.php</filename>
     </files>
 
-	<install>
-		<sql>
-			<file driver="mysql" charset="utf8">sql/install.sql</file>
-		</sql>
-	</install>
-	<uninstall>
-		<sql>
-			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
-		</sql>
-	</uninstall>
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.sql</file>
+        </sql>
+    </install>
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+        </sql>
+    </uninstall>
 
-	<administration>
-		<menu img="components/com_thm_repo/img/icon-16-repo.png">COM_THM_REPO</menu>
-		<submenu>
-			<menu link="option=com_thm_repo&amp;view=start" img="components/com_thm_repo/img/icon-16-repo.png" view="start" alt="THM_repo/start">COM_THM_REPO_START</menu>
-			<menu link="option=com_thm_repo&amp;view=folders" img="components/com_thm_repo/img/icon-16-folders.png" view="folders" alt="THM_repo/folders">COM_THM_REPO_FOLDERMANAGER</menu>
-			<menu link="option=com_thm_repo&amp;view=files" img="components/com_thm_repo/img/icon-16-files.png" view="files" alt="THM_repo/files">COM_THM_REPO_FILEMANAGER</menu>
-			<menu link="option=com_thm_repo&amp;view=links" img="components/com_thm_repo/img/icon-16-links.png" view="links" alt="THM_repo/links">COM_THM_REPO_LINKMANAGER</menu>
-		</submenu>
-		<files folder="admin">
-			<filename>index.html</filename>
-			<filename>access.xml</filename>	
-			<filename>config.xml</filename>		
-			<filename>controller.php</filename>
-			<filename>thm_repo.php</filename>
-			<folder>controllers</folder>
-			<folder>css</folder>
-			<folder>models</folder>
-			<folder>img</folder>
-			<folder>tables</folder>
-			<folder>views</folder>
-			<folder>sql</folder>
-		</files>
-		<languages>
-			<language tag="en-GB">language/en-GB/en-GB.com_thm_repo.ini</language>
-			<language tag="en-GB">language/en-GB/en-GB.com_thm_repo.sys.ini</language>
-			<language tag="de-DE">language/de-DE/de-DE.com_thm_repo.ini</language>
-			<language tag="de-DE">language/de-DE/de-DE.com_thm_repo.sys.ini</language>
-		</languages>
-	</administration>
+    <administration>
+        <menu img="components/com_thm_repo/img/icon-16-repo.png">COM_THM_REPO</menu>
+        <submenu>
+            <menu link="option=com_thm_repo&amp;view=start" img="components/com_thm_repo/img/icon-16-repo.png" view="start" alt="THM_repo/start">COM_THM_REPO_START</menu>
+            <menu link="option=com_thm_repo&amp;view=folders" img="components/com_thm_repo/img/icon-16-folders.png" view="folders" alt="THM_repo/folders">COM_THM_REPO_FOLDERMANAGER</menu>
+            <menu link="option=com_thm_repo&amp;view=files" img="components/com_thm_repo/img/icon-16-files.png" view="files" alt="THM_repo/files">COM_THM_REPO_FILEMANAGER</menu>
+            <menu link="option=com_thm_repo&amp;view=links" img="components/com_thm_repo/img/icon-16-links.png" view="links" alt="THM_repo/links">COM_THM_REPO_LINKMANAGER</menu>
+        </submenu>
+        <files folder="admin">
+            <filename>index.html</filename>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>thm_repo.php</filename>
+            <folder>controllers</folder>
+            <folder>css</folder>
+            <folder>models</folder>
+            <folder>img</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+            <folder>sql</folder>
+        </files>
+        <languages>
+            <language tag="en-GB">language/en-GB/en-GB.com_thm_repo.ini</language>
+            <language tag="en-GB">language/en-GB/en-GB.com_thm_repo.sys.ini</language>
+            <language tag="de-DE">language/de-DE/de-DE.com_thm_repo.ini</language>
+            <language tag="de-DE">language/de-DE/de-DE.com_thm_repo.sys.ini</language>
+        </languages>
+    </administration>
+    <dependencies>
+        <dependency before="true" type="library" minversion="0.0.3">lib_thm_core</dependency>
+    </dependencies>
 </extension>

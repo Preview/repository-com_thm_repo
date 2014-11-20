@@ -10,7 +10,7 @@
  */
 
 // No direct access to this file
-defined('_JEXEC') or die;	
+defined('_JEXEC') or die;
 
 // Get Model Functions
 $model = JModelLegacy::getInstance('folders', 'THM_RepoModel');
@@ -18,9 +18,9 @@ $model = JModelLegacy::getInstance('folders', 'THM_RepoModel');
 // Span layout
 $span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
 
-$listOrder	= $this->sortColumn;
-$listDirn	= $this->sortDirection;
-$ordering 	= ($listOrder == 'f.lft');
+$listOrder    = $this->sortColumn;
+$listDirn    = $this->sortDirection;
+$ordering     = ($listOrder == 'f.lft');
 $user = JFactory::getUser();
 
 // Load tooltip behavior
@@ -50,13 +50,13 @@ JHtml::_('behavior.tooltip');
             {
             ?>
                 <?php $canChange = $user->authorise('core.edit', 'com_content.folder.' . $item->id);?>
-                <?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
+                <?php $orderkey    = array_search($item->id, $this->ordering[$item->parent_id]);?>
                 <?php $count = 0; ?>
                 <tr class="row<?php echo $i % 2; ?>">
                     <td class="order nowrap center hidden-phone">
                         <span class="sortable-handler">
-								<i class="icon-menu"></i>
-							</span>
+                                <i class="icon-menu"></i>
+                            </span>
                             <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" />
                     </td>
                     <td class="center hidden-phone">

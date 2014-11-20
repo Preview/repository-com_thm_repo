@@ -12,6 +12,7 @@
 // No direct access to this file
 defined('_JEXEC') or die();
 
+jimport( 'joomla.user.authentication');
 jimport('joomla.filesystem.file');
 jimport('thm_core.log.THMChangelogColoriser');
  
@@ -77,15 +78,15 @@ class COM_THM_RepoInstallerScript
      * @return  boolean  True on success
      */
     public function install(JAdapterInstance $adapter)
-	{
-		$uploadPath = JPATH_ROOT . '/media/com_thm_repo';
-		$htAccessPath = $uploadPath . '/.htaccess';
+    {
+        $uploadPath = JPATH_ROOT . '/media/com_thm_repo';
+        $htAccessPath = $uploadPath . '/.htaccess';
 
-		JFolder::create($uploadPath);
+        JFolder::create($uploadPath);
 
-		$htContent = 'deny from all';
+        $htContent = 'deny from all';
 
-		JFile::write($htAccessPath, $htContent, true);
+        JFile::write($htAccessPath, $htContent, true);
 
         jimport('thm_repo.core.All');
 
@@ -105,7 +106,7 @@ class COM_THM_RepoInstallerScript
         );
 
         THMFolder::persist($folder);
-	}
+    }
 
     /**
      * Called on uninstallation
@@ -115,7 +116,7 @@ class COM_THM_RepoInstallerScript
      * @return  boolean  True on success
      */
     public function uninstall(JAdapterInstance $adapter)
-	{
+    {
         jimport('thm_repo.core.All');
 
         try
@@ -128,8 +129,8 @@ class COM_THM_RepoInstallerScript
             /* Nothing to delete if no folder was found! */
         }
 
-		$uploadPath = JPATH_ROOT . '/media/com_thm_repo';
-		JFolder::delete($uploadPath);
-	}
+        $uploadPath = JPATH_ROOT . '/media/com_thm_repo';
+        JFolder::delete($uploadPath);
+    }
 
 }

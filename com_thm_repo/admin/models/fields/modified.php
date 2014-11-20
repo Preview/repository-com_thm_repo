@@ -24,28 +24,28 @@ JFormHelper::loadFieldClass('list');
 */
 class JFormFieldModified extends JFormField
 {
-	/**
-	 * The form field type.
-	 *
-	 * @var		string
-	 */
-	protected $type = 'modified';
+    /**
+     * The form field type.
+     *
+     * @var        string
+     */
+    protected $type = 'modified';
 
-	/**
-	 * Method to get the field input markup.
-	 *
-	 * @return	string	The field input markup.
-	 */
-	protected function getInput()
-	{
-		// Initialize variables.
-		$html = array();
-		$time_updated = date("Y-m-d H:i:s");
-		
-		// HTML output
+    /**
+     * Method to get the field input markup.
+     *
+     * @return    string    The field input markup.
+     */
+    protected function getInput()
+    {
+        // Initialize variables.
+        $html = array();
+        $time_updated = date("Y-m-d H:i:s");
+
+        // HTML output
         $html[] = '<input type="hidden" name="' . $this->name . '" value="' . $time_updated . '" />';
         $html[] = '<input type="text" value="' . $time_updated . '" readonly />';
         
-		return implode($html);
-	}
+        return implode($html);
+    }
 }

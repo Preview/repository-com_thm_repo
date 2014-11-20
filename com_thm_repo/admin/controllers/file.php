@@ -25,4 +25,3 @@ jimport('joomla.application.component.controllerform');
 class THM_RepoControllerFile extends JControllerForm
 {
 }
-	

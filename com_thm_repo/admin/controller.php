@@ -23,32 +23,32 @@ defined('_JEXEC') or die;
  */
 class THM_RepoController extends JControllerLegacy
 {
-	/**
-	 * Method to display admincenter
-	 * 
-	 * @param   boolean  $cachable   cachable
-	 * @param   boolean  $urlparams  url param
-	 *
-	 * @return void
-	 */
-	public function display($cachable = false, $urlparams = false)
-	{
-		// Set default view if not set
-		$input = JFactory::getApplication()->input;
-		$input->set('view', $input->getCmd('view', 'start'));
+    /**
+     * Method to display admincenter
+     *
+     * @param   boolean  $cachable   cachable
+     * @param   boolean  $urlparams  url param
+     *
+     * @return void
+     */
+    public function display($cachable = false, $urlparams = false)
+    {
+        // Set default view if not set
+        $input = JFactory::getApplication()->input;
+        $input->set('view', $input->getCmd('view', 'start'));
 
-		// Submenu
+        // Submenu
         $vName = JFactory::getApplication()->input->getWord('view', 'thm_repo');
 
         // TODO: replace deprecated call
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_START'), 'index.php?option=com_thm_repo&view=start', $vName == 'start');
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FOLDERMANAGER'), 'index.php?option=com_thm_repo&view=folders', $vName == 'folders');
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FILEMANAGER'),  'index.php?option=com_thm_repo&view=files', $vName == 'files');
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');
-	
-		// Call parent behavior
-		parent::display($cachable, $urlparams);
-	}
+        JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_START'), 'index.php?option=com_thm_repo&view=start', $vName == 'start');
+        JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FOLDERMANAGER'), 'index.php?option=com_thm_repo&view=folders', $vName == 'folders');
+        JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FILEMANAGER'),  'index.php?option=com_thm_repo&view=files', $vName == 'files');
+        JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');
+
+        // Call parent behavior
+        parent::display($cachable, $urlparams);
+    }
 
     public function portOldRepositoryData()
     {

@@ -26,18 +26,18 @@ jimport('joomla.application.component.controlleradmin');
 class THM_RepoControllerFiles extends JControllerAdmin
 {
 
-	/**
-	 * Returns the Model (proxy)
-	 *
-	 * @param   string  $name    Model name
-	 * @param   string  $prefix  Model prefix
-	 *
-	 * @return  JModel
-	 */
-	public function getModel($name = 'File', $prefix = 'THM_RepoModel')
-	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		return $model;
-	}
+    /**
+     * Returns the Model (proxy)
+     *
+     * @param   string  $name    Model name
+     * @param   string  $prefix  Model prefix
+     *
+     * @return  JModel
+     */
+    public function getModel($name = 'File', $prefix = 'THM_RepoModel')
+    {
+        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+        return $model;
+    }
 
 }

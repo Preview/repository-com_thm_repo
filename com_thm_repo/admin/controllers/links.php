@@ -31,10 +31,10 @@ class THM_RepoControllerLinks extends JControllerAdmin
  *
  * @return  JModel
  */
-	public function getModel($name = 'Link', $prefix = 'THM_RepoModel')
-	{
-		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		return $model;
-	}
-	
+    public function getModel($name = 'Link', $prefix = 'THM_RepoModel')
+    {
+        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+        return $model;
+    }
+
 }

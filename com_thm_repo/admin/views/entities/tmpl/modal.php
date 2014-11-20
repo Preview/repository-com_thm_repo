@@ -15,7 +15,7 @@ $app = JFactory::getApplication();
 
 if ($app->isSite())
 {
-	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+    JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
 }
 
 JHtml::_('bootstrap.tooltip');
@@ -26,34 +26,34 @@ $model = JModelLegacy::getInstance('entities', 'THM_RepoModel');
 
 // Get ID from URL
 $id = JFactory::getApplication()->input->getInt('id', 0);
-$listOrder	= $this->sortColumn;
-$listDirn	= $this->sortDirection;
-$saveOrder	= $listOrder == 'e.ordering';
+$listOrder    = $this->sortColumn;
+$listDirn    = $this->sortDirection;
+$saveOrder    = $listOrder == 'e.ordering';
 $user = JFactory::getUser();
 
 $function  = $app->input->getCmd('function', 'jSelectRepoEntity');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_thm_repo&view=entities&id=' . (int) $id . '&layout=modal&tmpl=component&function=' . $function .'&' . JSession::getFormToken()) ?>"
       method="post" name="adminForm" id="adminForm" class="form-inline">
-	<fieldset class="filter clearfix">
-		<div class="btn-toolbar">
-			<div class="btn-group pull-left">
-				<label for="filter_search">
-					<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>
-				</label>
-			</div>
-			<div class="btn-group pull-left">
-				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>" data-placement="bottom">
-					<span class="icon-search"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
-				<button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" data-placement="bottom" onclick="document.id('filter_search').value='';this.form.submit();">
-					<span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
-			</div>
-			<div class="clearfix"></div>
-		</div>
-		<hr class="hr-condensed" />
-	</fieldset>
+    <fieldset class="filter clearfix">
+        <div class="btn-toolbar">
+            <div class="btn-group pull-left">
+                <label for="filter_search">
+                    <?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>
+                </label>
+            </div>
+            <div class="btn-group pull-left">
+                <button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>" data-placement="bottom">
+                    <span class="icon-search"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+                <button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" data-placement="bottom" onclick="document.id('filter_search').value='';this.form.submit();">
+                    <span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <hr class="hr-condensed" />
+    </fieldset>
 
-	<table class="table table-striped table-condensed">
+    <table class="table table-striped table-condensed">
         <thead>
         <tr>
             <th></th>
@@ -65,14 +65,14 @@ $function  = $app->input->getCmd('function', 'jSelectRepoEntity');
             <th><?php echo JHTML::_('grid.sort', 'COM_THM_REPO_VIEW_VIEWLEVEL', 'v.title', $this->sortDirection, $this->sortColumn); ?></th>
         </tr>
         </thead>
-		<tfoot>
-			<tr>
-				<td colspan="15">
-					<?php echo $this->pagination->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
-		<tbody>
+        <tfoot>
+            <tr>
+                <td colspan="15">
+                    <?php echo $this->pagination->getListFooter(); ?>
+                </td>
+            </tr>
+        </tfoot>
+        <tbody>
         <?php
         foreach ($this->items as $i => $item)
         { ?>
@@ -111,6 +111,6 @@ $function  = $app->input->getCmd('function', 'jSelectRepoEntity');
         <?php
         }
         ?>
-		</tbody>
-	</table>
+        </tbody>
+    </table>
 </form>

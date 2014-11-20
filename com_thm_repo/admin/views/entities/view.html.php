@@ -24,48 +24,48 @@ jimport('joomla.application.component.view');
  */
 class THM_RepoViewEntities extends JViewLegacy
 {
-	/**
-	 * Entities view display method
-	 * 
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
-	 */
-	public function display($tpl = null)
-	{
-		// Get data from the model
-		$items = $this->get('Items');
-		$pagination = $this->get('Pagination');
-		$state = $this->get('State');
+    /**
+     * Entities view display method
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     */
+    public function display($tpl = null)
+    {
+        // Get data from the model
+        $items = $this->get('Items');
+        $pagination = $this->get('Pagination');
+        $state = $this->get('State');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
-		// Assign data to the view
-		$this->items = $items;
-		$this->pagination = $pagination;
-		$this->sortDirection = $state->get('list.direction');
-		$this->sortColumn = $state->get('list.ordering');
-		$this->searchterms = $state->get('filter.search');
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
+            JError::raiseError(500, implode('<br />', $errors));
+            return false;
+        }
+        // Assign data to the view
+        $this->items = $items;
+        $this->pagination = $pagination;
+        $this->sortDirection = $state->get('list.direction');
+        $this->sortColumn = $state->get('list.ordering');
+        $this->searchterms = $state->get('filter.search');
 
-		// Set the toolbar
-		$this->addToolBar();
+        // Set the toolbar
+        $this->addToolBar();
 
-		// Display the template
-		parent::display();
-	}
+        // Display the template
+        parent::display();
+    }
 
-	/**
-	 * Setting the toolbar
-	 * 
-	 * @return void
-	 */
-	protected function addToolBar()
-	{
-		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_ENTITIES'));
-		JToolBarHelper::back('Back', 'index.php?option=com_thm_repo&view=folders');
-	}
+    /**
+     * Setting the toolbar
+     *
+     * @return void
+     */
+    protected function addToolBar()
+    {
+        JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_ENTITIES'));
+        JToolBarHelper::back('Back', 'index.php?option=com_thm_repo&view=folders');
+    }
 }

@@ -23,16 +23,16 @@ jimport('joomla.application.component.view');
  */
 class THM_RepoViewFile extends JViewLegacy
 {
-	/**
-	 * File view display method
-	 * 
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
-	 */
-	public function display($tpl = null) 
-	{
-		// Get the Data
+    /**
+     * File view display method
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     */
+    public function display($tpl = null)
+    {
+        // Get the Data
         $form = $this->get('Form');
         $item = $this->get('Item');
  
@@ -51,16 +51,16 @@ class THM_RepoViewFile extends JViewLegacy
  
         // Display the template
         parent::display($tpl);
-	}
+    }
  
- 	/**
+     /**
      * Setting the toolbar
      * 
      * @return void
      */
      protected function addToolBar() 
      {
-     	$input = JFactory::getApplication()->input;
+         $input = JFactory::getApplication()->input;
         $input->set('hidemainmenu', true);
         $isNew = ($this->item->id == 0);
         JToolBarHelper::back();
