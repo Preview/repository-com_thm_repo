@@ -13,6 +13,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+jimport('thm_repo.core.All');
+
 /**
  * THM_RepoController class for component com_thm_repo
  *
@@ -232,5 +234,71 @@ class THM_RepoController extends JControllerLegacy
         return new THMUser(empty($resultList) ? $this->getSuperUserId() : (int) $id);
     }
 
+    /*
+     * This function will walk a TreeVisitor object through the file-tree.
+     *
+     * @param TreeVisitor $visitor Visitor.
+     * @param THMFolder $folder Is the folder from where to start traversing the file tree or null to start from
+     *                          the root folder.
+     */
+    private function walkTree($visitor, $folder = null)
+    {
+        if($folder == null)
+        {
+            $folder = THMFolder::getRoot();
+        }
+
+        $this->walkFolders($visitor, $folder);
+    }
+
+    /*
+     * Helper function for walkTree.
+     */
+    private function walkFolders($visitor, $folder)
+    {
+        $visitor->enteringFolder($folder);
+
+        foreach ($folder->getFolders() as $f)
+        {
+            $this->walkFolders($visitor, $f);
+        }
+
+        foreach ($folder->getEntities() as $e)
+        {
+            $visitor->visitEntity($e);
+        }
+
+        $visitor->leavingFolder($folder);
+    }
 }
+
+//TODO Where would you put an interface in Joomla?
+/*
+ *
+ */
+interface TreeVisitor
+{
+    /*
+     * Will be called when entering a Folder.
+     *
+     * @param THMFolder $folder The Folder we are entering.
+     */
+    public function enteringFolder($folder);
+
+    /*
+     * Will be called when leaving a Folder.
+     *
+     * @param THMFolder $folder The Folder we leave.
+     */
+    public function leavingFolder($folder);
+
+    /*
+     * Will be called when an entity is found.
+     *
+     * @param THMEntity $entity The entity found.
+     */
+    public function visitEntity($entity);
+}
+
+
 
