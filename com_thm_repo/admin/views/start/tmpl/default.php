@@ -51,13 +51,28 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 	</div>
 
     <div class="menuitem">
-        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&task=doExport';">
-            <div class="picture2">
-                <img src="components/com_thm_repo/img/download.png" width="60" height="40" align="center" alt="Export" />
-            </div>
-
-            <div class="description2"><?php echo JText::_('COM_THM_REPO_EXPORTMANAGER');?></div>
-        </div>
+        <form action="" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form">
+            <input name="import_thm_repo_form_file" id="import_thm_repo_form_file" type="file" size="5000" maxlength="100000" accept="application/zip" class="hide" />
+            <span id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();">Import</span>
+        </form>
     </div>
-
+    
 </div>
+    
+<style>
+    form#import_thm_repo_form{margin:3px 10px 3px 3px;}
+    span#import_thm_repo_form_button{width:106px;height:89px;line-height:89px;border:1px solid #3364a3;color:#000000;background:#719ece;font-size:22px;text-align:center;cursor:pointer;display:block;}
+    span#import_thm_repo_form_button:hover{background:#9bc8f8;}
+</style>
+<script type="text/javascript">
+    document.getElementById('import_thm_repo_form_file').addEventListener('change', function(e) {
+        if (this.value) {
+            if (confirm(this.value + " jetzt importieren?")) {
+                this.form.submit();
+            }
+            else {
+                this.value = '';
+            }
+        }
+    });
+</script>
