@@ -51,6 +51,16 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 	</div>
 
     <div class="menuitem">
+        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&task=doExport';">
+            <div class="picture2">
+                <img src="components/com_thm_repo/img/download.png" width="60" height="40" align="center" alt="Export" />
+            </div>
+
+            <div class="description2"><?php echo JText::_('COM_THM_REPO_EXPORTMANAGER');?></div>
+        </div>
+    </div>
+
+    <div class="menuitem">
         <form action="" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form">
             <input name="import_thm_repo_form_file" id="import_thm_repo_form_file" type="file" size="5000" maxlength="100000" accept="application/zip" class="hide" />
             <span id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();">Import</span>
