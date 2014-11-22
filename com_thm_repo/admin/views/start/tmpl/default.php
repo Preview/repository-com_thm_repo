@@ -51,8 +51,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 	</div>
 
     <div class="menuitem">
-<!--        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=export';">-->
-        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=export';">
+        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&task=doExport';">
             <div class="picture2">
                 <img src="components/com_thm_repo/img/download.png" width="60" height="40" align="center" alt="Export" />
             </div>

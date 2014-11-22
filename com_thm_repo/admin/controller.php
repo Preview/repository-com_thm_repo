@@ -47,7 +47,7 @@ class THM_RepoController extends JControllerLegacy
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FOLDERMANAGER'), 'index.php?option=com_thm_repo&view=folders', $vName == 'folders');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FILEMANAGER'),  'index.php?option=com_thm_repo&view=files', $vName == 'files');
 		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');
-	
+
 		// Call parent behavior
 		parent::display($cachable, $urlparams);
 	}
@@ -64,6 +64,15 @@ class THM_RepoController extends JControllerLegacy
         $this->importIntoRepo($folders);
 
         echo 'Done!';
+    }
+
+    public function doExport()
+    {
+        // TODO: implement export functionality
+
+        $this->setMessage('Download erfolgreich!', 'message');
+
+        $this->setRedirect('index.php?option=com_thm_repo&view=start');
     }
 
     private function getSuperUserId()
