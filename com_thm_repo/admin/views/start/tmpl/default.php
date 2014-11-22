@@ -63,7 +63,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
     <div class="menuitem">
         <form action="" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form">
             <input name="import_thm_repo_form_file" id="import_thm_repo_form_file" type="file" size="5000" maxlength="100000" accept="application/zip" class="hide" />
-            <span id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();">Import</span>
+            <span id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();"><?php echo JText::_('COM_THM_REPO_IMPORTMANAGER');?></span>
         </form>
     </div>
     
@@ -77,7 +77,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 <script type="text/javascript">
     document.getElementById('import_thm_repo_form_file').addEventListener('change', function(e) {
         if (this.value) {
-            if (confirm(this.value + " jetzt importieren?")) {
+            if (confirm("<?php echo JText::_('COM_THM_REPO_IMPORTMANAGER_CONFIRM_MESSAGE'); ?>".replace('%filename%', this.value))) {
                 this.form.submit();
             }
             else {
