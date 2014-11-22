@@ -66,15 +66,6 @@ class THM_RepoController extends JControllerLegacy
         echo 'Done!';
     }
 
-    public function doExport()
-    {
-        // TODO: implement export functionality
-
-        $this->setMessage('Download erfolgreich!', 'message');
-
-        $this->setRedirect('index.php?option=com_thm_repo&view=start');
-    }
-
     private function getSuperUserId()
     {
         $db = JFactory::getDbo();
@@ -94,7 +85,6 @@ class THM_RepoController extends JControllerLegacy
 
         return (int) $resultList[0]->id;
     }
-
 
     private function importIntoRepo($folders)
     {
@@ -279,6 +269,99 @@ class THM_RepoController extends JControllerLegacy
 
         $visitor->leavingFolder($folder);
     }
+
+    /**
+     * Export-Task called by click event from export button.
+     *
+     * @return nothing
+     */
+    public function doExport()
+    {
+        $rootFolder = THMFolder::getRoot();
+
+        $jsonMetaInfo = json_encode($this->getMetaInfoFolder($rootFolder), JSON_PRETTY_PRINT);
+
+        // Only for the test
+        $this->setMessage($jsonMetaInfo);
+
+        // TODO: implement export functionality
+
+        // $this->setMessage('Download erfolgreich!', 'message');
+
+        $this->setRedirect('index.php?option=com_thm_repo&view=start');
+    }
+
+    /**
+     * Collect meta information recursively from folder.
+     *
+     * @param   THMFolder  $folder  folder to collect information from
+     *
+     * @return stdClass  object containing json meta information
+     */
+    private function getMetaInfoFolder($folder)
+    {
+        $jsonObject = new stdClass;
+
+        $jsonObject->name = $folder->getName();
+        $jsonObject->type = true;
+        $jsonObject->created_by = $folder->getCreatedBy()->getDisplayName();
+        $jsonObject->created_on = $folder->getCreated();
+        $jsonObject->modified_by = $folder->getModifiedBy()->getDisplayName();
+        $jsonObject->modified_on = $folder->getModified();
+        $jsonObject->description = $folder->getDescription();
+        $jsonObject->viewlevel = $folder->getViewLevel();
+        $jsonObject->enabled = $folder->isPublished();
+
+        $children = array();
+
+        foreach ($folder->getFolders() as $f)
+        {
+            $children[] = $this->getMetaInfoFolder($f);
+        }
+
+        foreach ($folder->getEntities() as $a)
+        {
+            $children[] = $this->getMetaInfoEntity($a);
+        }
+
+        $jsonObject->children = $children;
+
+        return $jsonObject;
+    }
+
+    /**
+     * Collect meta information recursively from file.
+     *
+     * @param   THMEntity  $entity  entity to collect information from
+     *
+     * @return stdClass  object containing json meta information
+     */
+    private function getMetaInfoEntity($entity)
+    {
+        $jsonObject = new stdClass;
+
+        $jsonObject->name = $entity->getName();
+
+        if ($entity instanceof THMWebLink)
+        {
+            $jsonObject->type = 'link';
+            $jsonObject->uri = $entity->getLink();
+        }
+        else
+        {
+            $jsonObject->type = 'file';
+        }
+
+        $jsonObject->created_by = $entity->getCreatedBy()->getDisplayName();
+        $jsonObject->created_on = $entity->getCreated();
+        $jsonObject->modified_by = $entity->getModifiedBy()->getDisplayName();
+        $jsonObject->modified_on = $entity->getModified();
+        $jsonObject->description = $entity->getDescription();
+        $jsonObject->viewlevel = $entity->getViewLevel();
+        $jsonObject->enabled = $entity->isPublished();
+
+        return $jsonObject;
+    }
 }
 
 //TODO Where would you put an interface in Joomla?
@@ -308,6 +391,3 @@ interface TreeVisitor
      */
     public function visitEntity($entity);
 }
-
-
-
