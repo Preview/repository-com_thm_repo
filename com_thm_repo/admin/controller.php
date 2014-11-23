@@ -298,13 +298,13 @@ class THM_RepoController extends JControllerLegacy
             $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />'; // Only for debugging
 
             $importObj = $this->dirToImportOject($tmpDir);
-            $message .= 'Archive Content: ' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
+            $message .= '<strong>Archive Content</strong><br />' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
             
             if (file_exists($tmpDir . '/Metadaten.json')) {
                 $jsonStr = file_get_contents($tmpDir . '/Metadaten.json');
                 $metaInformations = json_decode($jsonStr, TRUE); 
-                $message .= 'Meta Data: ' . print_r($metaInformations, TRUE) . '<br /><br />'; // Only for debugging
-                $this->importMetaInformations($metaInformations);
+                $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
+                $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
             }
             else {
                 $message .= 'Metadaten.json nicht gefunden!<br /><br />'; // Only for debugging
@@ -334,27 +334,30 @@ class THM_RepoController extends JControllerLegacy
      * 
      * @access      private
      * @param       array           Meta Informations Array
-     * @return      
+     * @param       String          Only for debugging
+     * @return      String          Only for debugging
      * @TODO        Check "Do something" in function
      * @TODO        Delete or uncomment echos in function
      */
-    private function importMetaInformations($metaInformations) {
+    private function importMetaInformations($metaInformations, $prefix = ' | ') {
+        $message = '';
         foreach ($metaInformations AS $obj) {
             if (empty($obj) || !isset($obj['type'])) continue;
             else if ($obj['type'] === 'folder') {
                 // Do something here with directories
-                echo 'Found folder ' . $obj['name'] . '<br />';
-                $this->importMetaInformations($obj['children']);
+                $message .= $prefix . $obj['name'] . '<br />';
+                $message .= $this->importMetaInformations($obj['children'], $prefix . ' - ');
             }
             else if ($obj['type'] === 'link') {
                 // Do something here with urls
-                echo 'Found link ' . $obj['name'] . ' with URL: ' . $obj['uri'] . '<br />';
+                $message .= $prefix . $obj['name'] . ' -&gt; ' . $obj['uri'] . '<br />';
             }
             else {
                 // Do something here with other files
-                echo 'Found file ' . $obj['name'] . '<br />';
+                $message .= $prefix . $obj['name'] . '<br />';
             }
         }
+        return $message;
     } // end of function importMetaInformations
     
     
