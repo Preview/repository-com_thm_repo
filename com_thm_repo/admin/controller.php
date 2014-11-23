@@ -269,6 +269,163 @@ class THM_RepoController extends JControllerLegacy
 
         $visitor->leavingFolder($folder);
     }
+    
+    
+    
+
+    /*
+     * Import Zip File Action
+     *
+     * @copyright   
+     * @author      adnan.oezsarigoel@mni.thm.de
+     * 
+     * @access      public
+     * @param       
+     * @return      
+     */
+    public function zipImportAction()
+    {        
+        $tmpDir = 'sys_get_temp_dir/' . uniqid('import_');  // This folder will be deleted by function delDir
+        
+        $message = '';
+
+        if (isset($_FILES['import_thm_repo_form_file'])) {
+            $zip = new ZipArchive();
+            $zip->open($_FILES['import_thm_repo_form_file']['tmp_name']);
+            $zip->extractTo($tmpDir);
+            $zip->close();
+            
+            $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />'; // Only for debugging
+
+            $importObj = $this->dirToImportOject($tmpDir);
+            $message .= 'Archive Content: ' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
+            
+            if (file_exists($tmpDir . '/Metadaten.json')) {
+                $jsonStr = file_get_contents($tmpDir . '/Metadaten.json');
+                $metaInformations = json_decode($jsonStr, TRUE); 
+                $message .= 'Meta Data: ' . print_r($metaInformations, TRUE) . '<br /><br />'; // Only for debugging
+                $this->importMetaInformations($metaInformations);
+            }
+            else {
+                $message .= 'Metadaten.json nicht gefunden!<br /><br />'; // Only for debugging
+            }
+            
+            if ($this->delDir($tmpDir)) {
+                $message .= 'Temp-Ordner ' . $tmpDir . ' erfolgreich entfernt!<br /><br />'; // Only for debugging
+            }
+            else {
+                $message .= 'Temp-Ordner ' . $tmpDir . ' löschen fehlgeschlagen!<br /><br />'; // Only for debugging
+            }
+        }
+            
+        $this->setMessage($message);
+
+        $this->setRedirect('index.php?option=com_thm_repo&view=start');        
+    } // end of function zipImportAction
+    
+    
+    
+
+    /*
+     * Import Meta Informations
+     *
+     * @copyright   
+     * @author      adnan.oezsarigoel@mni.thm.de
+     * 
+     * @access      private
+     * @param       array           Meta Informations Array
+     * @return      
+     * @TODO        Check "Do something" in function
+     * @TODO        Delete or uncomment echos in function
+     */
+    private function importMetaInformations($metaInformations) {
+        foreach ($metaInformations AS $obj) {
+            if (empty($obj) || !isset($obj['type'])) continue;
+            else if ($obj['type'] === 'folder') {
+                // Do something here with directories
+                echo 'Found folder ' . $obj['name'] . '<br />';
+                $this->importMetaInformations($obj['children']);
+            }
+            else if ($obj['type'] === 'link') {
+                // Do something here with urls
+                echo 'Found link ' . $obj['name'] . ' with URL: ' . $obj['uri'] . '<br />';
+            }
+            else {
+                // Do something here with other files
+                echo 'Found file ' . $obj['name'] . '<br />';
+            }
+        }
+    } // end of function importMetaInformations
+    
+    
+    
+
+    /*
+     * Directory to Import Object
+     *
+     * @copyright   
+     * @author      adnan.oezsarigoel@mni.thm.de
+     * 
+     * @access      private
+     * @param       String          Path to unpacked Zip-Directory
+     * @return      array           Array with Directory Informations
+     * @TODO        Check "Do something" in function
+     * @TODO        $obj is still not finished
+     */
+    private function dirToImportOject($dir) {
+        $obj = array();
+        if ($handle = opendir($dir)) {
+            while ($file = readdir($handle)) {
+                if ($file === "." || $file === "..") continue;
+                else if (is_dir($dir . "/" . $file)) {
+                    // Do something here with directories
+                    $obj[$file] = $this->dirToImportOject($dir . "/" . $file);
+                    // array_push($obj, $this->dirToImportOject($dir . "/" . $file));
+                }
+                else {
+                    $pathInfo = pathinfo($dir . "/" . $file);
+                    if ($pathInfo['extension'] === 'url') {
+                        // Do something here with urls
+                        $url = file_get_contents($dir . "/" . $file);
+                        $obj[$file] = $url;
+                        // array_push($obj, $url);
+                    }
+                    else {
+                        // Do something here with other files
+                        $obj[$file] = $pathInfo['filename'];
+                        // array_push($obj, $pathInfo['filename']);
+                    }
+                }
+            }
+            closedir($handle);
+        }
+        return $obj;
+    } // end of function dirToImportOject
+    
+    
+    
+    
+    /*
+     * Be careful - it will irrevocably delete $dir
+     *
+     * @copyright   
+     * @author      adnan.oezsarigoel@mni.thm.de  
+     * 
+     * @access      private
+     * @param       String      directory to be deleted
+     * @return      bool        deletion status
+     */
+    private function delDir($dir) {
+        $files = scandir($dir); 
+        foreach ($files AS $file) {
+            if ($file === "." || $file === "..") continue;
+            (is_dir($dir . "/" . $file)) ? $this->delDir($dir . "/" . $file) : unlink($dir . "/" . $file);
+        }
+        return rmdir($dir);
+    } // end of function delDir
+    
+    
+    
 
     /**
      * Export-Task called by click event from export button.

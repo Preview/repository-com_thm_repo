@@ -61,7 +61,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
     </div>
 
     <div class="menuitem">
-        <form action="" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form">
+        <form action="index.php?option=com_thm_repo&task=zipImportAction" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form">
             <input name="import_thm_repo_form_file" id="import_thm_repo_form_file" type="file" size="5000" maxlength="100000" accept="application/zip" class="hide" />
             <span id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();"><?php echo JText::_('COM_THM_REPO_IMPORTMANAGER');?></span>
         </form>
