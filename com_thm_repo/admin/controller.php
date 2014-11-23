@@ -285,7 +285,7 @@ class THM_RepoController extends JControllerLegacy
      */
     public function zipImportAction()
     {        
-        $tmpDir = 'sys_get_temp_dir/' . uniqid('import_');  // This folder will be deleted by function delDir
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('import_thm_repo_');  // This folder will be deleted by function delDir
         
         $message = '';
 
