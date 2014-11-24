@@ -289,7 +289,7 @@ class THM_RepoController extends JControllerLegacy
     
         jimport('joomla.filesystem.folder');
         
-        $tmpDir = uniqid('import_thm_repo_');  // This folder will be deleted by function delDir
+        $tmpDir = sys_get_temp_dir() . '/' . uniqid('import_thm_repo_');  // This folder will be deleted by JFolder::delete
         
         $message = '';
         
