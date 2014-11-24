@@ -285,38 +285,51 @@ class THM_RepoController extends JControllerLegacy
      * @param       
      * @return      
      */
-    public function zipImportAction()
-    {        
-        $tmpDir = sys_get_temp_dir() . '/' . uniqid('import_thm_repo_');  // This folder will be deleted by function delDir
+    public function zipImportAction() {  
+    
+        jimport('joomla.filesystem.folder');
+        
+        $tmpDir = uniqid('import_thm_repo_');  // This folder will be deleted by function delDir
         
         $message = '';
-
-        if (isset($_FILES['import_thm_repo_form_file'])) {
-            $zip = new ZipArchive();
-            $zip->open($_FILES['import_thm_repo_form_file']['tmp_name']);
-            $zip->extractTo($tmpDir);
-            $zip->close();
+        
+        $file = JRequest::getVar('import_thm_repo_form_file', null, 'files', 'array');
+        
+        if (isset($file)) {
+            $filename = JFile::makeSafe($file['name']);
             
-            $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />'; // Only for debugging
+            if (strtolower(JFile::getExt($filename)) === 'zip') {      
+                $zip = new ZipArchive();
+                $zip->open($file['tmp_name']);
+                $zip->extractTo($tmpDir);
+                $zip->close();
+                
+                $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />'; // Only for debugging
 
-            $importObj = $this->dirToImportOject($tmpDir);
-            $message .= '<strong>Archive Content</strong><br />' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
-            
-            if (file_exists($tmpDir . '/Metadaten.json')) {
-                $jsonStr = file_get_contents($tmpDir . '/Metadaten.json');
-                $metaInformations = json_decode($jsonStr, TRUE); 
-                $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
-                $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
+                // $listFolderTree = JFolder::listFolderTree($tmpDir, $filter, $maxLevel = 3, $level = 0, $parent = 0);
+                // $listFolderTree = JFolder::listFolderTree($tmpDir);
+                $importObj = $this->dirToImportOject($tmpDir);
+                $message .= '<strong>Archive Content</strong><br />' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
+                
+                if (file_exists($tmpDir . '/Metadaten.json')) {
+                    $jsonStr = file_get_contents($tmpDir . '/Metadaten.json');
+                    $metaInformations = json_decode($jsonStr, TRUE); 
+                    $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
+                    $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
+                }
+                else {
+                    $message .= 'Metadaten.json nicht gefunden!<br /><br />'; // Only for debugging
+                }
+                
+                if (JFolder::delete($tmpDir)) {
+                    $message .= 'Temp-Ordner ' . $tmpDir . ' erfolgreich entfernt!<br /><br />'; // Only for debugging
+                }
+                else {
+                    $message .= 'Temp-Ordner ' . $tmpDir . ' löschen fehlgeschlagen!<br /><br />'; // Only for debugging
+                }
             }
             else {
-                $message .= 'Metadaten.json nicht gefunden!<br /><br />'; // Only for debugging
-            }
-            
-            if ($this->delDir($tmpDir)) {
-                $message .= 'Temp-Ordner ' . $tmpDir . ' erfolgreich entfernt!<br /><br />'; // Only for debugging
-            }
-            else {
-                $message .= 'Temp-Ordner ' . $tmpDir . ' löschen fehlgeschlagen!<br /><br />'; // Only for debugging
+                $message .= 'Es sind nur Zip-Dateien erlaubt!<br /><br />'; // Only for debugging
             }
         }
             
@@ -324,43 +337,6 @@ class THM_RepoController extends JControllerLegacy
 
         $this->setRedirect('index.php?option=com_thm_repo&view=start');        
     } // end of function zipImportAction
-    
-    
-    
-
-    /*
-     * Import Meta Informations
-     *
-     * @copyright   
-     * @author      adnan.oezsarigoel@mni.thm.de
-     * 
-     * @access      private
-     * @param       array           Meta Informations Array
-     * @param       String          Only for debugging
-     * @return      String          Only for debugging
-     * @TODO        Check "Do something" in function
-     * @TODO        Delete or uncomment echos in function
-     */
-    private function importMetaInformations($metaInformations, $prefix = ' | ') {
-        $message = '';
-        foreach ($metaInformations AS $obj) {
-            if (empty($obj) || !isset($obj['type'])) continue;
-            else if ($obj['type'] === 'folder') {
-                // Do something here with directories
-                $message .= $prefix . $obj['name'] . '<br />';
-                $message .= $this->importMetaInformations($obj['children'], $prefix . ' - ');
-            }
-            else if ($obj['type'] === 'link') {
-                // Do something here with urls
-                $message .= $prefix . $obj['name'] . ' -&gt; ' . $obj['uri'] . '<br />';
-            }
-            else {
-                // Do something here with other files
-                $message .= $prefix . $obj['name'] . '<br />';
-            }
-        }
-        return $message;
-    } // end of function importMetaInformations
     
     
     
@@ -409,25 +385,40 @@ class THM_RepoController extends JControllerLegacy
     
     
     
-    
+
     /*
-     * Be careful - it will irrevocably delete $dir
+     * Import Meta Informations
      *
      * @copyright   
-     * @author      adnan.oezsarigoel@mni.thm.de  
+     * @author      adnan.oezsarigoel@mni.thm.de
      * 
      * @access      private
-     * @param       String      directory to be deleted
-     * @return      bool        deletion status
+     * @param       array           Meta Informations Array
+     * @param       String          Only for debugging
+     * @return      String          Only for debugging
+     * @TODO        Check "Do something" in function
+     * @TODO        Delete or uncomment echos in function
      */
-    private function delDir($dir) {
-        $files = scandir($dir); 
-        foreach ($files AS $file) {
-            if ($file === "." || $file === "..") continue;
-            (is_dir($dir . "/" . $file)) ? $this->delDir($dir . "/" . $file) : unlink($dir . "/" . $file);
+    private function importMetaInformations($metaInformations, $prefix = ' | ') {
+        $message = '';
+        foreach ($metaInformations AS $obj) {
+            if (empty($obj) || !isset($obj['type'])) continue;
+            else if ($obj['type'] === 'folder') {
+                // Do something here with directories
+                $message .= $prefix . $obj['name'] . '<br />';
+                $message .= $this->importMetaInformations($obj['children'], $prefix . ' - ');
+            }
+            else if ($obj['type'] === 'link') {
+                // Do something here with urls
+                $message .= $prefix . $obj['name'] . ' -&gt; ' . $obj['uri'] . '<br />';
+            }
+            else {
+                // Do something here with other files
+                $message .= $prefix . $obj['name'] . '<br />';
+            }
         }
-        return rmdir($dir);
-    } // end of function delDir
+        return $message;
+    } // end of function importMetaInformations
     
     
     
