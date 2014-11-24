@@ -248,6 +248,8 @@ class THM_RepoController extends JControllerLegacy
         }
 
         $this->walkFolders($visitor, $folder);
+
+        $visitor->done();
     }
 
     /*
@@ -438,17 +440,27 @@ class THM_RepoController extends JControllerLegacy
     public function doExport()
     {
         $rootFolder = THMFolder::getRoot();
-
         $jsonMetaInfo = json_encode($this->getMetaInfoFolder($rootFolder), JSON_PRETTY_PRINT);
 
+        $zipper = new ZipVisitor($jsonMetaInfo);
+
+        $this->walkTree($zipper);
+
+        header("Content-Type: application/zip");
+        //TODO changable name of the zip file
+        header("Content-Disposition: attachment; filename=\"tree.zip\"");
+        readfile($zipper->file);
+
         // Only for the test
-        $this->setMessage($jsonMetaInfo);
+        //$this->setMessage($zipper->report);
 
         // TODO: implement export functionality
 
         // $this->setMessage('Download erfolgreich!', 'message');
 
-        $this->setRedirect('index.php?option=com_thm_repo&view=start');
+
+
+        //$this->setRedirect('index.php?option=com_thm_repo&view=start');
     }
 
     /**
@@ -550,4 +562,59 @@ interface TreeVisitor
      * @param THMEntity $entity The entity found.
      */
     public function visitEntity($entity);
+
+    public function done();
+}
+
+class ZipVisitor implements TreeVisitor
+{
+    private $path = [];
+    private $zip;
+    public $file;
+    public $report = "";
+
+    public function __construct($json)
+    {
+        $this->file = tempnam(sys_get_temp_dir(), 'Tux');
+        $this->zip = new ZipArchive();
+
+        $this->zip->open($this->file);
+
+        $this->zip->addFromString("METAINFO.json", $json);
+    }
+
+    public function enteringFolder($folder)
+    {
+        $this->path[] = $folder->getName();
+        $this->zip->addEmptyDir($this->path());
+        $this->report .= "entering: " . $folder->getName() . "\n";
+    }
+
+    public function leavingFolder($folder)
+    {
+        array_pop($this->path);
+        $this->report .= "leaving: " . $folder->getName() . "\n";
+    }
+
+    public function visitEntity($entity)
+    {
+        if ($entity instanceof THMWebLink)
+        {
+            $this->zip->addFromString($this->path() . "/" . $entity->getName() . ".url", $entity->getLink());
+        }
+        else if ($entity instanceof THMFile)
+        {
+            $this->zip->addFile(JPATH_ROOT . $entity->getPath(), $this->path() . "/" . $entity->getName());
+        }
+    }
+
+    public function done()
+    {
+        $this->zip->close();
+    }
+
+    private function path()
+    {
+        return join("/", $this->path);
+    }
 }
