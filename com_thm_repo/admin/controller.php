@@ -438,20 +438,8 @@ class THM_RepoController extends JControllerLegacy
         $this->walkTree($zipper);
 
         header("Content-Type: application/zip");
-        //TODO changable name of the zip file
-        header("Content-Disposition: attachment; filename=\"tree.zip\"");
+        header("Content-Disposition: attachment; filename=thm-repo-export-" . date("Y-m-d-H-i", time()) . ".zip");
         readfile($zipper->file);
-
-        // Only for the test
-        //$this->setMessage($zipper->report);
-
-        // TODO: implement export functionality
-
-        // $this->setMessage('Download erfolgreich!', 'message');
-
-
-
-        //$this->setRedirect('index.php?option=com_thm_repo&view=start');
     }
 
     /**
@@ -595,7 +583,7 @@ class ZipVisitor implements TreeVisitor
         }
         else if ($entity instanceof THMFile)
         {
-            $this->zip->addFile(JPATH_ROOT . $entity->getPath(), $this->path() . "/" . $entity->getName());
+            $this->zip->addFile(JPATH_ROOT . $entity->getPath(), $this->path() . "/" . $entity->getName() . "." . pathinfo(JPATH_ROOT . $entity->getPath(), PATHINFO_EXTENSION));
         }
     }
 
