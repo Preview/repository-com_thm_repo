@@ -53,7 +53,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
     <div class="menuitem">
         <div class="icon" onclick="location.href='index.php?option=com_thm_repo&task=doExport';">
             <div class="picture2">
-                <img src="components/com_thm_repo/img/download.png" width="60" height="40" align="center" alt="Export" />
+                <img src="components/com_thm_repo/img/icon-48-export.png" align="center" alt="Export" />
             </div>
 
             <div class="description2"><?php echo JText::_('COM_THM_REPO_EXPORTMANAGER');?></div>
