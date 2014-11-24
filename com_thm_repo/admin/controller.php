@@ -311,14 +311,15 @@ class THM_RepoController extends JControllerLegacy
                 $importObj = $this->dirToImportOject($tmpDir);
                 $message .= '<strong>Archive Content</strong><br />' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
                 
-                if (file_exists($tmpDir . '/Metadaten.json')) {
-                    $jsonStr = file_get_contents($tmpDir . '/Metadaten.json');
+                $metaFileName = 'Metadata.json';
+                if (file_exists($tmpDir . '/' . $metaFileName)) {
+                    $jsonStr = file_get_contents($tmpDir . '/' . $metaFileName);
                     $metaInformations = json_decode($jsonStr, TRUE); 
                     $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
                     $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
                 }
                 else {
-                    $message .= 'Metadaten.json nicht gefunden!<br /><br />'; // Only for debugging
+                    $message .= $metaFileName . ' nicht gefunden!<br /><br />'; // Only for debugging
                 }
                 
                 if (JFolder::delete($tmpDir)) {
