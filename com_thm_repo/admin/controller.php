@@ -118,7 +118,7 @@ class THM_RepoController extends JControllerLegacy
             $this->importEntities($newRepoFolder, $folder->children);
         }
     }
-	
+
 	private function importFolder($repoFolder, $folder)
 	{
 		$newRepoFolder = new THMFolder(
@@ -126,11 +126,11 @@ class THM_RepoController extends JControllerLegacy
 			$folder['name'],
 			empty($folder['description']) ? 'No Description' : $folder['description'],
 			$this->getValidUser($folder['created_by']),
-			(int)$folder['viewlevel'],
-			(bool)$folder['enabled']
+			(int) $folder['viewlevel'],
+			(bool) $folder['enabled']
 		);
 		THMFolder::persist($newRepoFolder);
-		
+
 		$this->importEntities($newRepoFolder, $folder['children']);
 	}
 
@@ -171,8 +171,8 @@ class THM_RepoController extends JControllerLegacy
 				$file['name'],
 				$file['description'],
                 $this->getValidUser($file['created_by']),
-                (int)$file['viewlevel'],
-				(bool)$file['enabled'],
+                (int) $file['viewlevel'],
+				(bool) $file['enabled'],
                 array(
                     'tmp_name' => $filePath,
                     'name' => $file['name'],
@@ -181,7 +181,7 @@ class THM_RepoController extends JControllerLegacy
                 )
             );
             THMFile::persist($repoFile);
-			
+
 			$this->importEntities($repoFolder, $file['children']);
         }
     }
@@ -194,12 +194,12 @@ class THM_RepoController extends JControllerLegacy
 			$link['description'],
             $this->getValidUser($link['created_by']),
             $link['uri'],
-			(int)$link['viewlevel'],
-			(bool)$link['enabled']
+			(int) $link['viewlevel'],
+			(bool) $link['enabled']
         );
 
         THMWebLink::persist($repoLink);
-		
+
 		$this->importEntities($newRepoFolder, $link['children']);
     }
 
@@ -259,7 +259,7 @@ class THM_RepoController extends JControllerLegacy
             $result = $db->setQuery($query)->loadAssoc();
         }
 
-        return new THMUser(empty($result['id']) ? $this->getSuperUserId() : (int)$result['id']);
+        return new THMUser(empty($result['id']) ? $this->getSuperUserId() : (int) $result['id']);
     }
 
     /*
@@ -314,8 +314,8 @@ class THM_RepoController extends JControllerLegacy
      * @param       
      * @return      
      */
-    public function zipImportAction() {  
-    
+    public function zipImportAction()
+	{
         jimport('joomla.filesystem.folder');
         
         $tmpDir = sys_get_temp_dir() . '/' . uniqid('import_thm_repo_');  // This folder will be deleted by JFolder::delete
