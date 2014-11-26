@@ -63,7 +63,7 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
     <div class="menuitem">
         <div class="icon" id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();">
             <div class="picture2">
-                <img src="components/com_thm_repo/img/icon-48-import.png" align="center" alt="Import" />
+                <img src="components/com_thm_repo/img/icon-48-import.png" alt="Import" />
             </div>
 
             <div class="description2"><?php echo JText::_('COM_THM_REPO_IMPORTMANAGER'); ?></div>
