@@ -61,19 +61,20 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
     </div>
 
     <div class="menuitem">
-        <form action="index.php?option=com_thm_repo&task=zipImportAction" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form">
-            <input name="import_thm_repo_form_file" id="import_thm_repo_form_file" type="file" size="5000" maxlength="100000" accept="application/zip" class="hide" />
-            <span id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();"><?php echo JText::_('COM_THM_REPO_IMPORTMANAGER');?></span>
-        </form>
+        <div class="icon" id="import_thm_repo_form_button" onClick="document.getElementById('import_thm_repo_form_file').click();">
+            <div class="picture2">
+                <img src="components/com_thm_repo/img/icon-48-import.png" align="center" alt="Import" />
+            </div>
+
+            <div class="description2"><?php echo JText::_('COM_THM_REPO_IMPORTMANAGER'); ?></div>
+            <form action="index.php?option=com_thm_repo&task=zipImportAction" method="post" enctype="multipart/form-data" id="import_thm_repo_form" name="import_thm_repo_form" style="display:none;">
+                <input name="import_thm_repo_form_file" id="import_thm_repo_form_file" type="file" size="5000" maxlength="100000" accept="application/zip" class="hide" />
+            </form>
+        </div>
     </div>
     
 </div>
-    
-<style>
-    form#import_thm_repo_form{margin:3px 10px 3px 3px;}
-    span#import_thm_repo_form_button{width:106px;height:89px;line-height:89px;border:1px solid #3364a3;color:#000000;background:#719ece;font-size:22px;text-align:center;cursor:pointer;display:block;}
-    span#import_thm_repo_form_button:hover{background:#9bc8f8;}
-</style>
+
 <script type="text/javascript">
     document.getElementById('import_thm_repo_form_file').addEventListener('change', function(e) {
         if (this.value) {
