@@ -472,6 +472,8 @@ class THM_RepoController extends JControllerLegacy
         header("Content-Type: application/zip");
         header("Content-Disposition: attachment; filename=thm-repo-export-" . date("Y-m-d-H-i", time()) . ".zip");
         readfile($zipper->file);
+
+        exit();
     }
 
     /**
@@ -638,7 +640,8 @@ class ZipVisitor implements TreeVisitor
     {
         if ($entity instanceof THMWebLink)
         {
-            $this->zip->addFromString($this->path() . "/" . $entity->getName() . ".url", $entity->getLink());
+            $content = "[InternetShortcut]\nURL=" . $entity->getLink();
+            $this->zip->addFromString($this->path() . "/" . $entity->getName() . ".url", $content);
         }
         else if ($entity instanceof THMFile)
         {
