@@ -548,41 +548,54 @@ class THM_RepoController extends JControllerLegacy
 }
 
 //TODO Where would you put an interface in Joomla?
-/*
- *
+/**
+ * Interface TreeVisitor
  */
 interface TreeVisitor
 {
-    /*
+    /**
      * Will be called when entering a Folder.
      *
      * @param THMFolder $folder The Folder we are entering.
      */
     public function enteringFolder($folder);
 
-    /*
+    /**
      * Will be called when leaving a Folder.
      *
      * @param THMFolder $folder The Folder we leave.
      */
     public function leavingFolder($folder);
 
-    /*
+    /**
      * Will be called when an entity is found.
      *
      * @param THMEntity $entity The entity found.
      */
     public function visitEntity($entity);
 
+    /**
+     * Called after we visited all folders and entities.
+     *
+     * @return mixed
+     */
     public function done();
 }
 
+/**
+ * Class ZipVisitor zips all Folders and Entities it
+ * encounters in zip that is created in the temp directory.
+ *
+ * The path of the zip is saved in $file.
+ */
 class ZipVisitor implements TreeVisitor
 {
+    /**
+     * @var array stack to save current directory.
+     */
     private $path = [];
     private $zip;
     public $file;
-    public $report = "";
 
     public function __construct($json)
     {
@@ -594,19 +607,33 @@ class ZipVisitor implements TreeVisitor
         $this->zip->addFromString("Metadata.json", $json);
     }
 
+    /**
+     * Adds the current folder to the stack of folders we are currently in
+     * and creates a empty folder in the zip.
+     *
+     * @param $folder current Folder
+     */
     public function enteringFolder($folder)
     {
         $this->path[] = $folder->getName();
         $this->zip->addEmptyDir($this->path());
-        $this->report .= "entering: " . $folder->getName() . "\n";
     }
 
+    /**
+     * Removes the last folder from the stack.
+     *
+     * @param $folder current Folder
+     */
     public function leavingFolder($folder)
     {
         array_pop($this->path);
-        $this->report .= "leaving: " . $folder->getName() . "\n";
     }
 
+    /**
+     * Adds the entity to the zip.
+     *
+     * @param $entity
+     */
     public function visitEntity($entity)
     {
         if ($entity instanceof THMWebLink)
@@ -619,11 +646,19 @@ class ZipVisitor implements TreeVisitor
         }
     }
 
+    /**
+     * Closes the Zip.
+     */
     public function done()
     {
         $this->zip->close();
     }
 
+    /**
+     * Builds our current path from the $path stack.
+     *
+     * @return string current path.
+     */
     private function path()
     {
         return join("/", $this->path);
