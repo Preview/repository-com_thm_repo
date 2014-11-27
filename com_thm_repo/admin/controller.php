@@ -472,6 +472,7 @@ class THM_RepoController extends JControllerLegacy
         header("Content-Type: application/zip");
         header("Content-Disposition: attachment; filename=thm-repo-export-" . date("Y-m-d-H-i", time()) . ".zip");
         readfile($zipper->file);
+        exit();
     }
 
     /**
