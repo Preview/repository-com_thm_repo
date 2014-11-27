@@ -486,14 +486,14 @@ class THM_RepoController extends JControllerLegacy
         $jsonObject = new stdClass;
 
         $jsonObject->name = $folder->getName();
-        $jsonObject->type = true;
+        $jsonObject->type = 'folder';
         $jsonObject->created_by = $folder->getCreatedBy()->getDisplayName();
         $jsonObject->created_on = $folder->getCreated();
         $jsonObject->modified_by = $folder->getModifiedBy()->getDisplayName();
         $jsonObject->modified_on = $folder->getModified();
         $jsonObject->description = $folder->getDescription();
         $jsonObject->viewlevel = $folder->getViewLevel();
-        $jsonObject->enabled = $folder->isPublished();
+        $jsonObject->enabled = $folder->isPublished() ? 1 :0;
 
         $children = array();
 
@@ -541,7 +541,7 @@ class THM_RepoController extends JControllerLegacy
         $jsonObject->modified_on = $entity->getModified();
         $jsonObject->description = $entity->getDescription();
         $jsonObject->viewlevel = $entity->getViewLevel();
-        $jsonObject->enabled = $entity->isPublished();
+        $jsonObject->enabled = $entity->isPublished() ? 1 : 0;
 
         return $jsonObject;
     }
