@@ -591,7 +591,7 @@ class ZipVisitor implements TreeVisitor
 
         $this->zip->open($this->file);
 
-        $this->zip->addFromString("METAINFO.json", $json);
+        $this->zip->addFromString("Metadata.json", $json);
     }
 
     public function enteringFolder($folder)
