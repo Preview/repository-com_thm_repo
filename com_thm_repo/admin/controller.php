@@ -125,9 +125,10 @@ class THM_RepoController extends JControllerLegacy
 
     /**
      * Imports a folder into the repo and initiates importing of its children
-     * @param  THMFolder $repoFolder     The parent folder
-     * @param  array     $folder         Array with folder details (name, description, created_by, viewlevel, enabled, children)
-     * @param  array     $pathComponents Array of path components that point to the parent folder
+     * 
+     * @param   THMFolder  $repoFolder      The parent folder
+     * @param   array      $folder          Array with folder details (name, description, created_by, viewlevel, enabled, children)
+     * @param   array      $pathComponents  Array of path components that point to the parent folder
      */
 	private function importFolder($repoFolder, $folder, $pathComponents)
 	{
@@ -147,39 +148,54 @@ class THM_RepoController extends JControllerLegacy
 
     /**
      * Imports multiple entities into the repo
-     * @param  THMFolder $repoFolder     The parent folder
-     * @param  array     $entities       Array of entities that will be imported
-     * @param  array     $pathComponents The path components that point to the containing folder in the file system
-     * @throws RuntimeException If the entity type is unknown
+     * 
+     * @param   THMFolder  $repoFolder      The parent folder
+     * @param   array      $entities        Array of entities that will be imported
+     * @param   array      $pathComponents  The path components that point to the containing folder in the file system
      */
     private function importEntities($repoFolder, $entities, $pathComponents = array())
     {
         foreach ($entities as $entity)
         {
-            if ($entity['type'] == 'file')
-            {
-                $this->importFile($repoFolder, $entity, $pathComponents);
-            }
-            elseif ($entity['type'] == 'link')
-            {
-                $this->importLink($repoFolder, $entity, $pathComponents);
-            }
-			elseif ($entity['type'] == 'folder')
-			{
-				$this->importFolder($repoFolder, $entity, $pathComponents);
-			}
-			else
-			{
-				throw new RuntimeException('Unknown entity type: ' . $entity['type']);
-			}
+            $this->importEntity($repoFolder, $entity, $pathComponents);
+        }
+    }
+
+    /**
+     * Imports one entity into the repo
+     * 
+     * @param   THMFolder  $repoFolder      The parent folder
+     * @param   array      $entity          The entity details
+     * @param   array      $pathComponents  The oath components that point to the containing folder in the file system
+     * 
+     * @throws RuntimeException If the entity type is unknown
+     */
+    private function importEntity($repoFolder, $entity, $pathComponents = array())
+    {
+        if ($entity['type'] == 'file')
+        {
+            $this->importFile($repoFolder, $entity, $pathComponents);
+        }
+        elseif ($entity['type'] == 'link')
+        {
+            $this->importLink($repoFolder, $entity, $pathComponents);
+        }
+        elseif ($entity['type'] == 'folder')
+        {
+            $this->importFolder($repoFolder, $entity, $pathComponents);
+        }
+        else
+        {
+            throw new RuntimeException('Unknown entity type: ' . $entity['type']);
         }
     }
 
     /**
      * Imports a file into the repo and initiates importing of its children
-     * @param  THMFolder $repoFolder     The parent folder
-     * @param  array     $file           Array with file details (name, description, created_by, viewlevel, enabled, children)
-     * @param  array     $pathComponents The path components that will point to the containing folder
+     * 
+     * @param   THMFolder  $repoFolder      The parent folder
+     * @param   array      $file            Array with file details (name, description, created_by, viewlevel, enabled, children)
+     * @param   array      $pathComponents  The path components that will point to the containing folder
      */
     private function importFile($repoFolder, $file, $pathComponents)
     {
@@ -214,10 +230,10 @@ class THM_RepoController extends JControllerLegacy
 
     /**
      * Imports a link into the repo and initiates importing of its children
-     * @param  THMFolder $repoFolder     The parent folder
-     * @param  array     $link           Array of link details (name, description, created_by, uri, viewlevel, enabled, children)
-     * @param  array     $pathComponents The path components that point to the containing folder
-     * @return [type]                 [description]
+     * 
+     * @param   THMFolder  $repoFolder      The parent folder
+     * @param   array      $link            Array of link details (name, description, created_by, uri, viewlevel, enabled, children)
+     * @param   array      $pathComponents  The path components that point to the containing folder
      */
     private function importLink($repoFolder, $link, $pathComponents)
     {
@@ -279,7 +295,9 @@ class THM_RepoController extends JControllerLegacy
 
     /**
      * Gets a valid user in the system, if a user with the given name can't be found a super user will be selected
-     * @param  string $name The name of the user
+     * 
+     * @param   string  $name  The name of the user
+     * 
      * @return THMUser A valid user
      */
     private function getValidUser($name)
