@@ -169,9 +169,6 @@ class THM_RepoController extends JControllerLegacy
             $mimeType = finfo_file($finfo, $filePath);
             finfo_close($finfo);
 
-			/*var_dump(JFile::stripExt($file['name']));
-			var_dump($filePath);
-			die;*/
             $repoFile = new THMFile(
                 $repoFolder,
 				JFile::stripExt($file['name']),
@@ -325,7 +322,7 @@ class THM_RepoController extends JControllerLegacy
 	{
         jimport('joomla.filesystem.folder');
         
-        $tmpDir = sys_get_temp_dir() . '/' . uniqid('import_thm_repo_');  // This folder will be deleted by JFolder::delete
+        $tmpDir = sys_get_temp_dir() . DS . uniqid('import_thm_repo_');  // This folder will be deleted by JFolder::delete
         
         $message = '';
         
@@ -348,8 +345,8 @@ class THM_RepoController extends JControllerLegacy
                 $message .= '<strong>Archive Content</strong><br />' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
                 
                 $metaFileName = 'Metadata.json';
-                if (file_exists($tmpDir . '/' . $metaFileName)) {
-                    $jsonStr = file_get_contents($tmpDir . '/' . $metaFileName);
+                if (file_exists($tmpDir . DS . $metaFileName)) {
+                    $jsonStr = file_get_contents($tmpDir . DS . $metaFileName);
                     $metaInformations = json_decode($jsonStr, true); 
                     $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
                     $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
