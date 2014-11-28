@@ -119,36 +119,37 @@ class THM_RepoController extends JControllerLegacy
         }
     }
 
-	private function importFolder($repoFolder, $folder)
+	private function importFolder($repoFolder, $folder, $pathComponents)
 	{
 		$newRepoFolder = new THMFolder(
 			$repoFolder,
 			$folder['name'],
-			empty($folder['description']) ? 'No Description' : $folder['description'],
+			$folder['description'],
 			$this->getValidUser($folder['created_by']),
 			(int) $folder['viewlevel'],
 			(bool) $folder['enabled']
 		);
 		THMFolder::persist($newRepoFolder);
 
-		$this->importEntities($newRepoFolder, $folder['children']);
+		$pathComponents[] = $folder['name'];
+		$this->importEntities($newRepoFolder, $folder['children'], $pathComponents);
 	}
 
-    private function importEntities($repoFolder, $entities)
+    private function importEntities($repoFolder, $entities, $pathComponents = array())
     {
         foreach ($entities as $entity)
         {
             if ($entity['type'] == 'file')
             {
-                $this->importFile($repoFolder, $entity);
+                $this->importFile($repoFolder, $entity, $pathComponents);
             }
             elseif ($entity['type'] == 'link')
             {
-                $this->importLink($repoFolder, $entity);
+                $this->importLink($repoFolder, $entity, $pathComponents);
             }
 			elseif ($entity['type'] == 'folder')
 			{
-				$this->importFolder($repoFolder, $entity);
+				$this->importFolder($repoFolder, $entity, $pathComponents);
 			}
 			else
 			{
@@ -157,18 +158,23 @@ class THM_RepoController extends JControllerLegacy
         }
     }
 
-    private function importFile($repoFolder, $file)
+    private function importFile($repoFolder, $file, $pathComponents)
     {
-        $filePath = JPATH_ROOT . '/thm_repository/' . $file['path'];
+		$pathComponents[] = $file['name'];
+		$filePath = implode(DS, $pathComponents);
+
         if (JFile::exists($filePath))
         {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $filePath);
             finfo_close($finfo);
 
+			/*var_dump(JFile::stripExt($file['name']));
+			var_dump($filePath);
+			die;*/
             $repoFile = new THMFile(
                 $repoFolder,
-				$file['name'],
+				JFile::stripExt($file['name']),
 				$file['description'],
                 $this->getValidUser($file['created_by']),
                 (int) $file['viewlevel'],
@@ -182,11 +188,11 @@ class THM_RepoController extends JControllerLegacy
             );
             THMFile::persist($repoFile);
 
-			$this->importEntities($repoFolder, $file['children']);
+			$this->importEntities($repoFolder, $file['children'], $pathComponents);
         }
     }
 
-    private function importLink($repoFolder, $link)
+    private function importLink($repoFolder, $link, $pathComponents)
     {
         $repoLink = new THMWebLink(
             $repoFolder,
@@ -200,7 +206,8 @@ class THM_RepoController extends JControllerLegacy
 
         THMWebLink::persist($repoLink);
 
-		$this->importEntities($newRepoFolder, $link['children']);
+		$pathComponents[] = $link['name'];
+		$this->importEntities($newRepoFolder, $link['children'], $pathComponents);
     }
 
     private function createObjectTree($parentId = 1)
@@ -347,7 +354,7 @@ class THM_RepoController extends JControllerLegacy
                     $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
                     $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
 					
-					$this->importEntities(THMFolder::getRoot(false), $metaInformations);
+					$this->importEntities(THMFolder::getRoot(false), $metaInformations, array($tmpDir));
                 }
                 else {
                     $message .= $metaFileName . ' nicht gefunden!<br /><br />'; // Only for debugging
