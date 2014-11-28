@@ -400,11 +400,11 @@ class THM_RepoController extends JControllerLegacy
                 $metaFileName = 'Metadata.json';
                 if (file_exists($tmpDir . DS . $metaFileName)) {
                     $jsonStr = file_get_contents($tmpDir . DS . $metaFileName);
-                    $metaInformations = json_decode($jsonStr, true); 
+                    $metaData = json_decode($jsonStr, true);
                     $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
-                    $message .= $this->importMetaInformations($metaInformations) . '<br /><br />';
+                    $message .= $this->importMetaInformations($metaData) . '<br /><br />';
 					
-					$this->importEntities(THMFolder::getRoot(false), $metaInformations, array($tmpDir));
+					$this->importEntities(THMFolder::getRoot(false), $metaData, array($tmpDir));
                 }
                 else {
                     $message .= $metaFileName . ' nicht gefunden!<br /><br />'; // Only for debugging
