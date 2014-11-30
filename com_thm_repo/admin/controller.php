@@ -320,48 +320,6 @@ class THM_RepoController extends JControllerLegacy
     }
 
     /*
-     * This function will walk a TreeVisitor object through the file-tree.
-     *
-     * @param TreeVisitor $visitor Visitor.
-     * @param THMFolder $folder Is the folder from where to start traversing the file tree or null to start from
-     *                          the root folder.
-     */
-    private function walkTree($visitor, $folder = null)
-    {
-        if($folder == null)
-        {
-            $folder = THMFolder::getRoot();
-        }
-
-        $this->walkFolders($visitor, $folder);
-
-        $visitor->done();
-    }
-
-    /*
-     * Helper function for walkTree.
-     */
-    private function walkFolders($visitor, $folder)
-    {
-        $visitor->enteringFolder($folder);
-
-        foreach ($folder->getFolders() as $f)
-        {
-            $this->walkFolders($visitor, $f);
-        }
-
-        foreach ($folder->getEntities() as $e)
-        {
-            $visitor->visitEntity($e);
-        }
-
-        $visitor->leavingFolder($folder);
-    }
-    
-    
-    
-
-    /*
      * Import Zip File Action
      *
      * @copyright   
@@ -519,8 +477,7 @@ class THM_RepoController extends JControllerLegacy
      */
     public function doExport()
     {
-        $rootFolder = THMFolder::getRoot();
-        $jsonMetaInfo = json_encode($this->getMetaInfoFolder($rootFolder), JSON_PRETTY_PRINT);
+        $jsonMetaInfo = json_encode($this->getMetaInfoFolder(), JSON_PRETTY_PRINT);
 
         $zipper = new ZipVisitor($jsonMetaInfo);
 
@@ -540,19 +497,22 @@ class THM_RepoController extends JControllerLegacy
      *
      * @return stdClass  object containing json meta information
      */
-    private function getMetaInfoFolder($folder)
+    private function getMetaInfoFolder($folder = null)
     {
-        $jsonObject = new stdClass;
-
-        $jsonObject->name = $folder->getName();
-        $jsonObject->type = 'folder';
-        $jsonObject->created_by = $folder->getCreatedBy()->getDisplayName();
-        $jsonObject->created_on = $folder->getCreated();
-        $jsonObject->modified_by = $folder->getModifiedBy()->getDisplayName();
-        $jsonObject->modified_on = $folder->getModified();
-        $jsonObject->description = $folder->getDescription();
-        $jsonObject->viewlevel = $folder->getViewLevel();
-        $jsonObject->enabled = $folder->isPublished() ? 1 :0;
+        if ($folder == null) {
+            $folder = THMFolder::getRoot();
+        } else {
+            $jsonObject = new stdClass;
+            $jsonObject->name = $folder->getName();
+            $jsonObject->type = 'folder';
+            $jsonObject->created_by = $folder->getCreatedBy()->getDisplayName();
+            $jsonObject->created_on = $folder->getCreated();
+            $jsonObject->modified_by = $folder->getModifiedBy()->getDisplayName();
+            $jsonObject->modified_on = $folder->getModified();
+            $jsonObject->description = $folder->getDescription();
+            $jsonObject->viewlevel = $folder->getViewLevel();
+            $jsonObject->enabled = $folder->isPublished() ? 1 :0;
+        }
 
         $children = array();
 
@@ -566,9 +526,12 @@ class THM_RepoController extends JControllerLegacy
             $children[] = $this->getMetaInfoEntity($a);
         }
 
-        $jsonObject->children = $children;
-
-        return $jsonObject;
+        if ($jsonObject == null) {
+            return $children;
+        } else {
+            $jsonObject->children = $children;
+            return $jsonObject;
+        }
     }
 
     /**
@@ -604,6 +567,46 @@ class THM_RepoController extends JControllerLegacy
 
         return $jsonObject;
     }
+
+    /*
+     * This function will walk a TreeVisitor object through the file-tree.
+     *
+     * @param TreeVisitor $visitor Visitor.
+     * @param THMFolder $folder Is the folder from where to start traversing the file tree or null to start from
+     *                          the root folder.
+     */
+    private function walkTree($visitor)
+    {
+        $this->walkFolders($visitor);
+
+        $visitor->done();
+    }
+
+    /*
+     * Helper function for walkTree.
+     */
+    private function walkFolders($visitor, $folder = null)
+    {
+        if($folder == null)
+        {
+            $folder = THMFolder::getRoot();
+        } else {
+            $visitor->enteringFolder($folder);
+        }
+
+        foreach ($folder->getFolders() as $f)
+        {
+            $this->walkFolders($visitor, $f);
+        }
+
+        foreach ($folder->getEntities() as $e)
+        {
+            $visitor->visitEntity($e);
+        }
+
+        $visitor->leavingFolder($folder);
+    }
+
 }
 
 //TODO Where would you put an interface in Joomla?
