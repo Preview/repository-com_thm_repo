@@ -126,7 +126,7 @@ class THM_RepoController extends JControllerLegacy
 
         try
         {
-            $this->importFolders($root, $folders);
+            $this->_importFolders($root, $folders);
         }
         catch (Exception $ex)
         {
@@ -143,7 +143,7 @@ class THM_RepoController extends JControllerLegacy
     private function _importFolders($repoFolder, $folders)
     {
         foreach ($folders as $folder) {
-            $this->importFolder($repoFolder, $folder);
+            $this->_importFolder($repoFolder, $folder);
 
             $this->_importEntities($newRepoFolder, $folder->children);
         }
@@ -543,11 +543,6 @@ class THM_RepoController extends JControllerLegacy
         $zipper = new ZipVisitor($jsonMetaInfo);
 
         $this->walkTree($zipper);
-
-        $test = new THMFolder();
-
-        $test->
-
 
         header("Content-Type: application/zip");
         header(
