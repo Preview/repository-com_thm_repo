@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @category    Joomla component
+ * @category    Joomla_Component
  * @package     THM_Repo
- * @subpackage  com_thm_repo.admin
+ * @subpackage  Com_Thm_Repo.admin
  * @author      Stefan Schneider, <stefan.schneider@mni.thm.de>
  * @copyright   2013 TH Mittelhessen
  * @license     GNU GPL v.2
@@ -18,40 +18,59 @@ jimport('thm_repo.core.All');
 /**
  * THM_RepoController class for component com_thm_repo
  *
- * @category  Joomla.Component.Admin
- * @package   com_thm_repo.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
+ * @category Joomla.Component.Admin
+ * @package  Com_Thm_Repo.admin
+ * @link     www.mni.thm.de
+ * @since    Class available since Release 2.0
  */
 class THM_RepoController extends JControllerLegacy
 {
-	/**
-	 * Method to display admincenter
-	 * 
-	 * @param   boolean  $cachable   cachable
-	 * @param   boolean  $urlparams  url param
-	 *
-	 * @return void
-	 */
-	public function display($cachable = false, $urlparams = false)
-	{
-		// Set default view if not set
-		$input = JFactory::getApplication()->input;
-		$input->set('view', $input->getCmd('view', 'start'));
+    /**
+     * Method to display admincenter
+     *
+     * @param boolean $cachable  cachable
+     * @param boolean $urlparams url param
+     *
+     * @return void
+     */
+    public function display($cachable = false, $urlparams = false)
+    {
+        // Set default view if not set
+        $input = JFactory::getApplication()->input;
+        $input->set('view', $input->getCmd('view', 'start'));
 
-		// Submenu
+        // Submenu
         $vName = JFactory::getApplication()->input->getWord('view', 'thm_repo');
 
         // TODO: replace deprecated call
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_START'), 'index.php?option=com_thm_repo&view=start', $vName == 'start');
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FOLDERMANAGER'), 'index.php?option=com_thm_repo&view=folders', $vName == 'folders');
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_FILEMANAGER'),  'index.php?option=com_thm_repo&view=files', $vName == 'files');
-		JSubMenuHelper::addEntry(JText::_('COM_THM_REPO_LINKMANAGER'), 'index.php?option=com_thm_repo&view=links', $vName == 'links');
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_REPO_START'),
+            'index.php?option=com_thm_repo&view=start',
+            $vName == 'start'
+        );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_REPO_FOLDERMANAGER'),
+            'index.php?option=com_thm_repo&view=folders',
+            $vName == 'folders'
+        );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_REPO_FILEMANAGER'),
+            'index.php?option=com_thm_repo&view=files',
+            $vName == 'files'
+        );
+        JSubMenuHelper::addEntry(
+            JText::_('COM_THM_REPO_LINKMANAGER'),
+            'index.php?option=com_thm_repo&view=links',
+            $vName == 'links'
+        );
 
-		// Call parent behavior
-		parent::display($cachable, $urlparams);
-	}
+        // Call parent behavior
+        parent::display($cachable, $urlparams);
+    }
 
+    /**
+     *
+     */
     public function portOldRepositoryData()
     {
         jimport('thm_repo.core.All');
@@ -59,9 +78,9 @@ class THM_RepoController extends JControllerLegacy
 
         // TODO: Check is repository installed !?
 
-        $folders = $this->createObjectTree();
+        $folders = $this->_createObjectTree();
 
-        $this->importIntoRepo($folders);
+        $this->_importIntoRepo($folders);
 
         echo 'Done!';
     }
@@ -70,7 +89,7 @@ class THM_RepoController extends JControllerLegacy
      * Gets the id of a super user
      * @return int The id of a super user
      */
-    private function getSuperUserId()
+    private function _getSuperUserId()
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
@@ -82,22 +101,25 @@ class THM_RepoController extends JControllerLegacy
             ->where("g.title like 'Super Users'");
         $resultList = $db->setQuery($query)->loadObjectList();
 
-        if (empty($resultList))
-        {
+        if (empty($resultList)) {
             throw new RuntimeException("Unexpected State: No SuperUser found.");
         }
 
         return (int) $resultList[0]->id;
     }
 
-    private function importIntoRepo($folders)
+    /**
+     *
+     */
+    private function _importIntoRepo($folders)
     {
         // Create Root Folder
         $_public = 1;
         $_published = true;
 
         $root = new THMFolder(
-            null, 'Root', 'One Node to rule them all!', new THMUser($this->getSuperUserId()),
+            null, 'Root', 'One Node to rule them all!',
+            new THMUser($this->_getSuperUserId()),
             $_public, $_published
         );
         THMFolder::persist($root);
@@ -113,79 +135,79 @@ class THM_RepoController extends JControllerLegacy
         }
     }
 
-    private function importFolders($repoFolder, $folders)
+    /**
+     * @param $repoFolder
+     * @param $folders
+     * @return
+     */
+    private function _importFolders($repoFolder, $folders)
     {
-        foreach ($folders as $folder)
-        {
+        foreach ($folders as $folder) {
             $this->importFolder($repoFolder, $folder);
 
-            $this->importEntities($newRepoFolder, $folder->children);
+            $this->_importEntities($newRepoFolder, $folder->children);
         }
     }
 
     /**
      * Imports a folder into the repo and initiates importing of its children
      * 
-     * @param   THMFolder  $repoFolder      The parent folder
-     * @param   array      $folder          Array with folder details (name, description, created_by, viewlevel, enabled, children)
-     * @param   array      $pathComponents  Array of path components that point to the parent folder
+     * @param THMFolder $repoFolder     The parent folder
+     * @param array     $folder         Array with folder details (name,
+     * description, created_by, viewlevel, enabled, children)
+     * @param array     $pathComponents Array of path components that
+     * point to the parent folder
      */
-	private function importFolder($repoFolder, $folder, $pathComponents)
-	{
-		$newRepoFolder = new THMFolder(
-			$repoFolder,
-			$folder['name'],
-			$folder['description'],
-			$this->getValidUser($folder['created_by']),
-			(int) $folder['viewlevel'],
-			(bool) $folder['enabled']
-		);
-		THMFolder::persist($newRepoFolder);
+    private function _importFolder($repoFolder, $folder, $pathComponents)
+    {
+        $newRepoFolder = new THMFolder(
+            $repoFolder,
+            $folder['name'],
+            $folder['description'],
+            $this->_getValidUser($folder['created_by']),
+            (int) $folder['viewlevel'],
+            (bool) $folder['enabled']
+        );
+        THMFolder::persist($newRepoFolder);
 
-		$pathComponents[] = $folder['name'];
-		$this->importEntities($newRepoFolder, $folder['children'], $pathComponents);
-	}
+        $pathComponents[] = $folder['name'];
+        $this->_importEntities($newRepoFolder, $folder['children'], $pathComponents);
+    }
 
     /**
      * Imports multiple entities into the repo
      * 
-     * @param   THMFolder  $repoFolder      The parent folder
-     * @param   array      $entities        Array of entities that will be imported
-     * @param   array      $pathComponents  The path components that point to the containing folder in the file system
+     * @param THMFolder $repoFolder     The parent folder
+     * @param array     $entities       Array of entities that will be imported
+     * @param array     $pathComponents The path components that point to the
+     * containing folder in the file system
      */
-    private function importEntities($repoFolder, $entities, $pathComponents = array())
+    private function _importEntities($repoFolder, $entities, $pathComponents = array())
     {
-        foreach ($entities as $entity)
-        {
-            $this->importEntity($repoFolder, $entity, $pathComponents);
+        foreach ($entities as $entity) {
+            $this->_importEntity($repoFolder, $entity, $pathComponents);
         }
     }
 
     /**
      * Imports one entity into the repo
      * 
-     * @param   THMFolder  $repoFolder      The parent folder
-     * @param   array      $entity          The entity details
-     * @param   array      $pathComponents  The oath components that point to the containing folder in the file system
+     * @param THMFolder $repoFolder     The parent folder
+     * @param array     $entity         The entity details
+     * @param array     $pathComponents The oath components that point
+     * to the containing folder in the file system
      * 
      * @throws RuntimeException If the entity type is unknown
      */
-    private function importEntity($repoFolder, $entity, $pathComponents = array())
+    private function _importEntity($repoFolder, $entity, $pathComponents = array())
     {
-        if ($entity['type'] == 'file')
-        {
-            $this->importFile($repoFolder, $entity, $pathComponents);
-        }
-        elseif ($entity['type'] == 'link')
-        {
-            $this->importLink($repoFolder, $entity, $pathComponents);
-        }
-        elseif ($entity['type'] == 'folder')
-        {
-            $this->importFolder($repoFolder, $entity, $pathComponents);
-        }
-        else
-        {
+        if ($entity['type'] == 'file') {
+            $this->_importFile($repoFolder, $entity, $pathComponents);
+        } elseif ($entity['type'] == 'link') {
+            $this->_importLink($repoFolder, $entity, $pathComponents);
+        } elseif ($entity['type'] == 'folder') {
+            $this->_importFolder($repoFolder, $entity, $pathComponents);
+        } else {
             throw new RuntimeException('Unknown entity type: ' . $entity['type']);
         }
     }
@@ -193,28 +215,29 @@ class THM_RepoController extends JControllerLegacy
     /**
      * Imports a file into the repo and initiates importing of its children
      * 
-     * @param   THMFolder  $repoFolder      The parent folder
-     * @param   array      $file            Array with file details (name, description, created_by, viewlevel, enabled, children)
-     * @param   array      $pathComponents  The path components that will point to the containing folder
+     * @param THMFolder $repoFolder     The parent folder
+     * @param array     $file           Array with file details (name, description,
+     * created_by, viewlevel, enabled, children)
+     * @param array     $pathComponents The path components that will point
+     * to the containing folder
      */
-    private function importFile($repoFolder, $file, $pathComponents)
+    private function _importFile($repoFolder, $file, $pathComponents)
     {
-		$pathComponents[] = $file['name'];
-		$filePath = implode(DS, $pathComponents);
+        $pathComponents[] = $file['name'];
+        $filePath = implode(DS, $pathComponents);
 
-        if (JFile::exists($filePath))
-        {
+        if (JFile::exists($filePath)) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_file($finfo, $filePath);
             finfo_close($finfo);
 
             $repoFile = new THMFile(
                 $repoFolder,
-				JFile::stripExt($file['name']),
-				$file['description'],
-                $this->getValidUser($file['created_by']),
+                JFile::stripExt($file['name']),
+                $file['description'],
+                $this->_getValidUser($file['created_by']),
                 (int) $file['viewlevel'],
-				(bool) $file['enabled'],
+                (bool) $file['enabled'],
                 array(
                     'tmp_name' => $filePath,
                     'name' => $file['name'],
@@ -224,65 +247,79 @@ class THM_RepoController extends JControllerLegacy
             );
             THMFile::persist($repoFile);
 
-			$this->importEntities($repoFolder, $file['children'], $pathComponents);
+            $this->_importEntities($repoFolder, $file['children'], $pathComponents);
         }
     }
 
     /**
      * Imports a link into the repo and initiates importing of its children
      * 
-     * @param   THMFolder  $repoFolder      The parent folder
-     * @param   array      $link            Array of link details (name, description, created_by, uri, viewlevel, enabled, children)
-     * @param   array      $pathComponents  The path components that point to the containing folder
+     * @param THMFolder $repoFolder     The parent folder
+     * @param array     $link           Array of link details (name, description,
+     * created_by, uri, viewlevel, enabled, children)
+     * @param array     $pathComponents The path components that point to the
+     * containing folder
      */
-    private function importLink($repoFolder, $link, $pathComponents)
+    private function _importLink($repoFolder, $link, $pathComponents)
     {
         $repoLink = new THMWebLink(
             $repoFolder,
-			$link['name'],
-			$link['description'],
-            $this->getValidUser($link['created_by']),
+            $link['name'],
+            $link['description'],
+            $this->_getValidUser($link['created_by']),
             $link['uri'],
-			(int) $link['viewlevel'],
-			(bool) $link['enabled']
+            (int) $link['viewlevel'],
+            (bool) $link['enabled']
         );
 
         THMWebLink::persist($repoLink);
 
-		$pathComponents[] = $link['name'];
-		$this->importEntities($newRepoFolder, $link['children'], $pathComponents);
+        $pathComponents[] = $link['name'];
+        $this->_importEntities($newRepoFolder, $link['children'], $pathComponents);
     }
 
-    private function createObjectTree($parentId = 1)
+    /**
+     * @param int $parentId
+     * @return mixed
+     */
+    private function _createObjectTree($parentId = 1)
     {
         // 1. Read all categories from repository
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query
-            ->select("id, parent_id, title, description, published, access as 'viewlevel'")
+            ->select(
+                "id, parent_id, title, description, published, access as 'viewlevel'"
+            )
             ->from('#__categories')
             ->where("extension like 'com_thm_repository' AND parent_id = $parentId")
             ->order("lft");
 
         $folders = $db->setQuery($query)->loadObjectList();
 
-        foreach ($folders as $folder)
-        {
-            $folder->childFolders = $this->createObjectTree((int) $folder->id);
-            $folder->childEntities = $this->createEntityObject((int) $folder->id);
+        foreach ($folders as $folder) {
+            $folder->childFolders = $this->_createObjectTree((int) $folder->id);
+            $folder->childEntities = $this->_createEntityObject((int) $folder->id);
         }
 
         return $folders;
     }
 
-    private function createEntityObject($parentId)
+    /**
+     * @param $parentId
+     * @return mixed
+     */
+    private function _createEntityObject($parentId)
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query
-            ->select("DISTINCT e.id, e.catid, e.version, e.title, e.path, e.description, e.access as 'viewlevel'")
+            ->select(
+                "DISTINCT e.id, e.catid, e.version, e.title,
+                e.path, e.description, e.access as 'viewlevel'"
+            )
             ->select("e.created_by, e.state as 'published', t.name as 'type'")
             ->from("#__thm_repository_entity e")
             ->innerJoin("#__thm_repository_type t ON e.type = t.id")
@@ -294,21 +331,21 @@ class THM_RepoController extends JControllerLegacy
     }
 
     /**
-     * Gets a valid user in the system, if a user with the given name can't be found a super user will be selected
+     * Gets a valid user in the system, if a user with
+     * the given name can't be found a super user will be selected
      * 
-     * @param   string  $name  The name of the user
+     * @param string $name The name of the user
      * 
      * @return THMUser A valid user
      */
-    private function getValidUser($name)
+    private function _getValidUser($name)
     {
         $resultList = null;
 
-        if (!empty($id))
-        {
+        if (!empty($id)) {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
-			$name = $db->quote($id);
+            $name = $db->quote($id);
             $query
                 ->select('*')
                 ->from('#__users')
@@ -316,14 +353,17 @@ class THM_RepoController extends JControllerLegacy
             $result = $db->setQuery($query)->loadAssoc();
         }
 
-        return new THMUser(empty($result['id']) ? $this->getSuperUserId() : (int) $result['id']);
+        return new THMUser(
+            empty($result['id']) ? $this->_getSuperUserId() : (int) $result['id']
+        );
     }
 
     /*
      * This function will walk a TreeVisitor object through the file-tree.
      *
      * @param TreeVisitor $visitor Visitor.
-     * @param THMFolder $folder Is the folder from where to start traversing the file tree or null to start from
+     * @param THMFolder $folder Is the folder from where to start
+     * traversing the file tree or null to start from
      *                          the root folder.
      */
     private function walkTree($visitor, $folder = null)
@@ -361,25 +401,27 @@ class THM_RepoController extends JControllerLegacy
     
     
 
-    /*
+    /**
      * Import Zip File Action
      *
+     * @access public
+     * @return NULL
+     *
      * @copyright   
-     * @author      adnan.oezsarigoel@mni.thm.de
-     * 
-     * @access      public
-     * @param       
-     * @return      
+     * @author    adnan.oezsarigoel@mni.thm.de
      */
     public function zipImportAction()
-	{
+    {
         jimport('joomla.filesystem.folder');
         
-        $tmpDir = sys_get_temp_dir() . DS . uniqid('import_thm_repo_');  // This folder will be deleted by JFolder::delete
+        $tmpDir = sys_get_temp_dir() . DS . uniqid('import_thm_repo_');
+            // This folder will be deleted by JFolder::delete
         
         $message = '';
         
-        $file = JRequest::getVar('import_thm_repo_form_file', null, 'files', 'array');
+        $file = JRequest::getVar(
+            'import_thm_repo_form_file', null, 'files', 'array'
+        );
         
         if (isset($file)) {
             $filename = JFile::makeSafe($file['name']);
@@ -390,35 +432,46 @@ class THM_RepoController extends JControllerLegacy
                 $zip->extractTo($tmpDir);
                 $zip->close();
                 
-                $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />'; // Only for debugging
+                $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />';
+                        // Only for debugging
 
-                // $listFolderTree = JFolder::listFolderTree($tmpDir, $filter, $maxLevel = 3, $level = 0, $parent = 0);
+                // $listFolderTree = JFolder::listFolderTree($tmpDir,
+                // $filter, $maxLevel = 3, $level = 0, $parent = 0);
+
                 // $listFolderTree = JFolder::listFolderTree($tmpDir);
-                $importObj = $this->dirToImportOject($tmpDir);
-                $message .= '<strong>Archive Content</strong><br />' . print_r($importObj, TRUE) . '<br /><br />'; // Only for debugging
+                $importObj = $this->_dirToImportOject($tmpDir);
+                $message .= '<strong>Archive Content</strong><br />' .
+                    print_r($importObj, true) . '<br /><br />'; // Only for debugging
                 
                 $metaFileName = 'Metadata.json';
                 if (file_exists($tmpDir . DS . $metaFileName)) {
                     $jsonStr = file_get_contents($tmpDir . DS . $metaFileName);
                     $metaData = json_decode($jsonStr, true);
-                    $message .= '<strong>Meta Data</strong><br />'; // Only for debugging
-                    $message .= $this->importMetaInformations($metaData) . '<br /><br />';
-					
-					$this->importEntities(THMFolder::getRoot(false), $metaData, array($tmpDir));
-                }
-                else {
-                    $message .= $metaFileName . ' nicht gefunden!<br /><br />'; // Only for debugging
+                    $message .= '<strong>Meta Data</strong><br />';
+                        // Only for debugging
+                    $message .= $this->_importMetaInformations($metaData) .
+                        '<br /><br />';
+
+                    $this->_importEntities(
+                        THMFolder::getRoot(false), $metaData, array($tmpDir)
+                    );
+                } else {
+                    $message .= $metaFileName . ' nicht gefunden!<br /><br />';
+                    // Only for debugging
                 }
                 
                 if (JFolder::delete($tmpDir)) {
-                    $message .= 'Temp-Ordner ' . $tmpDir . ' erfolgreich entfernt!<br /><br />'; // Only for debugging
+                    $message .= 'Temp-Ordner ' . $tmpDir .
+                        ' erfolgreich entfernt!<br /><br />';
+                    // Only for debugging
+                } else {
+                    $message .= 'Temp-Ordner ' . $tmpDir .
+                        ' löschen fehlgeschlagen!<br /><br />';
+                        // Only for debugging
                 }
-                else {
-                    $message .= 'Temp-Ordner ' . $tmpDir . ' löschen fehlgeschlagen!<br /><br />'; // Only for debugging
-                }
-            }
-            else {
-                $message .= 'Es sind nur Zip-Dateien erlaubt!<br /><br />'; // Only for debugging
+            } else {
+                $message .= 'Es sind nur Zip-Dateien erlaubt!<br /><br />';
+                // Only for debugging
             }
         }
             
@@ -426,41 +479,43 @@ class THM_RepoController extends JControllerLegacy
 
         $this->setRedirect('index.php?option=com_thm_repo&view=start');        
     } // end of function zipImportAction
-    
-    
-    
 
-    /*
+
+    /**
      * Directory to Import Object
      *
-     * @copyright   
-     * @author      adnan.oezsarigoel@mni.thm.de
-     * 
-     * @access      private
-     * @param       String          Path to unpacked Zip-Directory
-     * @return      array           Array with Directory Informations
-     * @TODO        Check "Do something" in function
-     * @TODO        $obj is still not finished
+     * @param String $dir Path to unpacked Zip-Directory
+     *
+     * @access private
+     *
+     * @return array   Array with Directory Informations
+     *
+     * @TODO Check "Do something" in function
+     * @TODO $obj is still not finished
+     *
+     * @copyright
+     * @author    adnan.oezsarigoel@mni.thm.de
      */
-    private function dirToImportOject($dir) {
+    private function _dirToImportOject($dir)
+    {
         $obj = array();
         if ($handle = opendir($dir)) {
             while ($file = readdir($handle)) {
-                if ($file === "." || $file === "..") continue;
-                else if (is_dir($dir . "/" . $file)) {
+                if ($file === "." || $file === "..") {
+                    continue;
+                } else if (is_dir($dir . "/" . $file)) {
                     // Do something here with directories
-                    $obj[$file] = $this->dirToImportOject($dir . "/" . $file);
-                    // array_push($obj, $this->dirToImportOject($dir . "/" . $file));
-                }
-                else {
+                    $obj[$file] = $this->_dirToImportOject($dir . "/" . $file);
+                    // array_push($obj, $this->
+                    //_dirToImportOject($dir . "/" . $file));
+                } else {
                     $pathInfo = pathinfo($dir . "/" . $file);
                     if ($pathInfo['extension'] === 'url') {
                         // Do something here with urls
                         $url = file_get_contents($dir . "/" . $file);
                         $obj[$file] = $url;
                         // array_push($obj, $url);
-                    }
-                    else {
+                    } else {
                         // Do something here with other files
                         $obj[$file] = $pathInfo['filename'];
                         // array_push($obj, $pathInfo['filename']);
@@ -470,44 +525,50 @@ class THM_RepoController extends JControllerLegacy
             closedir($handle);
         }
         return $obj;
-    } // end of function dirToImportOject
+    } // end of function _dirToImportOject
     
     
     
 
-    /*
+    /**
      * Import Meta Informations
      *
-     * @copyright   
-     * @author      adnan.oezsarigoel@mni.thm.de
-     * 
-     * @access      private
-     * @param       array           Meta Informations Array
-     * @param       String          Only for debugging
-     * @return      String          Only for debugging
-     * @TODO        Check "Do something" in function
-     * @TODO        Delete or uncomment echos in function
+     * @param array  $metaInformations Meta Informations Array
+     * @param String $prefix           Only for debugging
+     *
+     * @return String          Only for debugging
+     *
+     * @access private
+     *
+     * @copyright
+     * @author    adnan.oezsarigoel@mni.thm.de
+     *
+     * @TODO Check "Do something" in function
+     * @TODO Delete or uncomment echos in function
      */
-    private function importMetaInformations($metaInformations, $prefix = ' | ') {
+    private function _importMetaInformations($metaInformations, $prefix = ' | ')
+    {
         $message = '';
         foreach ($metaInformations AS $obj) {
-            if (empty($obj) || !isset($obj['type'])) continue;
-            else if ($obj['type'] === 'folder') {
+            if (empty($obj) || !isset($obj['type'])) {
+                continue;
+            } else if ($obj['type'] === 'folder') {
                 // Do something here with directories
                 $message .= $prefix . $obj['name'] . '<br />';
-                $message .= $this->importMetaInformations($obj['children'], $prefix . ' - ');
-            }
-            else if ($obj['type'] === 'link') {
+                $message .= $this->_importMetaInformations(
+                    $obj['children'], $prefix . ' - '
+                );
+            } else if ($obj['type'] === 'link') {
                 // Do something here with urls
-                $message .= $prefix . $obj['name'] . ' -&gt; ' . $obj['uri'] . '<br />';
-            }
-            else {
+                $message .= $prefix . $obj['name'] .
+                    ' -&gt; ' . $obj['uri'] . '<br />';
+            } else {
                 // Do something here with other files
                 $message .= $prefix . $obj['name'] . '<br />';
             }
         }
         return $message;
-    } // end of function importMetaInformations
+    } // end of function _importMetaInformations
     
     
     
@@ -520,14 +581,24 @@ class THM_RepoController extends JControllerLegacy
     public function doExport()
     {
         $rootFolder = THMFolder::getRoot();
-        $jsonMetaInfo = json_encode($this->getMetaInfoFolder($rootFolder), JSON_PRETTY_PRINT);
+        $jsonMetaInfo = json_encode(
+            $this->getMetaInfoFolder($rootFolder), JSON_PRETTY_PRINT
+        );
 
         $zipper = new ZipVisitor($jsonMetaInfo);
 
         $this->walkTree($zipper);
 
+        $test = new THMFolder();
+
+        $test->
+
+
         header("Content-Type: application/zip");
-        header("Content-Disposition: attachment; filename=thm-repo-export-" . date("Y-m-d-H-i", time()) . ".zip");
+        header(
+            "Content-Disposition: attachment; filename=thm-repo-export-" .
+            date("Y-m-d-H-i", time()) . ".zip"
+        );
         readfile($zipper->file);
 
         exit();
@@ -536,7 +607,7 @@ class THM_RepoController extends JControllerLegacy
     /**
      * Collect meta information recursively from folder.
      *
-     * @param   THMFolder  $folder  folder to collect information from
+     * @param THMFolder $folder folder to collect information from
      *
      * @return stdClass  object containing json meta information
      */
