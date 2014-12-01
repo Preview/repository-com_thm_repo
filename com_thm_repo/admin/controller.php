@@ -172,8 +172,10 @@ class THM_RepoController extends JControllerLegacy
         THMFolder::persist($newRepoFolder);
 
         $pathComponents[] = $folder['name'];
-        $this->_importEntities($newRepoFolder, $folder['children'], $pathComponents);
-    }
+		if (array_key_exists('children', $folder)) {
+			$this->_importEntities($newRepoFolder, $folder['children'], $pathComponents);
+		}
+	}
 
     /**
      * Imports multiple entities into the repo
@@ -247,8 +249,6 @@ class THM_RepoController extends JControllerLegacy
                 )
             );
             THMFile::persist($repoFile);
-
-            $this->_importEntities($repoFolder, $file['children'], $pathComponents);
         }
     }
 
@@ -274,9 +274,6 @@ class THM_RepoController extends JControllerLegacy
         );
 
         THMWebLink::persist($repoLink);
-
-        $pathComponents[] = $link['name'];
-        $this->_importEntities($newRepoFolder, $link['children'], $pathComponents);
     }
 
     /**
@@ -355,7 +352,7 @@ class THM_RepoController extends JControllerLegacy
         }
 
         return new THMUser(
-            empty($result['id']) ? $this->_getSuperUserId() : (int) $result['id']
+            empty($result['id']) ? (int) JFactory::getUser()->get('id') : (int) $result['id']
         );
     }
 
@@ -372,8 +369,8 @@ class THM_RepoController extends JControllerLegacy
     {
         jimport('joomla.filesystem.folder');
         
+		// This folder will be deleted by JFolder::delete
         $tmpDir = sys_get_temp_dir() . DS . uniqid('import_thm_repo_');
-            // This folder will be deleted by JFolder::delete
         
         $message = '';
         
@@ -385,58 +382,56 @@ class THM_RepoController extends JControllerLegacy
             $filename = JFile::makeSafe($file['name']);
             
             if (strtolower(JFile::getExt($filename)) === 'zip') {      
-                $zip = new ZipArchive();
-                $zip->open($file['tmp_name']);
-                $zip->extractTo($tmpDir);
-                $zip->close();
-                
-                $message .= 'Temp-Ordner ' . $tmpDir . ' erstellt!<br /><br />';
-                        // Only for debugging
+                $zip = new ZipArchive;
+                $result = $zip->open($file['tmp_name']);
+				if ($result === true) {
+					$zip->extractTo($tmpDir);
+					$zip->close();
 
-                // $listFolderTree = JFolder::listFolderTree($tmpDir,
-                // $filter, $maxLevel = 3, $level = 0, $parent = 0);
+					// $listFolderTree = JFolder::listFolderTree($tmpDir,
+					// $filter, $maxLevel = 3, $level = 0, $parent = 0);
 
-                // $listFolderTree = JFolder::listFolderTree($tmpDir);
-                $importObj = $this->_dirToImportOject($tmpDir);
-                $message .= '<strong>Archive Content</strong><br />' .
-                    print_r($importObj, true) . '<br /><br />'; // Only for debugging
-                
-                $metaFileName = 'Metadata.json';
-                if (file_exists($tmpDir . DS . $metaFileName)) {
-                    $jsonStr = file_get_contents($tmpDir . DS . $metaFileName);
-                    $metaData = json_decode($jsonStr, true);
-                    $message .= '<strong>Meta Data</strong><br />';
-                        // Only for debugging
-                    $message .= $this->_importMetaInformations($metaData) .
-                        '<br /><br />';
+					// $listFolderTree = JFolder::listFolderTree($tmpDir);
+					$importObj = $this->_dirToImportOject($tmpDir);
+					$message .= '<strong>Archive Content</strong><br />' .
+						print_r($importObj, true) . '<br /><br />'; // Only for debugging
+					
+					$metaFileName = 'Metadata.json';
+					if (file_exists($tmpDir . DS . $metaFileName)) {
+						$jsonStr = file_get_contents($tmpDir . DS . $metaFileName);
+						$metaData = json_decode($jsonStr, true);
+						if ($metaData !== null) {
+							
+							$message .= '<strong>Meta Data</strong><br />';
+								// Only for debugging
+							$message .= $this->_importMetaInformations($metaData) .
+								'<br /><br />';
 
-                    $this->_importEntities(
-                        THMFolder::getRoot(false), $metaData, array($tmpDir)
-                    );
-                } else {
-                    $message .= $metaFileName . ' nicht gefunden!<br /><br />';
-                    // Only for debugging
-                }
-                
-                if (JFolder::delete($tmpDir)) {
-                    $message .= 'Temp-Ordner ' . $tmpDir .
-                        ' erfolgreich entfernt!<br /><br />';
-                    // Only for debugging
-                } else {
-                    $message .= 'Temp-Ordner ' . $tmpDir .
-                        ' löschen fehlgeschlagen!<br /><br />';
-                        // Only for debugging
-                }
+							$this->_importEntities(
+								THMFolder::getRoot(false), $metaData, array($tmpDir)
+							);
+							
+							JFactory::getApplication()->enqueueMessage($message);
+						} else {
+							JFactory::getApplication()->enqueueMessage('Fehler in der Metadaten-Struktur: ' . json_last_error_msg(), 'error');
+						}
+					} else {
+						JFactory::getApplication()->enqueueMessage($metaFileName . ' nicht gefunden!', 'error');
+					}
+						
+					if (!JFolder::delete($tmpDir)) {
+						JFactory::getApplication()->enqueueMessage('Temp-Ordner ' . $tmpDir . ' löschen fehlgeschlagen!', 'warning');
+					}
+				} else {
+					JFactory::getApplication()->enqueueMessage('Die hochgeladene Datei ist kein gültiges ZIP-Archiv.', 'error');
+				}
             } else {
-                $message .= 'Es sind nur Zip-Dateien erlaubt!<br /><br />';
-                // Only for debugging
-            }
-        }
-            
-        $this->setMessage($message);
+                JFactory::getApplication()->enqueueMessage('Es sind nur Zip-Dateien erlaubt!', 'error');
+			}
+		}
 
-        $this->setRedirect('index.php?option=com_thm_repo&view=start');        
-    } // end of function zipImportAction
+		$this->setRedirect('index.php?option=com_thm_repo&view=start');
+    }
 
 
     /**
