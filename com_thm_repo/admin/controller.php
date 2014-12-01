@@ -161,6 +161,10 @@ class THM_RepoController extends JControllerLegacy
      */
     private function _importFolder($repoFolder, $folder, $pathComponents)
     {
+        // Setting default values - Default User is set by function _getValidUser
+        if (!isset($folder['viewlevel'])) $folder['viewlevel'] = 1;
+        if (!isset($folder['enabled'])) $folder['enabled'] = true;
+    
         $newRepoFolder = new THMFolder(
             $repoFolder,
             $folder['name'],
@@ -225,7 +229,11 @@ class THM_RepoController extends JControllerLegacy
      * to the containing folder
      */
     private function _importFile($repoFolder, $file, $pathComponents)
-    {
+    {            
+        // Setting default values - Default User is set by function _getValidUser
+        if (!isset($file['viewlevel'])) $file['viewlevel'] = 1;
+        if (!isset($file['enabled'])) $file['enabled'] = true;
+        
         $pathComponents[] = $file['name'];
         $filePath = implode(DS, $pathComponents);
 
@@ -262,7 +270,11 @@ class THM_RepoController extends JControllerLegacy
      * containing folder
      */
     private function _importLink($repoFolder, $link, $pathComponents)
-    {
+    {            
+        // Setting default values - Default User is set by function _getValidUser
+        if (!isset($link['viewlevel'])) $link['viewlevel'] = 1;
+        if (!isset($link['enabled'])) $link['enabled'] = true;
+            
         $repoLink = new THMWebLink(
             $repoFolder,
             $link['name'],
@@ -338,18 +350,14 @@ class THM_RepoController extends JControllerLegacy
      */
     private function _getValidUser($name)
     {
-        $resultList = null;
-
-        if (!empty($id)) {
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $name = $db->quote($id);
-            $query
-                ->select('*')
-                ->from('#__users')
-                ->where("name = $name");
-            $result = $db->setQuery($query)->loadAssoc();
-        }
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $name = $db->quote($id);
+        $query
+            ->select('*')
+            ->from('#__users')
+            ->where("name = $name");
+        $result = $db->setQuery($query)->loadAssoc();
 
         return new THMUser(
             empty($result['id']) ? (int) JFactory::getUser()->get('id') : (int) $result['id']
@@ -387,25 +395,13 @@ class THM_RepoController extends JControllerLegacy
 				if ($result === true) {
 					$zip->extractTo($tmpDir);
 					$zip->close();
-
-					// $listFolderTree = JFolder::listFolderTree($tmpDir,
-					// $filter, $maxLevel = 3, $level = 0, $parent = 0);
-
-					// $listFolderTree = JFolder::listFolderTree($tmpDir);
-					$importObj = $this->_dirToImportOject($tmpDir);
-					$message .= '<strong>Archive Content</strong><br />' .
-						print_r($importObj, true) . '<br /><br />'; // Only for debugging
 					
 					$metaFileName = 'Metadata.json';
 					if (file_exists($tmpDir . DS . $metaFileName)) {
 						$jsonStr = file_get_contents($tmpDir . DS . $metaFileName);
 						$metaData = json_decode($jsonStr, true);
-						if ($metaData !== null) {
-							
-							$message .= '<strong>Meta Data</strong><br />';
-								// Only for debugging
-							$message .= $this->_importMetaInformations($metaData) .
-								'<br /><br />';
+						if ($metaData !== null) {							
+							$message .= $this->_getMetaInformations($metaData);
 
 							$this->_importEntities(
 								THMFolder::getRoot(false), $metaData, array($tmpDir)
@@ -432,96 +428,43 @@ class THM_RepoController extends JControllerLegacy
 
 		$this->setRedirect('index.php?option=com_thm_repo&view=start');
     }
-
-
-    /**
-     * Directory to Import Object
-     *
-     * @param String $dir Path to unpacked Zip-Directory
-     *
-     * @access private
-     *
-     * @return array   Array with Directory Informations
-     *
-     * @TODO Check "Do something" in function
-     * @TODO $obj is still not finished
-     *
-     * @copyright
-     * @author    adnan.oezsarigoel@mni.thm.de
-     */
-    private function _dirToImportOject($dir)
-    {
-        $obj = array();
-        if ($handle = opendir($dir)) {
-            while ($file = readdir($handle)) {
-                if ($file === "." || $file === "..") {
-                    continue;
-                } else if (is_dir($dir . "/" . $file)) {
-                    // Do something here with directories
-                    $obj[$file] = $this->_dirToImportOject($dir . "/" . $file);
-                    // array_push($obj, $this->
-                    //_dirToImportOject($dir . "/" . $file));
-                } else {
-                    $pathInfo = pathinfo($dir . "/" . $file);
-                    if ($pathInfo['extension'] === 'url') {
-                        // Do something here with urls
-                        $url = file_get_contents($dir . "/" . $file);
-                        $obj[$file] = $url;
-                        // array_push($obj, $url);
-                    } else {
-                        // Do something here with other files
-                        $obj[$file] = $pathInfo['filename'];
-                        // array_push($obj, $pathInfo['filename']);
-                    }
-                }
-            }
-            closedir($handle);
-        }
-        return $obj;
-    } // end of function _dirToImportOject
     
     
     
 
     /**
-     * Import Meta Informations
+     * Get Meta Informations
      *
      * @param array  $metaInformations Meta Informations Array
      * @param String $prefix           Only for debugging
      *
-     * @return String          Only for debugging
+     * @return String
      *
      * @access private
      *
      * @copyright
      * @author    adnan.oezsarigoel@mni.thm.de
-     *
-     * @TODO Check "Do something" in function
-     * @TODO Delete or uncomment echos in function
      */
-    private function _importMetaInformations($metaInformations, $prefix = ' | ')
+    private function _getMetaInformations($metaInformations, $prefix = ' | ')
     {
         $message = '';
         foreach ($metaInformations AS $obj) {
             if (empty($obj) || !isset($obj['type'])) {
                 continue;
             } else if ($obj['type'] === 'folder') {
-                // Do something here with directories
                 $message .= $prefix . $obj['name'] . '<br />';
-                $message .= $this->_importMetaInformations(
+                $message .= $this->_getMetaInformations(
                     $obj['children'], $prefix . ' - '
                 );
             } else if ($obj['type'] === 'link') {
-                // Do something here with urls
                 $message .= $prefix . $obj['name'] .
                     ' -&gt; ' . $obj['uri'] . '<br />';
             } else {
-                // Do something here with other files
                 $message .= $prefix . $obj['name'] . '<br />';
             }
         }
         return $message;
-    } // end of function _importMetaInformations
+    } // end of function _getMetaInformations
     
     
     
