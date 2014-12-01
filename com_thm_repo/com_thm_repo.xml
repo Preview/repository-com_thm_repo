@@ -41,7 +41,9 @@
 			<filename>access.xml</filename>	
 			<filename>config.xml</filename>		
 			<filename>controller.php</filename>
-			<filename>thm_repo.php</filename>
+            <filename>thm_repo.php</filename>
+            <filename>visitor.php</filename>
+            <filename>zip_visitor.php</filename>
 			<folder>controllers</folder>
 			<folder>css</folder>
 			<folder>models</folder>
