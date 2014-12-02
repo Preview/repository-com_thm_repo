@@ -352,6 +352,7 @@ class THM_RepoController extends JControllerLegacy
     {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
+        $name = $db->quote($name);
         $query
             ->select('*')
             ->from('#__users')
