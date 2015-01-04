@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 // Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
+jimport('thm_repo.core.All');
 
 /**
  * THM_RepoModelLink class for component com_thm_repo
@@ -170,7 +171,7 @@ class THM_RepoModelLink extends JModelAdmin
         $entitydata->viewlevel = $data['viewlevel'];
         $entitydata->created = $data['created'];
         $entitydata->created_by = $data['created_by'];
-        $entitydata->published = $data['published'];
+        $entitydata->published = !empty($data['published']);
 
 
         if (empty($entitydata->id))
@@ -230,37 +231,17 @@ class THM_RepoModelLink extends JModelAdmin
 	 */
 	public function delete(&$pks)
 	{
-		$id = $pks[0];
-		
-		// GetDBO
-		$db = JFactory::getDBO();
-		
-		// Delete link record
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_link'));
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		if (!($db->query()))
-		{
-			return false;
-		}
-		
-		// Delete Entity record
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_entity'));
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		if (!($db->query()))
-		{
-			return false;
-		}
-		
-		// Delete asset entry
-		$table = JTable::getInstance('Entity', 'THM_RepoTable');
-		if (!$table->delete($id))
-		{
-			return false;
-		}
+        foreach ($pks as $id)
+        {
+            try
+            {
+                THMWebLink::removeById($id);
+            }
+            catch (Exception $ex)
+            {
+                return false;
+            }
+        }
 		
 		return true;
 	}

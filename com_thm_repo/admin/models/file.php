@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 // Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.file');
+jimport('thm_repo.core.All');
 
 /**
  * THM_RepoModelFile class for component com_thm_repo
@@ -194,7 +195,7 @@ class THM_RepoModelFile extends JModelAdmin
         $entitydata->viewlevel = $data['viewlevel'];
         $entitydata->created = $data['created'];
         $entitydata->created_by = $data['created_by'];
-        $entitydata->published = $data['published'];
+        $entitydata->published = !empty($data['published']);
 
         if (empty($entitydata->id))
         {
@@ -333,64 +334,18 @@ class THM_RepoModelFile extends JModelAdmin
 	 */
 	public function delete(&$pks)
 	{
-		$id = $pks[0];
+        foreach ($pks as $id)
+        {
+            try
+            {
+                THMFile::removeById($id);
+            }
+            catch (Exception $ex)
+            {
+                return false;
+            }
+        }
 
-		// GetDBO
-		$db = JFactory::getDBO();
-
-		// Delete Version files
-		$query = $db->getQuery(true);
-		$query->select('path');
-		$query->from('#__thm_repo_version');
-		$query->where('id = ' . $id);
-		$db->setQuery((string) $query);
-		$versions = $db->loadObjectList();
-
-		if ($versions)
-		{
-			foreach ($versions as $version)
-			{
-				// Delete every Version File from deleted File
-				JFile::delete(JPATH_ROOT . $version->path);
-			}
-		}
-
-		// Delete Version record
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_version'));
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		if (!($db->execute()))
-		{
-			return false;
-		}
-
-		// Delete File record
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_file'));
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		if (!($db->execute()))
-		{
-			return false;
-		}
-
-		// Delete Entity record
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_entity'));
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		if (!($db->execute()))
-		{
-			return false;
-		}
-
-		// Delete asset entry
-		$table = JTable::getInstance('Entity', 'THM_RepoTable');
-		if (!$table->delete($id))
-		{
-			return false;
-		}
 		return true;
 	}
 }

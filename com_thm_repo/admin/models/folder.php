@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 // Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
+jimport('thm_repo.core.All');
 
 /**
  * THM_RepoModelFolder class for component com_thm_repo
@@ -126,6 +127,7 @@ class THM_RepoModelFolder extends JModelAdmin
 	public function save($data)
 	{
 		$folderdata = (object) $data;
+        $folderdata->published = !empty($data['published']);
 
 		$table = JTable::getInstance('Folder', 'THM_RepoTable');
 
@@ -274,8 +276,6 @@ class THM_RepoModelFolder extends JModelAdmin
 				$query->where('rgt < 0');
 				$db->setQuery($query);
 				$db->query();
-				
-							
 			}
 		
 		}
@@ -294,65 +294,28 @@ class THM_RepoModelFolder extends JModelAdmin
 	 */
 	public function delete(&$pks)
 	{
-		$id = $pks[0];
-			
-		// GetDBO
-		$db = JFactory::getDBO();
+        foreach ($pks as $id)
+        {
+            // GetDBO
+            $db = JFactory::getDBO();
 
-		// Check have child
-		$entitiesQuery = $db->getQuery(true);
-		$entitiesQuery
-			->select('e.id')
-			->from('#__thm_repo_entity e')
-			->where("e.parent_id = $id");
-		$entityResult = $db->setQuery($entitiesQuery)->loadAssoc();
+            // Check have child
+            $entitiesQuery = $db->getQuery(true);
+            $entitiesQuery
+                ->select('e.id')
+                ->from('#__thm_repo_entity e')
+                ->where("e.parent_id = $id");
+            $entityResult = $db->setQuery($entitiesQuery)->loadAssoc();
 
-		if (!empty($entityResult))
-		{
-			JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_FOLDER_CONTAINS_ENTITIES'));
-			return false;
-		}
+            if (!empty($entityResult))
+            {
+                JFactory::getApplication()->enqueueMessage(JText::_('COM_THM_REPO_FOLDER_CONTAINS_ENTITIES'));
+                return false;
+            }
 
-		// Get Data
-		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__thm_repo_folder');
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		$folderdata = $db->loadObject();
-		
-		// Delete folder entry
-		$query = $db->getQuery(true);
-		$query->delete($db->quoteName('#__thm_repo_folder'));
-		$query->where('id = ' . $id);
-		$db->setQuery($query);
-		if (!($db->query()))
-		{
-			return false;
-		}
-		
-		// Delete asset entry
- 		$table = JTable::getInstance('Folder', 'THM_RepoTable');
- 		if (!$table->delete($id))
- 		{
- 			return false;
- 		}
-				
-		// Update nested set
-		$query = $db->getQuery(true);
-		$query->update('#__thm_repo_folder');
-		$query->set('lft = lft - 2');
-		$query->where("lft > " . (int) $folderdata->lft);
-		$db->setQuery($query);
-		$db->query();
-		
-		$query = $db->getQuery(true);
-		$query->update('#__thm_repo_folder');
-		$query->set('rgt = rgt - 2');
-		$query->where("rgt > " . (int) $folderdata->rgt);
-		$db->setQuery($query);
-		$db->query();	
-		
+            THMFolder::removeById((int)$id);
+        }
+
 		return true;
 	}
 }

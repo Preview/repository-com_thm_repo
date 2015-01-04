@@ -39,11 +39,12 @@ class THM_RepoViewEntities extends JViewLegacy
 		$state = $this->get('State');
 
 		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
+            JFactory::getApplication()->enqueueMessage(implode('<br />', $errors), 'error');
+            return false;
+        }
 		// Assign data to the view
 		$this->items = $items;
 		$this->pagination = $pagination;
@@ -54,8 +55,13 @@ class THM_RepoViewEntities extends JViewLegacy
 		// Set the toolbar
 		$this->addToolBar();
 
+        if (version_compare(JVERSION, '3', '<'))
+        {
+            $tpl = 'j25';
+        }
+
 		// Display the template
-		parent::display();
+		parent::display($tpl);
 	}
 
 	/**

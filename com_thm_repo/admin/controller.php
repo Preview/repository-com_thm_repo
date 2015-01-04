@@ -23,6 +23,9 @@ defined('_JEXEC') or die;
  */
 class THM_RepoController extends JControllerLegacy
 {
+    private $_importIdMap = array();
+
+
 	/**
 	 * Method to display admincenter
 	 * 
@@ -50,18 +53,78 @@ class THM_RepoController extends JControllerLegacy
 		parent::display($cachable, $urlparams);
 	}
 
+    private static function getPortFilePath()
+    {
+        return JPATH_ROOT . '/media/com_thm_repo/portedFileIds';
+    }
+
+    public function translateRepositoryContentPlaceholder()
+    {
+        jimport('joomla.filesystem.file');
+
+        if (JFile::exists(self::getPortFilePath()))
+        {
+            $text = file_get_contents(self::getPortFilePath());
+            $idMap = json_decode($text);
+
+            $dbo = JFactory::getDbo();
+
+            foreach ($idMap as $remosId => $repoId)
+            {
+                $query = $dbo->getQuery(true);
+                $query
+                    ->update("#__content con")
+                    ->set("con.introtext = REPLACE(con.introtext, '{remos:$remosId}', '{\"repo\":$repoId}')")
+                    ->where("con.introtext like '%{remos:$remosId}%'");
+                $dbo->setQuery($query)->execute();
+
+                $query = $dbo->getQuery(true);
+                $query
+                    ->update("#__content con")
+                    ->set("con.fulltext = REPLACE(con.fulltext, '{remos:$remosId}', '{\"repo\":$repoId}')")
+                    ->where("con.fulltext like '%{remos:$remosId}%'");
+                $dbo->setQuery($query)->execute();
+            }
+
+            //JFile::delete(self::getPortFilePath());
+            echo 'Done!';
+        }
+        else
+        {
+            echo 'No id translation found! Use portOldRepositoryData on an non empty old repository';
+        }
+
+    }
+
     public function portOldRepositoryData()
     {
         jimport('thm_repo.core.All');
         jimport('joomla.filesystem.file');
 
-        // TODO: Check is repository installed !?
+        // TODO: Check is repository installed !
 
-        $folders = $this->createObjectTree();
+        $dbo = JFactory::getDbo();
+        $query = $dbo->getQuery(true);
+        $query
+            ->select('ex.extension_id, ex.name')
+            ->from('#__extensions ex')
+            ->where("ex.name like 'com_thm_repository'");
+        $result = $dbo->setQuery($query)->loadObjectList();
 
-        $this->importIntoRepo($folders);
+        if (count($result) > 0)
+        {
+            $folders = $this->createObjectTree();
 
-        echo 'Done!';
+            $this->importIntoRepo($folders);
+
+            file_put_contents(self::getPortFilePath(), json_encode($this->_importIdMap));
+
+            echo 'Done!';
+        }
+        else
+        {
+            echo 'No data to import!';
+        }
     }
 
     private function getSuperUserId()
@@ -87,15 +150,7 @@ class THM_RepoController extends JControllerLegacy
 
     private function importIntoRepo($folders)
     {
-        // Create Root Folder
-        $_public = 1;
-        $_published = true;
-
-        $root = new THMFolder(
-            null, 'Root', 'One Node to rule them all!', new THMUser($this->getSuperUserId()),
-            $_public, $_published
-        );
-        THMFolder::persist($root);
+        $root = THMFolder::getRoot(true);
 
         try
         {
@@ -144,22 +199,34 @@ class THM_RepoController extends JControllerLegacy
         $filePath = JPATH_ROOT . '/thm_repository/' . $file->path;
         if (JFile::exists($filePath))
         {
+            /* Copy file to a temporary folder */
+            $tempFolder = sys_get_temp_dir();
+            $tempFilePath = $tempFolder . '/' . JFile::getName($filePath);
+            JFile::copy($filePath, $tempFilePath);
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_file($finfo, $filePath);
+            $mimeType = finfo_file($finfo, $tempFilePath);
             finfo_close($finfo);
 
             $repoFile = new THMFile(
-                $repoFolder, $file->title, empty($file->description) ? 'No Description' : $file->description,
+                $repoFolder, $file->title, empty($file->description) ? '---' : $file->description,
                 $this->getValidUser($file->created_by),
                 (int) $file->viewlevel, $file->published == 1,
                 array(
-                    'tmp_name' => $filePath,
-                    'name' => basename($filePath),
-                    'size' => filesize($filePath),
+                    'tmp_name' => $tempFilePath,
+                    'name' => basename($tempFilePath),
+                    'size' => filesize($tempFilePath),
                     'type' => $mimeType
                 )
             );
             THMFile::persist($repoFile);
+
+            /* add a map entry (old repository file id -> new repo file id) */
+            $this->_importIdMap[$file->id] = $repoFile->getId();
+
+            /* Remove temporary file */
+            if (JFile::exists($tempFilePath))
+                JFile::delete($tempFilePath);
         }
     }
 
@@ -170,6 +237,9 @@ class THM_RepoController extends JControllerLegacy
             $this->getValidUser($link->created_by),
             $link->path, (int) $link->viewlevel, $link->published == 1
         );
+
+        /* add a map entry (old repository file id -> new repo link id) */
+        $this->_importIdMap[$link->id] = $repoLink->getId();
 
         THMWebLink::persist($repoLink);
     }
@@ -193,7 +263,6 @@ class THM_RepoController extends JControllerLegacy
             $folder->childFolders = $this->createObjectTree((int) $folder->id);
             $folder->childEntities = $this->createEntityObject((int) $folder->id);
         }
-
         return $folders;
     }
 

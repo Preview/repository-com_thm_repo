@@ -21,7 +21,7 @@ CREATE TABLE #__thm_repo_folder (
 	lft int(12) NULL,
 	rgt int(12) NULL,
 	parent_id int(10) UNSIGNED NULL,
-	name varchar(25) NOT NULL,
+	name varchar(100) NOT NULL,
 	description varchar(255) NULL,
 	created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	modified timestamp NOT NULL,
@@ -66,11 +66,11 @@ CREATE TABLE #__thm_repo_file (
 CREATE TABLE #__thm_repo_version (
 	id int(10) UNSIGNED,
 	version int (10) UNSIGNED NOT NULL DEFAULT 1,
-	name varchar(25) NOT NULL,
+	name varchar(100) NOT NULL,
 	description varchar(255),
 	modified timestamp,
 	modified_by int(11) NOT NULL,
-	path varchar(100) NOT NULL,
+	path varchar(255) NOT NULL,
 	size long NOT NULL,
 	mimetype varchar(100) NOT NULL,
 	PRIMARY KEY(id, version),
@@ -80,7 +80,7 @@ CREATE TABLE #__thm_repo_version (
 
 CREATE TABLE #__thm_repo_link (
 	id int(10) UNSIGNED,
-	name varchar(25) NOT NULL,
+	name varchar(100) NOT NULL,
 	description varchar(255),
 	modified Timestamp NOT NULL,
 	modified_by int(11) NOT NULL,

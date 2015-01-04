@@ -55,6 +55,11 @@ class THM_RepoViewFiles extends JViewLegacy
 		// Set the toolbar
 		$this->addToolBar();
 
+        if (version_compare(JVERSION, '3', '<'))
+        {
+            $tpl = 'j25';
+        }
+
 		// Display the template
 		parent::display($tpl);
 	}
