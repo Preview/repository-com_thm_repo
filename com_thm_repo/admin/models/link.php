@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 // Import Joomla modelform library
 jimport('joomla.application.component.modeladmin');
+jimport('thm_repo.core.All');
 
 /**
  * THM_RepoModelLink class for component com_thm_repo
@@ -24,127 +25,127 @@ jimport('joomla.application.component.modeladmin');
  */
 class THM_RepoModelLink extends JModelAdmin
 {
-    /**
-     * Returns a reference to the a Table object, always creating it.
-     *
-     * @param   type    $type    The table type to instantiate
-     * @param   string  $prefix  A prefix for the table class name. Optional.
-     * @param   array   $config  Configuration array for model. Optional.
-     *
-     * @return  JTable  A database object
-     *
-     * @since   2.5
-     */
-    public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
-    {
-        return JTable::getInstance($type, $prefix, $config);
-    }
+	/**
+	 * Returns a reference to the a Table object, always creating it.
+	 *
+	 * @param   type    $type    The table type to instantiate
+	 * @param   string  $prefix  A prefix for the table class name. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.
+	 * 
+	 * @return  JTable  A database object
+	 * 
+	 * @since   2.5
+	 */
+	public function getTable($type = 'Entity', $prefix = 'THM_RepoTable', $config = array())
+	{
+		return JTable::getInstance($type, $prefix, $config);
+	}
 
-    /**
-     * Method to get the record form.
-     *
-     * @param   array    $data      Data for the form.
-     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-     *
-     * @return   mixed   A JForm object on success, false on failure
-     *
-     * @since    2.5
-     */
-    public function getForm($data = array(), $loadData = true)
-    {
-        // Get the form.
-        $form = $this->loadForm('com_thm_repo.link', 'link', array('control' => 'jform', 'load_data' => $loadData));
-        if (empty($form))
-        {
-            return false;
-        }
-        return $form;
-    }
-    /**
-     * Method to get the data that should be injected in the form.
-     *
-     * @return      mixed   The data for the form.
-     *
-     * @since       2.5
-     */
-    protected function loadFormData()
-    {
-        // Check the session for previously entered form data.
-        $data = JFactory::getApplication()->getUserState('com_thm_repo.edit.link.data', array());
-        if (empty($data))
-        {;
-            $data = $this->getItem();
-        }
-        return $data;
-    }
+	/**
+	 * Method to get the record form.
+	 *
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * 
+	 * @return   mixed   A JForm object on success, false on failure
+	 * 
+	 * @since    2.5
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_thm_repo.link', 'link', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form))
+		{
+			return false;
+		}
+		return $form;
+	}
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @return      mixed   The data for the form.
+	 * 
+	 * @since       2.5
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_thm_repo.edit.link.data', array());
+		if (empty($data))
+		{;
+			$data = $this->getItem();
+		}
+		return $data;
+	}
+	
+  	/**
+  	 * Method to get a single record.
+  	 * 
+  	 * @param   integer  $pk  The id of the primary key.
+  	 * 
+  	 * @return  mixed    Object on success, false on failure.
+  	 */
+	public function getItem($pk = null)
+	{
+		$item = parent::getItem($pk);
+		
+		// Initialise variables.
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');		
+		if ($pk > 0) 
+		{
+			
+			// Get Data from #__thm_repo_entity table and assign it to $item
+			$data = $this->getData($item->id);
+			$item->link = $data->link;
+			$item->link_id = $data->id;
+			$item->name = $data->name;
+			$item->description = $data->description;
+			$item->modified = $data->modified;
+			$item->modified_by = $data->modified_by;
 
-      /**
-       * Method to get a single record.
-       *
-       * @param   integer  $pk  The id of the primary key.
-       *
-       * @return  mixed    Object on success, false on failure.
-       */
-    public function getItem($pk = null)
-    {
-        $item = parent::getItem($pk);
-
-        // Initialise variables.
-        $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
-        if ($pk > 0)
-        {
-
-            // Get Data from #__thm_repo_entity table and assign it to $item
-            $data = $this->getData($item->id);
-            $item->link = $data->link;
-            $item->link_id = $data->id;
-            $item->name = $data->name;
-            $item->description = $data->description;
-            $item->modified = $data->modified;
-            $item->modified_by = $data->modified_by;
-
-        }
-        else
-        {
-            // Set link and link_id NULL for creating new links
-            $item->link = null;
-            $item->link_id = null;
-            $item->name = null;
-            $item->description = null;
-            $item->modified = null;
-            $item->modified_by = null;
-        }
-        return $item;
-    }
-
-    /**
-     * Method to get the needed data from entity table
-     *
-     * @param   number  $id  ID
-     *
-     * @return mixed   The data from #__thm_repo_entity table.
-     */
-    public function getData($id)
-    {
-        // Create a new query object.
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from('#__thm_repo_link');
-        $query->where('id = ' . $id);
-        $db->setQuery($query);
-        $result = $db->loadObject();
-
-        return $result;
-
-    }
+		} 
+		else 
+		{
+			// Set link and link_id NULL for creating new links
+			$item->link = null;
+			$item->link_id = null;
+			$item->name = null;
+			$item->description = null;
+			$item->modified = null;
+			$item->modified_by = null;		
+		}
+		return $item;
+	}
+	
+	/**
+	 * Method to get the needed data from entity table
+	 * 
+	 * @param   number  $id  ID
+	 * 
+	 * @return mixed   The data from #__thm_repo_entity table.
+	 */
+	public function getData($id)
+	{
+		// Create a new query object.
+		$db = $this->getDbo();
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__thm_repo_link');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadObject();
+		
+		return $result;
+		
+	}
 
     /**
      * Method to save the form data.
      *
      * @param   array  $data  The form data.
      *
-     * @return    boolean    True on success.
+     * @return	boolean	True on success.
      */
     public function save($data)
     {
@@ -170,7 +171,7 @@ class THM_RepoModelLink extends JModelAdmin
         $entitydata->viewlevel = $data['viewlevel'];
         $entitydata->created = $data['created'];
         $entitydata->created_by = $data['created_by'];
-        $entitydata->published = $data['published'];
+        $entitydata->published = !empty($data['published']);
 
 
         if (empty($entitydata->id))
@@ -221,47 +222,27 @@ class THM_RepoModelLink extends JModelAdmin
         return true;
     }
 
-    /**
-     * Method to delete one or more records.
-     *
-     * @param   array  &$pks  An array of record primary keys.
-     *
-     * @return  boolean  True if successful, false if an error occurs.
-     */
-    public function delete(&$pks)
-    {
-        $id = $pks[0];
-
-        // GetDBO
-        $db = JFactory::getDBO();
-
-        // Delete link record
-        $query = $db->getQuery(true);
-        $query->delete($db->quoteName('#__thm_repo_link'));
-        $query->where('id = ' . $id);
-        $db->setQuery($query);
-        if (!($db->query()))
+	/**
+	 * Method to delete one or more records.
+	 *
+	 * @param   array  &$pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 */
+	public function delete(&$pks)
+	{
+        foreach ($pks as $id)
         {
-            return false;
+            try
+            {
+                THMWebLink::removeById($id);
+            }
+            catch (Exception $ex)
+            {
+                return false;
+            }
         }
-
-        // Delete Entity record
-        $query = $db->getQuery(true);
-        $query->delete($db->quoteName('#__thm_repo_entity'));
-        $query->where('id = ' . $id);
-        $db->setQuery($query);
-        if (!($db->query()))
-        {
-            return false;
-        }
-
-        // Delete asset entry
-        $table = JTable::getInstance('Entity', 'THM_RepoTable');
-        if (!$table->delete($id))
-        {
-            return false;
-        }
-
-        return true;
-    }
+		
+		return true;
+	}
 }
