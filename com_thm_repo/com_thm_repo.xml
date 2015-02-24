@@ -18,6 +18,10 @@
         <filename>thm_repo.php</filename>
     </files>
 
+	<dependencies>
+		<dependency before="true" type="library" minversion="0.0.3">lib_thm_core</dependency>
+	</dependencies>
+
 	<install>
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.sql</file>
