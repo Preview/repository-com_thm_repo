@@ -51,5 +51,6 @@ class THM_RepoViewStart extends JViewLegacy
         $document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
 
         JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_START'), 'repo.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-repo.png');
+        JToolBarHelper::custom( 'import_edocman_manager.run', 'iconname.png', 'iconname.png', 'Import Edocman Data', false, false );
     }
 }
