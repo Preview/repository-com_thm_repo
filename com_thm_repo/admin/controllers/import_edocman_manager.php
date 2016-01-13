@@ -2,11 +2,10 @@
 /**
  * @version     v1.0.0
  * @category    Joomla component
- * @package     THM_Groups
- * @subpackage  com_thm_groups.admin
- * @name        THM_GroupsControllerDB_Data_Manager
- * @description THM_GroupsControllerDB_Data_Manager class from com_thm_groups
- * @author      Ilja Michajlow, <ilja.michajlow@mni.thm.de>
+ * @package     com_thm_repo.admin
+ * @name        THM_RepoControllerImport_Edocman_Manager
+ * @description THM_RepoControllerImport_Edocman_Manager is responsible for data migration for Edocman component
+ * @author      Markus Gerlach, <markus.gerlach@mni.thm.de>
  * @copyright   2015 TH Mittelhessen
  * @license     GNU GPL v.2
  * @link        www.mni.thm.de
@@ -22,14 +21,6 @@ jimport('joomla.filesystem.file');
 jimport('thm_repo.core.All');
 
 
-/**
- * THM_RepoControllerImport_Edocman_Manager is responsible for data migration for Edocman component
- *
- * @category  Joomla.Component.Admin
- * @package   com_thm_repo.admin
- * @link      www.mni.thm.de
- * @since     Class available since Release 2.0
- */
 class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
 {
     /**
@@ -46,10 +37,12 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
     {
         $this->setCategories($this->getCategories());
         $this->setDocuments($this->getDocuments());
+        $this->setDocumentCategory($this->getDocumentCategory());
     }
 
     public function setCategories($categories)
     {
+
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('count(*)');
@@ -58,17 +51,18 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
 
         if ($db->loadResult() == 0) {
             for ($i = 0; $i < sizeof($categories); $i++) {
-
                 $query = $db->getQuery(true);
                 $columns = array('id', 'parent_id', 'title', 'description', 'access', 'asset_id', 'created_user_id',
-                    'created_time', 'modified_user_id', 'modified_time', 'published', 'category_layout', 'alias', 'level');
+                    'created_time', 'modified_user_id', 'modified_time', 'published', 'category_layout', 'alias',
+                    'level', 'checked_out', 'checked_out_time', 'language', 'path');
 
                 $values = array($db->quote($categories[$i]["id"]), $db->quote($categories[$i]["parent_id"]),
                     $db->quote($categories[$i]["name"]), $db->quote($categories[$i]["description"]), $db->quote($categories[$i]["viewlevel"]),
                     $db->quote($categories[$i]["asset_id"]), $db->quote($categories[$i]["created_by"]),
                     $db->quote($categories[$i]["created"]), $db->quote($categories[$i]["modified_by"]),
                     $db->quote($categories[$i]["modified"]), $db->quote($categories[$i]["published"]),
-                    $db->quote("default"), $db->quote(strtolower($categories[$i]["name"])), $db->quote($categories[$i][0]));
+                    $db->quote("default"), $db->quote(strtolower($categories[$i]["name"])), $db->quote($categories[$i][0]),
+                    $db->quote("0"), $db->quote("null"), $db->quote("*"), $db->quote($categories[$i][1]));
 
                 // Prepare the insert query.
                 $query
@@ -83,11 +77,10 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                 $columns = null;
                 $values = null;
             }
+            echo "Migrate edocman_categories successful!";
         } else {
             echo "Table edocman_categories is not empty!";
         }
-
-
     }
 
     public function getCategories()
@@ -115,33 +108,39 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                     (int)($categories[$j]["id"]),
                     (int)($categories[$j]["parent_id"]),
                     ($categories[$j]["name"]));
+                    //strtolower($categories[$j]["name"]));
                 $j++;
             } else {
                 $levels[$i] = null;
             }
         }
 
-        // getLevels
+        // getLevels and path
         for ($i = 0; $i < sizeof($levels); $i++) {
             $level = 1;
             $id = $i;
+            $path = "";
             if (!(empty($levels[$id]))) {
                 do {
                     $pid = ($levels[$id][1]);
                     if ($pid != 0) {
+                        $path = strtolower($levels[$id][2]) . "/" . $path;
                         $id = $pid;
                         $level++;
                     }
                 } while ($pid != 0);
                 $levels[$i][3] = $level;
+                $path = substr($path, 0, strlen($path)-1);
+                $levels[$i][4] = $path;
             }
         }
 
-        //setLevels
+        //setLevels and path
         for ($i = 0; $i < sizeof($categories); $i++) {
             for ($j = 0; $j < sizeof($levels); $j++) {
                 if ((int)$categories[$i]["id"] == $levels[$j][0]) {
                     array_push($categories[$i], $levels[$j][3]);
+                    array_push($categories[$i], $levels[$j][4]);
                 }
             }
         }
@@ -183,14 +182,15 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                     $documents[$i]["id"] == $result[$j]["id"];
                     $documents[$i]["title"] = $result[$j]["name"];
                     $documents[$i]["alias"] = strtolower($result[$j]["name"]);
-                    $documents[$i]["filename"] = $result[$j]["path"];
-                    $documents[$i]["original_filename"] = $result[$j]["path"];
+                    $documents[$i]["filename"] = substr(strrchr ($result[$j]["path"], "/"), 1);
+                    $documents[$i]["original_filename"] = substr(strrchr ($result[$j]["path"], "/"), 1);
                     $documents[$i]["description"] = $result[$j]["description"];
                     $documents[$i]["modified_time"] = $result[$j]["modified"];
                     $documents[$i]["modified_user_id"] = $result[$j]["modified_by"];
                 }
             }
         }
+
         return $documents;
     }
 
@@ -208,7 +208,9 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                 if (array_key_exists('title', $documents[$i])) {
                     $query = $db->getQuery(true);
                     $columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'description', 'modified_time',
-                        'modified_user_id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access');
+                        'modified_user_id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
+                        'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
+                        'indexed_content','params');
 
                     $values = array($db->quote($documents[$i]["id"]), $db->quote($documents[$i]["title"]),
                         $db->quote($documents[$i]["alias"]), $db->quote($documents[$i]["filename"]),
@@ -216,7 +218,9 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                         $db->quote($documents[$i]["modified_time"]), $db->quote($documents[$i]["modified_user_id"]),
                         $db->quote($documents[$i]["asset_id"]), $db->quote($documents[$i]["created_user_id"]),
                         $db->quote($documents[$i]["created_time"]), $db->quote($documents[$i]["ordering"]),
-                        $db->quote($documents[$i]["published"]), $db->quote($documents[$i]["access"]));
+                        $db->quote($documents[$i]["published"]), $db->quote($documents[$i]["access"]), $db->quote(null),
+                        $db->quote("0"), $db->quote("0.00"),  $db->quote("0"), $db->quote("0"), $db->quote(null),
+                        $db->quote("*"), $db->quote(null), $db->quote(null));
 
                     // Prepare the insert query.
                     $query
@@ -249,10 +253,66 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                 $query = null;
                 $columns = null;
                 $values = null;
+
+                echo "Migrate edocman_documents successful!";
             }
         } else {
             echo "Table edocman_documents is not empty!";
+        }
+    }
 
+    public function getDocumentCategory(){
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*');
+        $query->from('#__thm_repo_entity');
+        $db->setQuery($query);
+        $result = $db->loadAssocList();
+        $docCat = array();
+
+        //var_dump($result);
+
+        for($i=0; $i<sizeof($result); $i++){
+            $docCat[$i]["document_id"] = $result[$i]["id"];
+            $docCat[$i]["category_id"] = $result[$i]["parent_id"];
+        }
+        return $docCat;
+    }
+
+    public function setDocumentCategory($docCat){
+        $db = JFactory::getDBO();
+        $query = $db->getQuery(true);
+        $query->select('*');
+        $query->from('#__edocman_document_category');
+        $db->setQuery($query);
+        $result = $db->loadResult();
+
+        if ($result == 0) {
+            for ($i = 0; $i < sizeof($docCat); $i++) {
+
+                $query = $db->getQuery(true);
+                $columns = array('id', 'document_id', 'category_id', 'is_main_category');
+
+                $values = array($db->quote($docCat[$i]["document_id"]), $db->quote($docCat[$i]["document_id"]),
+                    $db->quote($docCat[$i]["category_id"]), $db->quote("1"));
+
+                // Prepare the insert query.
+                $query
+                    ->insert($db->quoteName('#__edocman_document_category'))
+                    ->columns($db->quoteName($columns))
+                    ->values(implode(',', $values));
+
+                // Set the query using our newly populated query object and execute it.
+                $db->setQuery($query);
+                $db->execute();
+                $query = null;
+                $columns = null;
+                $values = null;
+            }
+            echo "Migrate edocman_document_category successful!";
+        }
+        else {
+            echo "Table edocman_document_category is not empty!";
         }
     }
 }
