@@ -32,17 +32,50 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
         parent::__construct();
     }
 
+    private $categories;
+    private $documents;
+    private $documentCategory;
+
+    public function getCategories(){
+        return $this->categories;
+    }
+
+    public function setCategories($categories){
+        $this->categories = $categories;
+    }
+
+    public function getDocuments(){
+        return $this->documents;
+    }
+
+    public function setDocuments($documents){
+        $this->documents =$documents;
+    }
+
+    public function getDocumentCategory(){
+        return $this->documentCategory;
+    }
+
+    public function setDocumentCategory($documentCategory){
+        $this->documentCategory = $documentCategory;
+    }
+
 
     public function run()
     {
-        $this->setCategories($this->getCategories());
-        $this->setDocuments($this->getDocuments());
-        $this->setDocumentCategory($this->getDocumentCategory());
+        $this->setCategories($this-> compileCategories());
+        $this->saveCategoriesToDb($this->getCategories());
+
+        $this->setDocuments($this->compileDocuments());
+        $this->saveDocumentsToDb($this->getDocuments());
+
+        $this->setDocumentCategory($this->compileDocumentCategory());
+        $this->saveDocumentCategoryToDb($this->getDocumentCategory());
+
     }
 
-    public function setCategories($categories)
+    public function saveCategoriesToDb($categories)
     {
-
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('count(*)');
@@ -83,7 +116,7 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
         }
     }
 
-    public function getCategories()
+    public function compileCategories()
     {
         $db = JFactory::getDBO();
 
@@ -150,7 +183,7 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
         return $categories;
     }
 
-    public function getDocuments()
+    public function compileDocuments()
     {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
@@ -159,8 +192,10 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
         $db->setQuery($query);
         $result = $db->loadAssocList();
 
+        $categories = $this->getCategories();
         $documents = array();
         for ($i = 0; $i < sizeof($result); $i++) {
+            $parent_id = (int)$result[$i]["parent_id"];
             $documents[$i]["id"] = $result[$i]["id"];
             $documents[$i]["asset_id"] = $result[$i]["asset_id"];
             $documents[$i]["created_user_id"] = $result[$i]["created_by"];
@@ -168,8 +203,17 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
             $documents[$i]["ordering"] = $result[$i]["ordering"];
             $documents[$i]["published"] = $result[$i]["published"];
             $documents[$i]["access"] = $result[$i]["viewlevel"];
+            if($parent_id < sizeof($categories)){
+                for($j=0; $j < sizeof($categories); $j++){
+                    if($parent_id == $categories[$j]["id"]){
+                        $documents[$i]["filename"] = $categories[$parent_id][1];
+                    }
+                }
+            }
+            else{
+                $documents[$i]["filename"] = "";
+            }
         }
-
         $query = $db->getQuery(true);
         $query->select('*');
         $query->from('#__thm_repo_version');
@@ -182,19 +226,23 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                     $documents[$i]["id"] == $result[$j]["id"];
                     $documents[$i]["title"] = $result[$j]["name"];
                     $documents[$i]["alias"] = strtolower($result[$j]["name"]);
-                    $documents[$i]["filename"] = substr(strrchr ($result[$j]["path"], "/"), 1);
                     $documents[$i]["original_filename"] = substr(strrchr ($result[$j]["path"], "/"), 1);
                     $documents[$i]["description"] = $result[$j]["description"];
                     $documents[$i]["modified_time"] = $result[$j]["modified"];
                     $documents[$i]["modified_user_id"] = $result[$j]["modified_by"];
+                    $documents[$i]["filename"] = $documents[$i]["filename"] . "/" . substr(strrchr ($result[$j]["path"], "/"), 1);
                 }
             }
         }
-
         return $documents;
     }
 
-    public function setDocuments($documents)
+    public function getDocumentsPath(){
+
+
+    }
+
+    public function saveDocumentsToDb($documents)
     {
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
@@ -253,15 +301,14 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
                 $query = null;
                 $columns = null;
                 $values = null;
-
-                echo "Migrate edocman_documents successful!";
             }
+            echo "Migrate edocman_documents successful!";
         } else {
             echo "Table edocman_documents is not empty!";
         }
     }
 
-    public function getDocumentCategory(){
+    public function compileDocumentCategory(){
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*');
@@ -276,10 +323,11 @@ class THM_RepoControllerImport_Edocman_Manager extends JControllerLegacy
             $docCat[$i]["document_id"] = $result[$i]["id"];
             $docCat[$i]["category_id"] = $result[$i]["parent_id"];
         }
+
         return $docCat;
     }
 
-    public function setDocumentCategory($docCat){
+    public function saveDocumentCategoryToDb($docCat){
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*');
