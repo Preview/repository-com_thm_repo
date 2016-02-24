@@ -133,9 +133,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         $this->saveCategoriesToDb();
         $this->saveDocumentsToDb();
         $this->saveDocumentCategoryToDb();
-
-        $this->createTableLinks();
-        $this->saveLinksToDB();
+        $this->saveLinksToDbDocuments();
 
         $this->importFoldersToCategories();
         $this->importEntitiesToDocuments();
@@ -169,13 +167,11 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                     $db->quote("default"), $db->quote(strtolower($categories[$i]["name"])), $db->quote($categories[$i][0]),
                     $db->quote("0"), $db->quote("null"), $db->quote("*"), $db->quote($categories[$i][1]));
 
-                // Prepare the insert query.
                 $query
                     ->insert($db->quoteName('#__edocman_categories'))
                     ->columns($db->quoteName($columns))
                     ->values(implode(',', $values));
 
-                // Set the query using our newly populated query object and execute it.
                 $db->setQuery($query);
                 $db->execute();
                 $query = null;
@@ -322,7 +318,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                     $documents[$i]["filename"] = $documents[$i]["path"] . "/" . $originalFilename;
                 }
             }
-            // Set links
+
             if (!(array_key_exists('title', $documents[$i]))) {
                 array_push($links, $documents[$i]);
             }
@@ -333,7 +329,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 
     /**
      * Method so save the documents to the database edocman_documents
-     *
+     * and push all documents without titles to $links
      */
     public function saveDocumentsToDb()
     {
@@ -364,31 +360,11 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                         $db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
                         $db->quote("*"), $db->quote(null), $db->quote(null));
 
-                    // Prepare the insert query.
                     $query
                         ->insert($db->quoteName('#__edocman_documents'))
                         ->columns($db->quoteName($columns))
                         ->values(implode(',', $values));
 
-                    // Set the query using our newly populated query object and execute it.
-                    $db->setQuery($query);
-                    $db->execute();
-                } else {
-                    $query = $db->getQuery(true);
-                    $columns = array('id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access');
-
-                    $values = array($db->quote($documents[$i]["id"]), $db->quote($documents[$i]["asset_id"]),
-                        $db->quote($documents[$i]["created_user_id"]), $db->quote($documents[$i]["created_time"]),
-                        $db->quote($documents[$i]["ordering"]), $db->quote($documents[$i]["published"]),
-                        $db->quote($documents[$i]["access"]));
-
-                    // Prepare the insert query.
-                    $query
-                        ->insert($db->quoteName('#__edocman_documents'))
-                        ->columns($db->quoteName($columns))
-                        ->values(implode(',', $values));
-
-                    // Set the query using our newly populated query object and execute it.
                     $db->setQuery($query);
                     $db->execute();
                 }
@@ -447,13 +423,11 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                 $values = array($db->quote($docCat[$i]["document_id"]), $db->quote($docCat[$i]["document_id"]),
                     $db->quote($docCat[$i]["category_id"]), $db->quote("1"));
 
-                // Prepare the insert query.
                 $query
                     ->insert($db->quoteName('#__edocman_document_category'))
                     ->columns($db->quoteName($columns))
                     ->values(implode(',', $values));
 
-                // Set the query using our newly populated query object and execute it.
                 $db->setQuery($query);
                 $db->execute();
                 $query = null;
@@ -473,7 +447,6 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
     public function compileLinks()
     {
         $links = $this->getLinks();
-
         $db = JFactory::getDBO();
         $query = $db->getQuery(true);
         $query->select('*');
@@ -484,21 +457,21 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         for ($i = 0; $i < sizeof($links); $i++) {
             for ($j = 0; $j < sizeof($result); $j++) {
                 if ($links[$i]["id"] == $result[$j]["id"]) {
-                    $links[$i]["name"] = $result[$j]["name"];
+                    $links[$i]["title"] = $result[$j]["name"];
+                    $links[$i]["alias"] = strtolower($result[$j]["name"]);
+                    $links[$i]["filename"] = $links[$i]["path"] . "/" . $links[$i]["title"];
+                    $links[$i]["original_filename"] = "";
                     $links[$i]["description"] = $result[$j]["description"];
                     $links[$i]["modified_time"] = $result[$j]["modified"];
                     $links[$i]["modified_user_id"] = $result[$j]["modified_by"];
-                    $links[$i]["link"] = $result[$j]["link"];
+                    $links[$i]["document_url"] = $result[$j]["link"];
                 }
             }
         }
-        //var_dump($links);
         return $links;
     }
 
-    /**
-     * Method to create the table edocman_links in databse
-     */
+    /*
     public function createTableLinks()
     {
         $db = JFactory::getDBO();
@@ -506,40 +479,46 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         $db->setQuery($query);
         $db->query();
     }
+    */
 
-    public function saveLinksToDB()
+    /**
+     * Method to save links to database edocman_documents
+     */
+    public function saveLinksToDbDocuments()
     {
         $links = $this->getLinks();
         $db = JFactory::getDBO();
 
         for ($i = 0; $i < sizeof($links); $i++) {
             $query = $db->getQuery(true);
-            $columns = array('id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
-                'path', 'name', 'description','modified_time', 'modified_user_id', 'link');
+            $columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'document_url', 'description', 'modified_time',
+                'modified_user_id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
+                'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
+                'indexed_content', 'params');
 
-            $values = array($db->quote($links[$i]["id"]), $db->quote($links[$i]["asset_id"]),
-                $db->quote($links[$i]["created_user_id"]), $db->quote($links[$i]["created_time"]),
-                $db->quote($links[$i]["ordering"]), $db->quote($links[$i]["published"]) ,$db->quote($links[$i]["access"]),
-                $db->quote($links[$i]["path"]), $db->quote($links[$i]["name"]) ,$db->quote($links[$i]["description"]),
+            $values = array($db->quote($links[$i]["id"]), $db->quote($links[$i]["title"]),
+                $db->quote($links[$i]["alias"]), $db->quote($links[$i]["filename"]),
+                $db->quote($links[$i]["original_filename"]), $db->quote($links[$i]["document_url"]),$db->quote($links[$i]["description"]),
                 $db->quote($links[$i]["modified_time"]), $db->quote($links[$i]["modified_user_id"]),
-                $db->quote($links[$i]["link"]));
+                $db->quote($links[$i]["asset_id"]), $db->quote($links[$i]["created_user_id"]),
+                $db->quote($links[$i]["created_time"]), $db->quote($links[$i]["ordering"]),
+                $db->quote($links[$i]["published"]), $db->quote($links[$i]["access"]), $db->quote(null),
+                $db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
+                $db->quote("*"), $db->quote(null), $db->quote(null));
 
-            // Prepare the insert query.
             $query
-                ->insert($db->quoteName('#__edocman_links'))
+                ->insert($db->quoteName('#__edocman_documents'))
                 ->columns($db->quoteName($columns))
                 ->values(implode(',', $values));
 
-            // Set the query using our newly populated query object and execute it.
             $db->setQuery($query);
             $db->execute();
             $query = null;
             $columns = null;
             $values = null;
         }
-        echo "Migrate edocman_document_category successful! ";
+        echo "Migrate links to edocman_document successful! ";
     }
-
 
     public function importFoldersToCategories()
     {
