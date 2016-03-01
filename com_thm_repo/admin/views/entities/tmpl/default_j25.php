@@ -20,9 +20,9 @@ $model = JModel::getInstance('entities', 'THM_RepoModel');
 
 // Get ID from URL
 $id = JRequest::getVar('id');
-$listOrder	= $this->sortColumn;
-$listDirn	= $this->sortDirection;
-$saveOrder	= $listOrder == 'e.ordering';
+$listOrder    = $this->sortColumn;
+$listDirn    = $this->sortDirection;
+$saveOrder    = $listOrder == 'e.ordering';
 $user = JFactory::getUser();
 
 ?>
@@ -69,7 +69,7 @@ $user = JFactory::getUser();
         {
             ?>
             <?php $canChange = $user->authorise('core.edit', 'com_content.entity.' . $item->id);?>
-            <?php $ordering	= $listOrder == 'e.ordering'; ?>
+            <?php $ordering    = $listOrder == 'e.ordering'; ?>
 
             <tr class="row<?php echo $i % 2; ?>">
                 <td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
@@ -113,28 +113,28 @@ $user = JFactory::getUser();
                         {
                             ?>
                             <span>
-										<?php echo $this->pagination->orderUpIcon($i, 1, 'entities.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
-									</span>
+                                        <?php echo $this->pagination->orderUpIcon($i, 1, 'entities.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?>
+                                    </span>
                             <span>
-										<?php echo $this->pagination->orderDownIcon(
+                                        <?php echo $this->pagination->orderDownIcon(
                                             $i, $this->pagination->total, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering
                                         ); ?>
-									</span>
+                                    </span>
                         <?php
                         }
                         elseif ($listDirn == 'desc')
                         {
                             ?>
                             <span>
-										<?php echo $this->pagination->orderUpIcon(
+                                        <?php echo $this->pagination->orderUpIcon(
                                             $i, 1, 'entities.orderdown', 'JLIB_HTML_MOVE_UP', $ordering
                                         ); ?>
-									</span>
+                                    </span>
                             <span>
-										<?php echo $this->pagination->orderDownIcon(
+                                        <?php echo $this->pagination->orderDownIcon(
                                             $i, $this->pagination->total, 1, 'entities.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering
                                         );?>
-									</span>
+                                    </span>
                         <?php
                         }
                         ?>

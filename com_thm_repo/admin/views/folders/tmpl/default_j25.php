@@ -18,9 +18,9 @@ $model = JModel::getInstance('folders', 'THM_RepoModel');
 // Span layout
 $span = "<span style='color: #D7D7D7; font-weight: bold; margin-right: 5px;'>|&mdash;</span>";
 
-$listOrder	= $this->sortColumn;
-$listDirn	= $this->sortDirection;
-$ordering 	= ($listOrder == 'f.lft');
+$listOrder    = $this->sortColumn;
+$listDirn    = $this->sortDirection;
+$ordering     = ($listOrder == 'f.lft');
 $user = JFactory::getUser();
 
 // Load tooltip behavior
@@ -46,7 +46,7 @@ JHtml::_('behavior.tooltip');
         {
             ?>
             <?php $canChange = $user->authorise('core.edit', 'com_content.folder.' . $item->id);?>
-            <?php $orderkey	= array_search($item->id, $this->ordering[$item->parent_id]);?>
+            <?php $orderkey    = array_search($item->id, $this->ordering[$item->parent_id]);?>
             <?php $count = 0; ?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td><?php echo JHtml::_('grid.id', $i, $item->id); ?></td>
@@ -67,17 +67,17 @@ JHtml::_('behavior.tooltip');
                 </td>
                 <td><?php echo $item->title; ?></td>
                 <td class="order">
-							<span>
-								<?php echo $this->pagination->orderUpIcon(
+                            <span>
+                                <?php echo $this->pagination->orderUpIcon(
                                     $i, isset($this->ordering[$item->parent_id][$orderkey - 1]), 'folders.orderup', 'JLIB_HTML_MOVE_UP', $ordering
                                 ); ?>
-							</span>
-							<span>
-								<?php echo $this->pagination->orderDownIcon(
+                            </span>
+                            <span>
+                                <?php echo $this->pagination->orderDownIcon(
                                     $i, $this->pagination->total, isset($this->ordering[$item->parent_id][$orderkey + 1]),
                                     'folders.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering
                                 ); ?>
-							</span>
+                            </span>
                     <input type="text" name="order[]" size="5" value="<?php echo $orderkey + 1;?>"
                            disabled="disabled" class="text-area-order" />
                     <?php $originalOrders[] = $orderkey + 1; ?>

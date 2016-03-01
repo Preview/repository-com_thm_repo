@@ -21,33 +21,33 @@ $document->addStyleSheet("components/com_thm_repo/css/start/start.css");
 
     <div class="description1">Main Menu</div>
 
-    <div id="gimenu1">
+<div id="gimenu1">
 
-        <!-- Manage Entries -->
-        <hr/>
-        <div class="menuitem">
-            <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=folders';">
-                <div class="picture2">
-                    <img src="components/com_thm_repo/img/icon-48-folders.png" alt="Folder Manager"/>
-                </div>
-                <div class="description2"><?php echo JText::_('COM_THM_REPO_FOLDERMANAGER'); ?></div>
+    <!-- Manage Entries -->
+    <hr />
+    <div class="menuitem">
+        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=folders';">
+            <div class="picture2">
+                <img src="components/com_thm_repo/img/icon-48-folders.png" alt="Folder Manager" />
             </div>
+            <div class="description2"><?php echo JText::_('COM_THM_REPO_FOLDERMANAGER');?></div>
         </div>
+    </div>
 
-        <div class="menuitem">
-            <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=files';">
-                <div class="picture2">
-                    <img src="components/com_thm_repo/img/icon-48-files.png" alt="File Manager"/>
-                </div>
-                <div class="description2"><?php echo JText::_('COM_THM_REPO_FILEMANAGER'); ?></div>
+    <div class="menuitem">
+        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=files';">
+            <div class="picture2">
+                <img src="components/com_thm_repo/img/icon-48-files.png" alt="File Manager" />
             </div>
+            <div class="description2"><?php echo JText::_('COM_THM_REPO_FILEMANAGER');?></div>
         </div>
+    </div>
 
-        <div class="menuitem">
-            <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=links';">
-                <div class="picture2">
-                    <img src="components/com_thm_repo/img/icon-48-links.png" alt="Link Manager"/>
-                </div>
+    <div class="menuitem">
+        <div class="icon" onclick="location.href='index.php?option=com_thm_repo&view=links';">
+            <div class="picture2">
+                <img src="components/com_thm_repo/img/icon-48-links.png" alt="Link Manager" />
+            </div>
 
                 <div class="description2"><?php echo JText::_('COM_THM_REPO_LINKMANAGER'); ?></div>
             </div>

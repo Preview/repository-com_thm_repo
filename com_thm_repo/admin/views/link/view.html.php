@@ -23,54 +23,54 @@ jimport('joomla.application.component.view');
 */
 class THM_RepoViewLink extends JViewLegacy
 {
-	/**
-	 * Files view display method
-	 * 
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
-	 */
-	public function display($tpl = null)
-	{
-		// Get the Data
-		$form = $this->get('Form');
-		$item = $this->get('Item');
+    /**
+     * Files view display method
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     */
+    public function display($tpl = null)
+    {
+        // Get the Data
+        $form = $this->get('Form');
+        $item = $this->get('Item');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
             JFactory::getApplication()->enqueueMessage(implode('<br />', $errors), 'error');
-			return false;
-		}
-		// Assign the Data
-		$this->form = $form;
-		$this->item = $item;
+            return false;
+        }
+        // Assign the Data
+        $this->form = $form;
+        $this->item = $item;
 
-		// Set the toolbar
-		$this->addToolBar();
+        // Set the toolbar
+        $this->addToolBar();
 
         if (version_compare(JVERSION, '3', '<'))
         {
             $tpl = 'j25';
         }
 
-		// Display the template
-		parent::display($tpl);
-	}
+        // Display the template
+        parent::display($tpl);
+    }
 
-	/**
-	 * Setting the toolbar
-	 * 
-	 * @return void
-	 */
-	protected function addToolBar()
-	{
-		$input = JFactory::getApplication()->input;
-		$input->set('hidemainmenu', true);
-		$isNew = ($this->item->id == 0);
-		JToolBarHelper::back();
-		JToolBarHelper::title($isNew ? JText::_('COM_THM_REPO_MANAGER_LINK_NEW') : JText::_('COM_THM_REPO_MANAGER_LINK_EDIT'));
-		JToolBarHelper::save('link.save');
-		JToolBarHelper::cancel('link.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
-	}
+    /**
+     * Setting the toolbar
+     *
+     * @return void
+     */
+    protected function addToolBar()
+    {
+        $input = JFactory::getApplication()->input;
+        $input->set('hidemainmenu', true);
+        $isNew = ($this->item->id == 0);
+        JToolBarHelper::back();
+        JToolBarHelper::title($isNew ? JText::_('COM_THM_REPO_MANAGER_LINK_NEW') : JText::_('COM_THM_REPO_MANAGER_LINK_EDIT'));
+        JToolBarHelper::save('link.save');
+        JToolBarHelper::cancel('link.cancel', $isNew ? 'JTOOLBAR_CANCEL' : 'JTOOLBAR_CLOSE');
+    }
 }

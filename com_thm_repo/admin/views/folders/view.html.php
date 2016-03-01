@@ -25,79 +25,79 @@ jimport('joomla.application.component.view');
  */
 class THM_RepoViewFolders extends JViewLegacy
 {
-	/**
-	 * Folders view display method
-	 * 
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a JError object.
-	 */
-	public function display($tpl = null)
-	{
-		// Get data from the model
-		$items = $this->get('Items');
-		$pagination = $this->get('Pagination');
-		$state = $this->get('State');
+    /**
+     * Folders view display method
+     *
+     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @return  mixed  A string if successful, otherwise a JError object.
+     */
+    public function display($tpl = null)
+    {
+        // Get data from the model
+        $items = $this->get('Items');
+        $pagination = $this->get('Pagination');
+        $state = $this->get('State');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
+        // Check for errors.
+        if (count($errors = $this->get('Errors')))
+        {
             JFactory::getApplication()->enqueueMessage(implode('<br />', $errors), 'error');
-			return false;
-		}
-		// Assign data to the view
-		$this->items = $items;
-		$this->pagination = $pagination;
-		$this->sortDirection = $state->get('list.direction');
-		$this->sortColumn = $state->get('list.ordering');
-		
-		// Preprocess the list of items to find ordering divisions.
-		foreach ($this->items as &$item) 
-		{
-			$this->ordering[$item->parent_id][] = $item->id;
-		}
-		
+            return false;
+        }
+        // Assign data to the view
+        $this->items = $items;
+        $this->pagination = $pagination;
+        $this->sortDirection = $state->get('list.direction');
+        $this->sortColumn = $state->get('list.ordering');
 
-		// Set the toolbar
-		$this->addToolBar();
+        // Preprocess the list of items to find ordering divisions.
+        foreach ($this->items as &$item)
+        {
+            $this->ordering[$item->parent_id][] = $item->id;
+        }
+
+
+        // Set the toolbar
+        $this->addToolBar();
 
        if (version_compare(JVERSION, '3', '<'))
        {
             $tpl = 'j25';
        }
 
-		// Display the template
-		parent::display($tpl);
-	}
+        // Display the template
+        parent::display($tpl);
+    }
 
-	/**
-	 * Setting the toolbar
-	 * 
-	 * @return nothing
-	 */
-	protected function addToolBar()
-	{
-		
-		$document = JFactory::getDocument();
-		$document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
-		
-		$user = JFactory::getUser();
+    /**
+     * Setting the toolbar
+     *
+     * @return nothing
+     */
+    protected function addToolBar()
+    {
 
-		JToolBarHelper::title(
-			JText::_('COM_THM_REPO_MANAGER_FOLDERS'), 'folders.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-folders.png'
-		);
-		if ($user->authorise('core.delete', 'com_thm_repo'))
-		{
-			JToolBarHelper::deleteList('', 'folders.delete');
-		}
-		if ($user->authorise('core.edit', 'com_thm_repo'))
-		{
-			JToolBarHelper::editList('folder.edit');
-		}
-		if ($user->authorise('core.create', 'com_thm_repo'))
-		{
-			JToolBarHelper::addNew('folder.add');
-		}		
-		JToolBarHelper::preferences('com_thm_repo');
-	}
+        $document = JFactory::getDocument();
+        $document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
+
+        $user = JFactory::getUser();
+
+        JToolBarHelper::title(
+            JText::_('COM_THM_REPO_MANAGER_FOLDERS'), 'folders.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-folders.png'
+        );
+        if ($user->authorise('core.delete', 'com_thm_repo'))
+        {
+            JToolBarHelper::deleteList('', 'folders.delete');
+        }
+        if ($user->authorise('core.edit', 'com_thm_repo'))
+        {
+            JToolBarHelper::editList('folder.edit');
+        }
+        if ($user->authorise('core.create', 'com_thm_repo'))
+        {
+            JToolBarHelper::addNew('folder.add');
+        }
+        JToolBarHelper::preferences('com_thm_repo');
+    }
 }

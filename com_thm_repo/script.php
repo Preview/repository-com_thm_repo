@@ -12,7 +12,7 @@
 // No direct access to this file
 defined('_JEXEC') or die();
 
-jimport( 'joomla.user.authentication');
+jimport('joomla.user.authentication');
 jimport('joomla.filesystem.file');
 jimport('thm_core.log.THMChangelogColoriser');
  
@@ -35,7 +35,6 @@ class COM_THM_RepoInstallerScript
      */
     public function __construct(JAdapterInstance $adapter)
     {
-
     }
 
     /**
