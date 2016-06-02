@@ -20,6 +20,8 @@ jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.file');
 jimport('thm_repo.core.All');
 
+require JPATH_ROOT . '/components/com_edocman/helper/helper.php';
+
 
 class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 {
@@ -36,7 +38,8 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
     private $documents;
     private $documentCategory;
     private $links;
-    private $edocmanDirectory = "../media/edocman/";
+    private $edocmanDirectory;
+
 
     /**
      * Method to get the categories
@@ -119,12 +122,22 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         return $this->edocmanDirectory;
     }
 
+    /**
+     * @param mixed $edocmanDirectory
+     */
+    public function setEdocmanDirectory($edocmanDirectory)
+    {
+        $this->edocmanDirectory = $edocmanDirectory;
+    }
+
 
     /**
      * Main function which is called from button Import Edocman Data
      */
     public function run()
     {
+        $this->setEdocmanDirectory(EdocmanHelper::getConfig()->documents_path . "\\");
+
         $this->setCategories($this->compileCategories());
         $this->setDocuments($this->compileDocuments());
         $this->setDocumentCategory($this->compileDocumentCategory());
@@ -155,13 +168,13 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         if ($db->loadResult() == 0) {
             for ($i = 0; $i < sizeof($categories); $i++) {
                 $query = $db->getQuery(true);
-                $columns = array('id', 'parent_id', 'title', 'description', 'access', 'asset_id', 'created_user_id',
+                $columns = array('id', 'parent_id', 'title', 'description', 'access', 'created_user_id',
                     'created_time', 'modified_user_id', 'modified_time', 'published', 'category_layout', 'alias',
                     'level', 'checked_out', 'checked_out_time', 'language', 'path');
 
                 $values = array($db->quote($categories[$i]["id"]), $db->quote($categories[$i]["parent_id"]),
                     $db->quote($categories[$i]["name"]), $db->quote($categories[$i]["description"]), $db->quote($categories[$i]["viewlevel"]),
-                    $db->quote($categories[$i]["asset_id"]), $db->quote($categories[$i]["created_by"]),
+                    $db->quote($categories[$i]["created_by"]),
                     $db->quote($categories[$i]["created"]), $db->quote($categories[$i]["modified_by"]),
                     $db->quote($categories[$i]["modified"]), $db->quote($categories[$i]["published"]),
                     $db->quote("default"), $db->quote(strtolower($categories[$i]["name"])), $db->quote($categories[$i][0]),
@@ -346,7 +359,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                 if (array_key_exists('title', $documents[$i])) {
                     $query = $db->getQuery(true);
                     $columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'description', 'modified_time',
-                        'modified_user_id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
+                        'modified_user_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
                         'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
                         'indexed_content', 'params');
 
@@ -354,7 +367,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                         $db->quote($documents[$i]["alias"]), $db->quote($documents[$i]["filename"]),
                         $db->quote($documents[$i]["original_filename"]), $db->quote($documents[$i]["description"]),
                         $db->quote($documents[$i]["modified_time"]), $db->quote($documents[$i]["modified_user_id"]),
-                        $db->quote($documents[$i]["asset_id"]), $db->quote($documents[$i]["created_user_id"]),
+                        $db->quote($documents[$i]["created_user_id"]),
                         $db->quote($documents[$i]["created_time"]), $db->quote($documents[$i]["ordering"]),
                         $db->quote($documents[$i]["published"]), $db->quote($documents[$i]["access"]), $db->quote(null),
                         $db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
@@ -492,15 +505,15 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         for ($i = 0; $i < sizeof($links); $i++) {
             $query = $db->getQuery(true);
             $columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'document_url', 'description', 'modified_time',
-                'modified_user_id', 'asset_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
+                'modified_user_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
                 'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
                 'indexed_content', 'params');
 
             $values = array($db->quote($links[$i]["id"]), $db->quote($links[$i]["title"]),
                 $db->quote($links[$i]["alias"]), $db->quote($links[$i]["filename"]),
-                $db->quote($links[$i]["original_filename"]), $db->quote($links[$i]["document_url"]),$db->quote($links[$i]["description"]),
+                $db->quote($links[$i]["original_filename"]), $db->quote($links[$i]["document_url"]), $db->quote($links[$i]["description"]),
                 $db->quote($links[$i]["modified_time"]), $db->quote($links[$i]["modified_user_id"]),
-                $db->quote($links[$i]["asset_id"]), $db->quote($links[$i]["created_user_id"]),
+                $db->quote($links[$i]["created_user_id"]),
                 $db->quote($links[$i]["created_time"]), $db->quote($links[$i]["ordering"]),
                 $db->quote($links[$i]["published"]), $db->quote($links[$i]["access"]), $db->quote(null),
                 $db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
@@ -527,7 +540,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
         $edocmanFolder = $this->getEdocmanDirectory();
         for ($i = 1; $i < sizeof($categories); $i++) {
             $structure = $edocmanFolder . $categories[$i][1];
-            if (!mkdir(utf8_decode($structure), 0777, true)) {
+            if (!mkdir(utf8_decode($structure), 0755, true)) {
                 die('Create Folder: ' . $structure . ' failed');
             }
         }
@@ -545,13 +558,19 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
                     $newfile = $this->getEdocmanDirectory() . $documents[$i]["filename"];
                     $newfile = utf8_decode($newfile);
 
-                    if (!copy($file, $newfile)) {
-                        echo "copy from $file to $newfile failed\n";
-                        var_dump($documents[$i]);
+                    if (file_exists($file)) {
+                        if (!copy($file, $newfile)) {
+                            echo "copy from $file to $newfile failed\n";
+                            var_dump($documents[$i]);
+                        }
+                    } else {
+                        echo "Die Datei $file existiert nicht ";
                     }
                 }
             }
         }
         echo "Copy documents to " . $this->getEdocmanDirectory() . " successful! ";
     }
+
+
 }
