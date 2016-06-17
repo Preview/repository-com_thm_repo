@@ -21,11 +21,11 @@ if (!defined('JPATH_LIBRARIES'))
 }
 if (!defined('JPATH_COMPONENT'))
 {
-    define('JPATH_COMPONENT', JPATH_BASE . '/components/com_thm_organizer');
+    define('JPATH_COMPONENT', JPATH_BASE . '/components/com_thm_repo');
 }
 if (!defined('JPATH_COMPONENT_SITE'))
 {
-    define('JPATH_COMPONENT_SITE', JPATH_BASE . '/components/com_thm_organizer');
+    define('JPATH_COMPONENT_SITE', JPATH_BASE . '/components/com_thm_repo');
 }
 // Import the Joomla bootstrap.
 require_once JPATH_BASE . '/tests/bootstrapJ3.php';
