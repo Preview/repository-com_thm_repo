@@ -10,8 +10,8 @@
 	-->
 
 	<testsuites>
-        <testsuite name="com_thm_organizer_admin">
-            <directory>tests</directory>
+        <testsuite name="com_thm_repo_admin">
+            <!--<directory>tests</directory>-->
         </testsuite>
 	</testsuites>
 </phpunit>

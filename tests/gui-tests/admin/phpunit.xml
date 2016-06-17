@@ -2,7 +2,7 @@
 <phpunit bootstrap="../component_bootstrap.php" colors="false">
     <testsuites>
         <testsuite name="selenium_admin_test">
-            <directory>tests</directory>
+            <!--<directory>tests</directory>-->
         </testsuite>
     </testsuites>
 </phpunit>
