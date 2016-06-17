@@ -9,8 +9,8 @@
 	</php>
 	-->
 	<testsuites>
-        <testsuite name="com_thm_repo_site">
-            <!--<directory>tests</directory>-->
-        </testsuite>
+        <!--<testsuite name="com_thm_repo_site">
+            <directory>tests</directory>
+        </testsuite>-->
 	</testsuites>
 </phpunit>
