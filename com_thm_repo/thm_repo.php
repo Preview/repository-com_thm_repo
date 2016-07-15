@@ -15,7 +15,7 @@
 
 if (!defined('DS'))
 {
-    define('DS', DIRECTORY_SEPARATOR);
+	define('DS', DIRECTORY_SEPARATOR);
 }
 
 jimport('thm_repo.core.All');
@@ -23,29 +23,29 @@ jimport('thm_repo.core.All');
 
 $uId = (int) JFactory::getUser()->id;
 
-$user = empty($uId) ? null : new THMUser($uId);
+$user   = empty($uId) ? null : new THMUser($uId);
 $filter = new THMAccessFilter($user);
 $jInput = JFactory::getApplication()->input;
 
 try
 {
-    $emptyDownloadId = -1;
-    $downloadId = $jInput->getInt('downloadId', $emptyDownloadId);
+	$emptyDownloadId = -1;
+	$downloadId      = $jInput->getInt('downloadId', $emptyDownloadId);
 
-    if ($downloadId === $emptyDownloadId)
-        throw new Exception("Missing download id!", 400 /* Bad request */);
+	if ($downloadId === $emptyDownloadId)
+		throw new Exception("Missing download id!", 400 /* Bad request */);
 
-    $file = THMFile::get($downloadId);
+	$file = THMFile::get($downloadId);
 
-    if (!$filter->accept($file))
-    {
-        throw new Exception("You have no permission to download this file!", 401 /* Unauthorized */);
-    }
+	if (!$filter->accept($file))
+	{
+		throw new Exception("You have no permission to download this file!", 401 /* Unauthorized */);
+	}
 
-    $file->download();
+	$file->download();
 }
 catch (Exception $ex)
 {
-    http_response_code($ex->getCode());
-    echo $ex->getMessage();
+	http_response_code($ex->getCode());
+	echo $ex->getMessage();
 }

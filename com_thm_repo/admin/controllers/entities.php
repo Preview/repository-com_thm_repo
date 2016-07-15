@@ -10,98 +10,98 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die;
- 
+
 // Import Joomla controlleradmin library
 jimport('joomla.application.component.controlleradmin');
 
- 
+
 /**
  * Entities Controller
- * 
+ *
  * @category  Joomla.Component.Admin
  * @package   thm_repo
- * 
+ *
  */
 class THM_RepoControllerEntities extends JControllerAdmin
 {
-    /**
-     * Returns the Model (proxy)
-     *
-     * @param   string  $name    Model name
-     * @param   string  $prefix  Model prefix
-     *
-     * @return  JModel
-     */
-    public function getModel($name = 'Entity', $prefix = 'THM_RepoModel')
-    {
-        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-        return $model;
-    }
+	/**
+	 * Returns the Model (proxy)
+	 *
+	 * @param   string $name   Model name
+	 * @param   string $prefix Model prefix
+	 *
+	 * @return  JModel
+	 */
+	public function getModel($name = 'Entity', $prefix = 'THM_RepoModel')
+	{
+		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 
-    /**
-     * Save order
-     *
-     * @return void
-     */
-    public function saveorder()
-    {
-         $model = $this->getModel('entities');
-         $id = JRequest::getVar('id');
+		return $model;
+	}
 
+	/**
+	 * Save order
+	 *
+	 * @return void
+	 */
+	public function saveorder()
+	{
+		$model = $this->getModel('entities');
+		$id    = JRequest::getVar('id');
 
-        if ($model->reorder())
-        {
-            $msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_REPO_ORDER_ERROR');
-        }
-        $this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
-    }
+		if ($model->reorder())
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
 
-    /**
-     * Order up
-     *
-     * @return void
-     */
-    public function orderup()
-    {
-         $model = $this->getModel('entities');
-         $id = JRequest::getVar('id');
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
+	}
 
-        if ($model->reorder(-1))
-        {
-            $msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_REPO_ORDER_ERROR');
-        }
-        $this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
-    }
+	/**
+	 * Order up
+	 *
+	 * @return void
+	 */
+	public function orderup()
+	{
+		$model = $this->getModel('entities');
+		$id    = JRequest::getVar('id');
 
-    /**
-     * Order down
-     *
-     * @return void
-     */
-    public function orderdown()
-    {
-         $model = $this->getModel('entities');
-         $id = JRequest::getVar('id');
+		if ($model->reorder(-1))
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
 
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
+	}
 
-        if ($model->reorder(1))
-        {
-            $msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_REPO_ORDER_ERROR');
-        }
+	/**
+	 * Order down
+	 *
+	 * @return void
+	 */
+	public function orderdown()
+	{
+		$model = $this->getModel('entities');
+		$id    = JRequest::getVar('id');
 
-        $this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
-    }
+		if ($model->reorder(1))
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_ORDER_ERROR');
+		}
 
+		$this->setRedirect('index.php?option=com_thm_repo&view=entities&id=' . (int) $id, $msg);
+	}
 }

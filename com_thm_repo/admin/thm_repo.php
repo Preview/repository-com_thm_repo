@@ -15,7 +15,7 @@ defined('_JEXEC') or die;
 
 if (!defined('DS'))
 {
-    define('DS', DIRECTORY_SEPARATOR);
+	define('DS', DIRECTORY_SEPARATOR);
 }
 
 JError::$legacy = false;
@@ -23,6 +23,6 @@ JError::$legacy = false;
 // Include dependancies
 jimport('joomla.application.component.controller');
 
-$controller    = JControllerLegacy::getInstance('THM_Repo');
+$controller = JControllerLegacy::getInstance('THM_Repo');
 $controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();

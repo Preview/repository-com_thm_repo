@@ -14,6 +14,7 @@ defined('_JEXEC') or die();
 
 // Import the Joomla modellist library
 jimport('joomla.application.component.modellist');
+
 /**
  * THM_RepoModelFiles class for component com_thm_repo
  *
@@ -24,148 +25,147 @@ jimport('joomla.application.component.modellist');
  */
 class THM_RepoModelFiles extends JModelList
 {
-    /**
-     * Constructor.
-     *
-     * @param   array  $config  An optional associative array of configuration settings.
-     *
-     * @see        JController
-     */
-    public function __construct($config = array())
-    {
-        $config['filter_fields'] = array(
-                'e.id',
-                've.name',
-                've.path',
-                'fo.parent',
-                'vi.title'
-        );
-        parent::__construct($config);
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param   array $config An optional associative array of configuration settings.
+	 *
+	 * @see        JController
+	 */
+	public function __construct($config = array())
+	{
+		$config['filter_fields'] = array(
+			'e.id',
+			've.name',
+			've.path',
+			'fo.parent',
+			'vi.title'
+		);
+		parent::__construct($config);
+	}
 
-    /**
-     * Method to populate
-     *
-     * @param   string  $ordering   An optional ordering field.
-     * @param   string  $direction  An optional direction (asc|desc).
-     *
-     * @access  protected
-     * @return    populatestate
-     */
-    protected function populateState($ordering = 'e.id', $direction = 'ASC')
-    {
-        // Load the filter state.
-        $search = $this->getUserStateFromRequest($this->context . ' . filter.search', 'filter_search');
+	/**
+	 * Method to populate
+	 *
+	 * @param   string $ordering  An optional ordering field.
+	 * @param   string $direction An optional direction (asc|desc).
+	 *
+	 * @access  protected
+	 * @return    populatestate
+	 */
+	protected function populateState($ordering = 'e.id', $direction = 'ASC')
+	{
+		// Load the filter state.
+		$search = $this->getUserStateFromRequest($this->context . ' . filter.search', 'filter_search');
 
-        // Omit double (white-)spaces and set state
-        $this->setState('filter.search', preg_replace('/\s+/', ' ', $search));
+		// Omit double (white-)spaces and set state
+		$this->setState('filter.search', preg_replace('/\s+/', ' ', $search));
 
-        // List state information.
-        parent::populateState($ordering, $direction);
-    }
+		// List state information.
+		parent::populateState($ordering, $direction);
+	}
 
-    /**
-     * Method to build an SQL query to load the list data.
-     *
-     * @return      string  An SQL query
-     */
-    protected function getListQuery()
-    {
-        // Create a new query object.
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
+	/**
+	 * Method to build an SQL query to load the list data.
+	 *
+	 * @return      string  An SQL query
+	 */
+	protected function getListQuery()
+	{
+		// Create a new query object.
+		$db    = JFactory::getDBO();
+		$query = $db->getQuery(true);
 
-        // Select some fields
-        $query->select('e.*, vi.title, fo.name AS parent, ve.*, fi.*');
+		// Select some fields
+		$query->select('e.*, vi.title, fo.name AS parent, ve.*, fi.*');
 
-        // From the links table
-        $query->from('#__thm_repo_entity AS e');
-        $query->join('INNER', '#__thm_repo_version AS ve ON e.id = ve.id');
-        $query->join('INNER', '#__thm_repo_file AS fi ON ve.id = fi.id AND ve.version = fi.current_version');
-        $query->join('INNER', '#__viewlevels AS vi on e.viewlevel = vi.id');
-        $query->join('LEFT', '#__thm_repo_folder AS fo on e.parent_id = fo.id');
+		// From the links table
+		$query->from('#__thm_repo_entity AS e');
+		$query->join('INNER', '#__thm_repo_version AS ve ON e.id = ve.id');
+		$query->join('INNER', '#__thm_repo_file AS fi ON ve.id = fi.id AND ve.version = fi.current_version');
+		$query->join('INNER', '#__viewlevels AS vi on e.viewlevel = vi.id');
+		$query->join('LEFT', '#__thm_repo_folder AS fo on e.parent_id = fo.id');
 
-        $search = $this->getState('filter.search');
-        if (!empty($search))
-        {
-            $s = $db->quote('%' . $db->escape($search, true) . '%');
-            $query->where('ve.name LIKE' . $s);
-        }
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+		{
+			$s = $db->quote('%' . $db->escape($search, true) . '%');
+			$query->where('ve.name LIKE' . $s);
+		}
 
-        $query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+		$query->order($db->escape($this->getState('list.ordering', 'e.id')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
 
-        return $query;
-    }
+		return $query;
+	}
 
-    /**
-     * Function to download a file
-     *
-     * @param   int  $id  ID of the file
-     *
-     * @return  void
-     */
-    public function download($id)
-    {
-        // GetDBO
-        $db = JFactory::getDBO();
+	/**
+	 * Function to download a file
+	 *
+	 * @param   int $id ID of the file
+	 *
+	 * @return  void
+	 */
+	public function download($id)
+	{
+		// GetDBO
+		$db = JFactory::getDBO();
 
-        // Get current Versionnumber of file
-        $query = $db->getQuery(true);
-        $query->select('current_version');
-        $query->from('#__thm_repo_file');
-        $query->where('id = ' . $id);
-        $db->setQuery($query);
-        $version = $db->loadResult();
+		// Get current Versionnumber of file
+		$query = $db->getQuery(true);
+		$query->select('current_version');
+		$query->from('#__thm_repo_file');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$version = $db->loadResult();
 
-        // Get Data from the Version
-        $query = $db->getQuery(true);
-        $query->select('*');
-        $query->from('#__thm_repo_version');
-        $query->where('id = ' . $id . ' AND version = ' . $version);
-        $db->setQuery($query);
-        $versiondata = $db->loadObject();
+		// Get Data from the Version
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id . ' AND version = ' . $version);
+		$db->setQuery($query);
+		$versiondata = $db->loadObject();
 
-        // Clean the output buffer
-        ob_end_clean();
+		// Clean the output buffer
+		ob_end_clean();
 
-        /* create the header */
-        header("Pragma: public");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-        header("Cache-Control: private", false);
+		/* create the header */
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
 
-        // Required for certain browsers
-        header("Content-Type: . filetype($versiondata->path) .");
-        header("Content-Description: File Transfer");
-        header('Content-Disposition: attachment; filename=' . $versiondata->name . "." . JFile::getExt($versiondata->path));
-        header("Content-Transfer-Encoding: binary");
-        header("Content-Length: " . $versiondata->size);
+		// Required for certain browsers
+		header("Content-Type: . filetype($versiondata->path) .");
+		header("Content-Description: File Transfer");
+		header('Content-Disposition: attachment; filename=' . $versiondata->name . "." . JFile::getExt($versiondata->path));
+		header("Content-Transfer-Encoding: binary");
+		header("Content-Length: " . $versiondata->size);
 
-        /* download file */
-        readfile(JPATH_ROOT . $versiondata->path);
-    }
+		/* download file */
+		readfile(JPATH_ROOT . $versiondata->path);
+	}
 
-    /**
-     * Counts the versions of a file
-     *
-     * @param   int  $id  ID of the file
-     *
-     * @return string The number of Versions
-     */
-    public function countVersions($id)
-    {
-        // GetDBO
-        $db = JFactory::getDBO();
+	/**
+	 * Counts the versions of a file
+	 *
+	 * @param   int $id ID of the file
+	 *
+	 * @return string The number of Versions
+	 */
+	public function countVersions($id)
+	{
+		// GetDBO
+		$db = JFactory::getDBO();
 
-        // Get current Versionnumber of file
-        $query = $db->getQuery(true);
-        $query->select('COUNT(*) AS versions');
-        $query->from('#__thm_repo_version');
-        $query->where('id = ' . $id);
-        $db->setQuery($query);
-        $result = $db->loadResult();
+		// Get current Versionnumber of file
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*) AS versions');
+		$query->from('#__thm_repo_version');
+		$query->where('id = ' . $id);
+		$db->setQuery($query);
+		$result = $db->loadResult();
 
-        return $result;
-    }
-
+		return $result;
+	}
 }

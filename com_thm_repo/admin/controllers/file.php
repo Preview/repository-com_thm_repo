@@ -17,10 +17,10 @@ jimport('joomla.application.component.controllerform');
 
 /**
  * File Controller
- * 
+ *
  * @category  Joomla.Component.Admin
  * @package   thm_repo
- * 
+ *
  */
 class THM_RepoControllerFile extends JControllerForm
 {

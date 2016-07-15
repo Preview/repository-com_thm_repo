@@ -15,121 +15,118 @@ defined('_JEXEC') or die();
 jimport('joomla.user.authentication');
 jimport('joomla.filesystem.file');
 jimport('thm_core.log.THMChangelogColoriser');
- 
+
 /**
  * Script file of THM_Repo component
- * 
+ *
  * @category  Joomla.Component.Admin
  * @package   com_thm_repo.admin
  */
 class COM_THM_RepoInstallerScript
 {
-    const UPDATE = 'Update';
-    const INSTALL = 'Install';
-    const UNINSTALL = 'Uninstall';
+	const UPDATE = 'Update';
+	const INSTALL = 'Install';
+	const UNINSTALL = 'Uninstall';
 
-    /**
-     * Constructor
-     *
-     * @param   JAdapterInstance  $adapter  The object responsible for running this script
-     */
-    public function __construct(JAdapterInstance $adapter)
-    {
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param   JAdapterInstance $adapter The object responsible for running this script
+	 */
+	public function __construct(JAdapterInstance $adapter)
+	{
+	}
 
-    /**
-     * Called before any type of action
-     *
-     * @param   string            $route    Which action is happening (install|uninstall|discover_install|update)
-     * @param   JAdapterInstance  $adapter  The object responsible for running this script
-     *
-     * @return  boolean  True on success
-     */
-    public function preflight($route, JAdapterInstance $adapter)
-    {
-    }
+	/**
+	 * Called before any type of action
+	 *
+	 * @param   string           $route   Which action is happening (install|uninstall|discover_install|update)
+	 * @param   JAdapterInstance $adapter The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
+	 */
+	public function preflight($route, JAdapterInstance $adapter)
+	{
+	}
 
-    /**
-     * Called after any type of action
-     *
-     * @param   string            $route    Which action is happening (Install|Uninstall|discover_install|Update)
-     * @param   JAdapterInstance  $adapter  The object responsible for running this script
-     *
-     * @return  boolean  True on success
-     */
-    public function postflight($route, JAdapterInstance $adapter)
-    {
-        if (ucfirst($route) == self::UPDATE || ucfirst($route) == self::INSTALL)
-        {
-            $uri = JURI::root(true) . '/libraries/thm_core/log/THMChangelogColoriser.css';
-            echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
-            echo THMChangelogColoriser::colorise(dirname(__FILE__) . '/CHANGELOG.php');
-        }
+	/**
+	 * Called after any type of action
+	 *
+	 * @param   string           $route   Which action is happening (Install|Uninstall|discover_install|Update)
+	 * @param   JAdapterInstance $adapter The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
+	 */
+	public function postflight($route, JAdapterInstance $adapter)
+	{
+		if (ucfirst($route) == self::UPDATE || ucfirst($route) == self::INSTALL)
+		{
+			$uri = JURI::root(true) . '/libraries/thm_core/log/THMChangelogColoriser.css';
+			echo "<link rel='stylesheet' type='text/css' href='{$uri}' />";
+			echo THMChangelogColoriser::colorise(dirname(__FILE__) . '/CHANGELOG.php');
+		}
+	}
 
-    }
+	/**
+	 * Called on installation
+	 *
+	 * @param   JAdapterInstance $adapter The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
+	 */
+	public function install(JAdapterInstance $adapter)
+	{
+		$uploadPath   = JPATH_ROOT . '/media/com_thm_repo';
+		$htAccessPath = $uploadPath . '/.htaccess';
 
+		JFolder::create($uploadPath);
 
-    /**
-     * Called on installation
-     *
-     * @param   JAdapterInstance  $adapter  The object responsible for running this script
-     *
-     * @return  boolean  True on success
-     */
-    public function install(JAdapterInstance $adapter)
-    {
-        $uploadPath = JPATH_ROOT . '/media/com_thm_repo';
-        $htAccessPath = $uploadPath . '/.htaccess';
+		$htContent = 'deny from all';
 
-        JFolder::create($uploadPath);
+		JFile::write($htAccessPath, $htContent, true);
 
-        $htContent = 'deny from all';
+		jimport('thm_repo.core.All');
 
-        JFile::write($htAccessPath, $htContent, true);
+		$uid  = JFactory::getUser()->id;
+		$user = new THMUser((int) $uid);
 
-        jimport('thm_repo.core.All');
+		$publicViewlevel = 1;
+		$published       = true;
 
-        $uid = JFactory::getUser()->id;
-        $user = new THMUser((int) $uid);
+		$folder = new THMFolder(
+			null,
+			'root',
+			'The main folder to organize files and folders.',
+			$user,
+			$publicViewlevel,
+			$published
+		);
 
-        $publicViewlevel = 1;
-        $published = true;
+		THMFolder::persist($folder);
+	}
 
-        $folder = new THMFolder(
-            null,
-            'root',
-            'The main folder to organize files and folders.',
-            $user,
-            $publicViewlevel,
-            $published
-        );
+	/**
+	 * Called on uninstallation
+	 *
+	 * @param   JAdapterInstance $adapter The object responsible for running this script
+	 *
+	 * @return  boolean  True on success
+	 */
+	public function uninstall(JAdapterInstance $adapter)
+	{
+		jimport('thm_repo.core.All');
 
-        THMFolder::persist($folder);
-    }
+		try
+		{
+			$root = THMFolder::getRoot(true);
+			THMFolder::remove($root, true);
+		}
+		catch (Exception $e)
+		{
+			/* Nothing to delete if no folder was found! */
+		}
 
-    /**
-     * Called on uninstallation
-     *
-     * @param   JAdapterInstance  $adapter  The object responsible for running this script
-     *
-     * @return  boolean  True on success
-     */
-    public function uninstall(JAdapterInstance $adapter)
-    {
-        jimport('thm_repo.core.All');
-
-        try
-        {
-            $root = THMFolder::getRoot(true);
-            THMFolder::remove($root, true);
-        }
-        catch (Exception $e)
-        {
-            /* Nothing to delete if no folder was found! */
-        }
-
-        $uploadPath = JPATH_ROOT . '/media/com_thm_repo';
-        JFolder::delete($uploadPath);
-    }
-
+		$uploadPath = JPATH_ROOT . '/media/com_thm_repo';
+		JFolder::delete($uploadPath);
+	}
 }

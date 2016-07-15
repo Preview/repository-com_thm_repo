@@ -21,62 +21,63 @@ jimport('joomla.application.component.view');
  * @category  Joomla.Component.Admin
  * @package   com_thm_repo.admin
  * @link      www.mni.thm.de
-*/
+ */
 class THM_RepoViewLinks extends JViewLegacy
 {
-    /**
-     * Links view display method
-     *
-     * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-     *
-     * @return  mixed  A string if successful, otherwise a JError object.
-     */
-    public function display($tpl = null)
-    {
-        // Get data from the model
-        $items = $this->get('Items');
-        $pagination = $this->get('Pagination');
-        $state = $this->get('State');
+	/**
+	 * Links view display method
+	 *
+	 * @param   string $tpl The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  mixed  A string if successful, otherwise a JError object.
+	 */
+	public function display($tpl = null)
+	{
+		// Get data from the model
+		$items      = $this->get('Items');
+		$pagination = $this->get('Pagination');
+		$state      = $this->get('State');
 
-        // Check for errors.
-        if (count($errors = $this->get('Errors')))
-        {
-            JFactory::getApplication()->enqueueMessage(implode('<br />', $errors), 'error');
-            return false;
-        }
-        // Assign data to the view
-        $this->items = $items;
-        $this->pagination = $pagination;
-        $this->sortDirection = $state->get('list.direction');
-        $this->sortColumn = $state->get('list.ordering');
-        $this->searchterms = $state->get('filter.search');
+		// Check for errors.
+		if (count($errors = $this->get('Errors')))
+		{
+			JFactory::getApplication()->enqueueMessage(implode('<br />', $errors), 'error');
+
+			return false;
+		}
+		// Assign data to the view
+		$this->items         = $items;
+		$this->pagination    = $pagination;
+		$this->sortDirection = $state->get('list.direction');
+		$this->sortColumn    = $state->get('list.ordering');
+		$this->searchterms   = $state->get('filter.search');
 
 
-        // Set the toolbar
-        $this->addToolBar();
+		// Set the toolbar
+		$this->addToolBar();
 
-        if (version_compare(JVERSION, '3', '<'))
-        {
-            $tpl = 'j25';
-        }
+		if (version_compare(JVERSION, '3', '<'))
+		{
+			$tpl = 'j25';
+		}
 
-        // Display the template
-        parent::display($tpl);
-    }
+		// Display the template
+		parent::display($tpl);
+	}
 
-    /**
-     * Setting the toolbar
-     *
-     * @return void
-     */
-    protected function addToolBar()
-    {
-        $document = JFactory::getDocument();
-        $document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
+	/**
+	 * Setting the toolbar
+	 *
+	 * @return void
+	 */
+	protected function addToolBar()
+	{
+		$document = JFactory::getDocument();
+		$document->addStyleSheet("components/com_thm_repo/css/icon/icon.css");
 
-        JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_LINKS'), 'links.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-links.png');
-        JToolBarHelper::deleteList('', 'links.delete');
-        JToolBarHelper::editList('link.edit');
-        JToolBarHelper::addNew('link.add');
-    }
+		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_LINKS'), 'links.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-links.png');
+		JToolBarHelper::deleteList('', 'links.delete');
+		JToolBarHelper::editList('link.edit');
+		JToolBarHelper::addNew('link.add');
+	}
 }

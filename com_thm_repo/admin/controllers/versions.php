@@ -10,40 +10,38 @@
  */
 // No direct access to this file
 defined('_JEXEC') or die;
- 
+
 // Import Joomla controlleradmin library
 jimport('joomla.application.component.controlleradmin');
- 
+
 /**
  * Versions Controller
- * 
+ *
  * @category  Joomla.Component.Admin
  * @package   thm_repo
- * 
+ *
  */
 class THM_RepoControllerVersions extends JControllerAdmin
 {
+	/**
+	 * Set current version
+	 *
+	 * @return void
+	 */
+	public function publish()
+	{
+		$model = $this->getModel('versions');
+		$id    = JRequest::getVar('id');
 
-    /**
-     * Set current version
-     *
-     * @return void
-     */
-    public function publish()
-    {
+		if ($model->setversion())
+		{
+			$msg = JText::_('COM_THM_REPO_SET_VERSION_SUCCESSFUL');
+		}
+		else
+		{
+			$msg = JText::_('COM_THM_REPO_SET_VERSION_ERROR');
+		}
 
-         $model = $this->getModel('versions');
-         $id = JRequest::getVar('id');
-
-        if ($model->setversion())
-        {
-            $msg = JText::_('COM_THM_REPO_SET_VERSION_SUCCESSFUL');
-        }
-        else
-        {
-            $msg = JText::_('COM_THM_REPO_SET_VERSION_ERROR');
-        }
-        $this->setRedirect('index.php?option=com_thm_repo&view=versions&id=' . (int) $id, $msg);
-    }
-
+		$this->setRedirect('index.php?option=com_thm_repo&view=versions&id=' . (int) $id, $msg);
+	}
 }
