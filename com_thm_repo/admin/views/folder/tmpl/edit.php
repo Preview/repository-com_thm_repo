@@ -19,8 +19,8 @@ JHtml::_('behavior.tooltip');
 			<div class="row-fluid">
 				<legend><?php echo JText::_('COM_THM_REPO_FOLDER_DETAILS'); ?></legend>
 				<div class="control-group">
-					<?php echo $this->form->getLabel('name'); ?>
-					<?php echo $this->form->getInput('name'); ?>
+					<?php echo $this->form->getLabel('title'); ?>
+					<?php echo $this->form->getInput('title'); ?>
 				</div>
 				<div class="control-group">
 					<?php echo $this->form->getLabel('description'); ?>
