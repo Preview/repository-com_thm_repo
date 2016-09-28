@@ -61,23 +61,20 @@ JHtml::_('behavior.tooltip');
 				</div>
 			</div>
 		</fieldset>
-
-		<div class="clr"></div>
-		<div class="width-100 fltlft">
-			<?php echo JHtml::_('sliders.panel', JText::_('COM_THM_REPO_ACCESS'), 'accesscontrol'); ?>
-			<fieldset class="panelform">
-				<div class="row-fluid">
-					<div class="control-group">
-						<?php echo $this->form->getLabel('rules'); ?>
-						<?php echo $this->form->getInput('rules'); ?>
-					</div>
-				</div>
-			</fieldset>
-			<?php echo JHtml::_('sliders.end'); ?>
-		</div>
 		<div>
 			<input type="hidden" name="task" value="folder.edit"/>
 			<?php echo JHtml::_('form.token'); ?>
 		</div>
 	</div>
 </form>
+<div class="form-horizontal">
+	<h3><?php echo JText::_('COM_THM_REPO_ACCESS')?></h3>
+	<fieldset class="panelform">
+		<div class="row-fluid">
+			<div class="control-group">
+				<?php echo $this->form->getLabel('rules'); ?>
+				<?php echo $this->form->getInput('rules'); ?>
+			</div>
+		</div>
+	</fieldset>
+</div>

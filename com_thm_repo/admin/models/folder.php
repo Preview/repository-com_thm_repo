@@ -84,6 +84,7 @@ class THM_RepoModelFolder extends JModelAdmin
 			$data = $this->getItem();
 		}
 
+		$data->title = $data->name;
 		return $data;
 	}
 
@@ -130,6 +131,8 @@ class THM_RepoModelFolder extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		$data["name"] = $data["title"];
+		unset($data["title"]);
 		$folderdata            = (object) $data;
 		$folderdata->published = !empty($data['published']);
 
