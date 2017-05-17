@@ -42,6 +42,14 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 
 	private $links;
 
+	private $categoriesOffset;
+
+	private $documentsOffset;
+
+	private $documentCategoryOffset;
+
+	private $linksOffset;
+
 	private $edocmanDirectory;
 
 	/**
@@ -121,6 +129,82 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 	}
 
 	/**
+	 * Method to get categoriesOffset
+	 * @return categoriesOffset
+	 */
+	public function getCategoriesOffset()
+	{
+		return $this->categoriesOffset;
+	}
+
+	/**
+	 * Method to set the parameter to $categoriesOffset
+	 *
+	 * @param $categoriesOffset
+	 */
+	public function setCategoriesOffset($categoriesOffset)
+	{
+		$this->categoriesOffset = $categoriesOffset;
+	}
+
+	/**
+	 * Method to get documentsOffset
+	 * @return documentsOffset
+	 */
+	public function getDocumentsOffset()
+	{
+		return $this->documentsOffset;
+	}
+
+	/**
+	 * Method to set the parameter to $documentsOffset
+	 *
+	 * @param $documentsOffset
+	 */
+	public function setDocumentsOffset($documentsOffset)
+	{
+		$this->documentsOffset = $documentsOffset;
+	}
+
+	/**
+	 * Method to get documentCategoryOffset
+	 * @return documentCategoryOffset
+	 */
+	public function getDocumentCategoryOffset()
+	{
+		return $this->documentCategoryOffset;
+	}
+
+	/**
+	 * Method to set the parameter to $documentCategoryOffset
+	 *
+	 * @param $documentCategoryOffset
+	 */
+	public function setDocumentCategoryOffset($documentCategoryOffset)
+	{
+		$this->documentCategoryOffset = $documentCategoryOffset;
+	}
+
+	/**
+	 * Method to get linksOffset
+	 * @return linksOffset
+	 */
+	public function getLinksOffset()
+	{
+		return $this->linksOffset;
+	}
+
+	/**
+	 * Method to set the parameter to $linksOffset
+	 *
+	 * @param $linksOffset
+	 */
+	public function setLinksOffset($linksOffset)
+	{
+		$this->linksOffset = $linksOffset;
+	}
+
+	/**
 	 * Method to get edocmanDirectory
 	 * @return links
 	 */
@@ -143,7 +227,12 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 	 */
 	public function run()
 	{
-		$this->setEdocmanDirectory(EdocmanHelper::getConfig()->documents_path . "\\");
+		$this->setEdocmanDirectory(EdocmanHelper::getConfig()->documents_path . DIRECTORY_SEPARATOR);
+
+		$this->setCategoriesOffset($this->calcCategoriesOffset());
+		$this->setDocumentsOffset($this->calcDocumentsOffset());
+		$this->setDocumentCategoryOffset($this->calcDocumentCategoryOffset());
+		$this->setLinksOffset($this->calcLinksOffset());
 
 		$this->setCategories($this->compileCategories());
 		$this->setDocuments($this->compileDocuments());
@@ -154,9 +243,64 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		$this->saveDocumentsToDb();
 		$this->saveDocumentCategoryToDb();
 		$this->saveLinksToDbDocuments();
+		$this->updateTHMTreeModules();
 
 		$this->importFoldersToCategories();
 		$this->importEntitiesToDocuments();
+	}
+
+	/**
+	 * Method to calculate the offset for the id of the categories
+	 * @return categoriesOffset
+	 */
+	public function calcCategoriesOffset()
+	{
+		$db = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->select('max(id)');
+		$query->from('#__edocman_categories');
+		$db->setQuery($query);
+		return (int) $db->loadResult();
+	}
+
+	/**
+	 * Method to calculate the offset for the id of the documents
+	 * @return documentsOffset
+	 */
+	public function calcDocumentsOffset()
+	{
+		$db = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->select('max(id)');
+		$query->from('#__edocman_documents');
+		$db->setQuery($query);
+		return (int) $db->loadResult();
+	}
+
+	/**
+	 * Method to calculate the offset for the id of the document category
+	 * @return documentCategoryOffset
+	 */
+	public function calcDocumentCategoryOffset()
+	{
+		$db = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->select('max(id)');
+		$query->from('#__edocman_document_category');
+		$db->setQuery($query);
+		return (int) $db->loadResult();
+	}
+
+	/**
+	 * Method to calculate the offset for the id of the links
+	 * @return linksOffset
+	 */
+	public function calcLinksOffset()
+	{
+		return $this->getDocumentsOffset();
 	}
 
 	/**
@@ -167,46 +311,35 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 	{
 		$categories = $this->getCategories();
 		$db         = JFactory::getDBO();
-		$query      = $db->getQuery(true);
-		$query->select('count(*)');
-		$query->from('#__edocman_categories');
-		$db->setQuery($query);
 
-		if ($db->loadResult() == 0)
+		for ($i = 0; $i < sizeof($categories); $i++)
 		{
-			for ($i = 0; $i < sizeof($categories); $i++)
-			{
-				$query   = $db->getQuery(true);
-				$columns = array('id', 'parent_id', 'title', 'description', 'access', 'created_user_id',
-					'created_time', 'modified_user_id', 'modified_time', 'published', 'category_layout', 'alias',
-					'level', 'checked_out', 'checked_out_time', 'language', 'path');
+			$query   = $db->getQuery(true);
+			$columns = array('id', 'parent_id', 'title', 'description', 'access', 'created_user_id',
+				'created_time', 'modified_user_id', 'modified_time', 'published', 'category_layout', 'alias',
+				'level', 'checked_out', 'checked_out_time', 'language', 'path');
 
-				$values = array($db->quote($categories[$i]["id"]), $db->quote($categories[$i]["parent_id"]),
-					$db->quote($categories[$i]["name"]), $db->quote($categories[$i]["description"]), $db->quote($categories[$i]["viewlevel"]),
-					$db->quote($categories[$i]["created_by"]),
-					$db->quote($categories[$i]["created"]), $db->quote($categories[$i]["modified_by"]),
-					$db->quote($categories[$i]["modified"]), $db->quote($categories[$i]["published"]),
-					$db->quote("default"), $db->quote(strtolower($categories[$i]["name"])), $db->quote($categories[$i][0]),
-					$db->quote("0"), $db->quote("null"), $db->quote("*"), $db->quote($categories[$i][1]));
+			$values = array($db->quote($categories[$i]["id"] + $this->getCategoriesOffset()), $db->quote($categories[$i]["parent_id"] + $this->getCategoriesOffset()),
+				$db->quote($categories[$i]["name"]), $db->quote($categories[$i]["description"]), $db->quote($categories[$i]["viewlevel"]),
+				$db->quote($categories[$i]["created_by"]),
+				$db->quote($categories[$i]["created"]), $db->quote($categories[$i]["modified_by"]),
+				$db->quote($categories[$i]["modified"]), $db->quote($categories[$i]["published"]),
+				$db->quote("default"), $db->quote(strtolower($this->removeSpecialChars($categories[$i]["name"]))), $db->quote($categories[$i][0]),
+				$db->quote("0"), $db->quote(null), $db->quote("*"), $db->quote($categories[$i][1]));
 
-				$query
-					->insert($db->quoteName('#__edocman_categories'))
-					->columns($db->quoteName($columns))
-					->values(implode(',', $values));
+			$query
+				->insert($db->quoteName('#__edocman_categories'))
+				->columns($db->quoteName($columns))
+				->values(implode(',', $values));
 
-				$db->setQuery($query);
-				$db->execute();
-				$query   = null;
-				$columns = null;
-				$values  = null;
-			}
-
-			echo "Migrate edocman_categories successful! ";
+			$db->setQuery($query);
+			$db->execute();
+			$query   = null;
+			$columns = null;
+			$values  = null;
 		}
-		else
-		{
-			echo "Table edocman_categories is not empty! ";
-		}
+
+		echo "Migrate edocman_categories with id-offset " . $this->getCategoriesOffset() . " successful!<br>";
 	}
 
 	/**
@@ -262,7 +395,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 					$pid = ($levels[$id][1]);
 					if ($pid != 0)
 					{
-						$path = mb_strtolower($levels[$id][2], 'UTF-8') . "/" . $path;
+						$path = strtolower($this->removeSpecialChars($levels[$id][2])) . DIRECTORY_SEPARATOR . $path;
 						$id   = $pid;
 						$level++;
 					}
@@ -288,7 +421,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		}
 
 		// Set parent_id root = 0
-		$categories[0]["parent_id"] = '0';
+		$categories[0]["parent_id"] = 0-$this->getCategoriesOffset();
 
 		return $categories;
 	}
@@ -351,18 +484,18 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 				{
 					$documents[$i]["id"] == $result[$j]["id"];
 					$documents[$i]["title"]                  = $result[$j]["name"];
-					$documents[$i]["alias"]                  = strtolower($result[$j]["name"]);
+					$documents[$i]["alias"]                  = strtolower($this->removeSpecialChars($result[$j]["name"]));
 					$originalFilename                        = substr(strrchr($result[$j]["path"], "/"), 1);
+					if ($originalFilename == FALSE)
+					{
+						$originalFilename = substr(strrchr($result[$j]["path"], "\\"), 1);
+					}
 					$documents[$i]["original_filename_repo"] = $originalFilename;
-					$pos                                     = strpos($originalFilename, '_');
-					$originalFilename                        = substr($originalFilename, $pos + 1);
-					$pos                                     = strpos($originalFilename, '_');
-					$originalFilename                        = substr($originalFilename, $pos + 1);
-					$documents[$i]["original_filename"]      = $originalFilename;
+					$documents[$i]["original_filename"]      = $result[$j]["name"] . "." . pathinfo($originalFilename, PATHINFO_EXTENSION);
 					$documents[$i]["description"]            = $result[$j]["description"];
 					$documents[$i]["modified_time"]          = $result[$j]["modified"];
 					$documents[$i]["modified_user_id"]       = $result[$j]["modified_by"];
-					$documents[$i]["filename"]               = $documents[$i]["path"] . "/" . $originalFilename;
+					$documents[$i]["filename"]               = $documents[$i]["path"] . DIRECTORY_SEPARATOR . $documents[$i]["original_filename_repo"];
 				}
 			}
 
@@ -370,6 +503,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 			{
 				array_push($links, $documents[$i]);
 			}
+
 		}
 
 		$this->setLinks($links);
@@ -385,54 +519,42 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 	{
 		$documents = $this->getDocuments();
 		$db        = JFactory::getDBO();
-		$query     = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__edocman_documents');
-		$db->setQuery($query);
-		$result = $db->loadResult();
 
-		if ($result == 0)
+		for ($i = 0; $i < sizeof($documents); $i++)
 		{
-			for ($i = 0; $i < sizeof($documents); $i++)
+			if (array_key_exists('title', $documents[$i]))
 			{
-				if (array_key_exists('title', $documents[$i]))
-				{
-					$query   = $db->getQuery(true);
-					$columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'description', 'modified_time',
-						'modified_user_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
-						'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
-						'indexed_content', 'params');
+				$query   = $db->getQuery(true);
+				$columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'description', 'modified_time',
+					'modified_user_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
+					'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
+					'indexed_content', 'params');
 
-					$values = array($db->quote($documents[$i]["id"]), $db->quote($documents[$i]["title"]),
-						$db->quote($documents[$i]["alias"]), $db->quote($documents[$i]["filename"]),
-						$db->quote($documents[$i]["original_filename"]), $db->quote($documents[$i]["description"]),
-						$db->quote($documents[$i]["modified_time"]), $db->quote($documents[$i]["modified_user_id"]),
-						$db->quote($documents[$i]["created_user_id"]),
-						$db->quote($documents[$i]["created_time"]), $db->quote($documents[$i]["ordering"]),
-						$db->quote($documents[$i]["published"]), $db->quote($documents[$i]["access"]), $db->quote(null),
-						$db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
-						$db->quote("*"), $db->quote(null), $db->quote(null));
+				$values = array($db->quote($documents[$i]["id"] + $this->getDocumentsOffset()), $db->quote($documents[$i]["title"]),
+					$db->quote($documents[$i]["alias"]), $db->quote($documents[$i]["filename"]),
+					$db->quote($documents[$i]["original_filename"]), $db->quote($documents[$i]["description"]),
+					$db->quote($documents[$i]["modified_time"]), $db->quote($documents[$i]["modified_user_id"]),
+					$db->quote($documents[$i]["created_user_id"]),
+					$db->quote($documents[$i]["created_time"]), $db->quote($documents[$i]["ordering"]),
+					$db->quote($documents[$i]["published"]), $db->quote($documents[$i]["access"]), $db->quote(null),
+					$db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
+					$db->quote("*"), $db->quote(null), $db->quote(null));
 
-					$query
-						->insert($db->quoteName('#__edocman_documents'))
-						->columns($db->quoteName($columns))
-						->values(implode(',', $values));
+				$query
+					->insert($db->quoteName('#__edocman_documents'))
+					->columns($db->quoteName($columns))
+					->values(implode(',', $values));
 
-					$db->setQuery($query);
-					$db->execute();
-				}
-
-				$query   = null;
-				$columns = null;
-				$values  = null;
+				$db->setQuery($query);
+				$db->execute();
 			}
 
-			echo "Migrate edocman_documents successful! ";
+			$query   = null;
+			$columns = null;
+			$values  = null;
 		}
-		else
-		{
-			echo "Table edocman_documents is not empty! ";
-		}
+
+		echo "Migrate edocman_documents with id-offset " . $this->getDocumentsOffset() . " successful!<br>";
 	}
 
 	/**
@@ -449,57 +571,62 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		$result = $db->loadAssocList();
 		$docCat = array();
 
+		$documents = $this->getDocuments();
+		$links = $this->getLinks();
+
 		for ($i = 0; $i < sizeof($result); $i++)
 		{
-			$docCat[$i]["document_id"] = $result[$i]["id"];
-			$docCat[$i]["category_id"] = $result[$i]["parent_id"];
+			for ($j = 0; $j < sizeof($documents); $j++)
+			{
+				if ($documents[$i]["id"] == $result[$i]["id"]) {
+					$docCat[$i]["document_id"] = $result[$i]["id"];
+					$docCat[$i]["category_id"] = $result[$i]["parent_id"];
+					break;
+				}
+			}
+			for ($j = 0; !isset($docCat[$i]["document_id"]) && $j < sizeof($links); $j++)
+			{
+				if ($links[$i]["id"] == $result[$i]["id"]) {
+					$docCat[$i]["document_id"] = $result[$i]["id"];
+					$docCat[$i]["category_id"] = $result[$i]["parent_id"];
+					break;
+				}
+			}
 		}
 
 		return $docCat;
 	}
 
 	/**
-	 * Method to save the documentCategoriy to database edocman_documtn_category
+	 * Method to save the documentCategory to database edocman_documtn_category
 	 *
 	 */
 	public function saveDocumentCategoryToDb()
 	{
 		$docCat = $this->getDocumentCategory();
 		$db     = JFactory::getDBO();
-		$query  = $db->getQuery(true);
-		$query->select('*');
-		$query->from('#__edocman_document_category');
-		$db->setQuery($query);
-		$result = $db->loadResult();
 
-		if ($result == 0)
+		for ($i = 0; $i < sizeof($docCat); $i++)
 		{
-			for ($i = 0; $i < sizeof($docCat); $i++)
-			{
-				$query   = $db->getQuery(true);
-				$columns = array('id', 'document_id', 'category_id', 'is_main_category');
+			$query   = $db->getQuery(true);
+			$columns = array('id', 'document_id', 'category_id', 'is_main_category');
 
-				$values = array($db->quote($docCat[$i]["document_id"]), $db->quote($docCat[$i]["document_id"]),
-					$db->quote($docCat[$i]["category_id"]), $db->quote("1"));
+			$values = array($db->quote($docCat[$i]["document_id"] + $this->getDocumentCategoryOffset()), $db->quote($docCat[$i]["document_id"] + $this->getDocumentsOffset()),
+				$db->quote($docCat[$i]["category_id"] + $this->getCategoriesOffset()), $db->quote("1"));
 
-				$query
-					->insert($db->quoteName('#__edocman_document_category'))
-					->columns($db->quoteName($columns))
-					->values(implode(',', $values));
+			$query
+				->insert($db->quoteName('#__edocman_document_category'))
+				->columns($db->quoteName($columns))
+				->values(implode(',', $values));
 
-				$db->setQuery($query);
-				$db->execute();
-				$query   = null;
-				$columns = null;
-				$values  = null;
-			}
-
-			echo "Migrate edocman_document_category successful! ";
+			$db->setQuery($query);
+			$db->execute();
+			$query   = null;
+			$columns = null;
+			$values  = null;
 		}
-		else
-		{
-			echo "Table edocman_document_category is not empty! ";
-		}
+
+		echo "Migrate edocman_document_category with id-offset " . $this->getDocumentCategoryOffset() . " successful!<br>";
 	}
 
 	/**
@@ -523,13 +650,14 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 				if ($links[$i]["id"] == $result[$j]["id"])
 				{
 					$links[$i]["title"]             = $result[$j]["name"];
-					$links[$i]["alias"]             = strtolower($result[$j]["name"]);
-					$links[$i]["filename"]          = $links[$i]["path"] . "/" . $links[$i]["title"];
+					$links[$i]["alias"]             = strtolower($this->removeSpecialChars($result[$j]["name"]));
+					$links[$i]["filename"]          = $links[$i]["path"] . DIRECTORY_SEPARATOR . $links[$i]["title"];
 					$links[$i]["original_filename"] = "";
 					$links[$i]["description"]       = $result[$j]["description"];
 					$links[$i]["modified_time"]     = $result[$j]["modified"];
 					$links[$i]["modified_user_id"]  = $result[$j]["modified_by"];
 					$links[$i]["document_url"]      = $result[$j]["link"];
+					break;
 				}
 			}
 		}
@@ -557,34 +685,38 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 
 		for ($i = 0; $i < sizeof($links); $i++)
 		{
-			$query   = $db->getQuery(true);
-			$columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'document_url', 'description', 'modified_time',
-				'modified_user_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
-				'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
-				'indexed_content', 'params');
+			if(!empty($links[$i]["document_url"]))
+			{
+				$query   = $db->getQuery(true);
+				$columns = array('id', 'title', 'alias', 'filename', 'original_filename', 'document_url', 'description', 'modified_time',
+					'modified_user_id', 'created_user_id', 'created_time', 'ordering', 'published', 'access',
+					'image', 'rating_count', 'rating_sum', 'hits', 'downloads', 'checked_out', 'language',
+					'indexed_content', 'params');
 
-			$values = array($db->quote($links[$i]["id"]), $db->quote($links[$i]["title"]),
-				$db->quote($links[$i]["alias"]), $db->quote($links[$i]["filename"]),
-				$db->quote($links[$i]["original_filename"]), $db->quote($links[$i]["document_url"]), $db->quote($links[$i]["description"]),
-				$db->quote($links[$i]["modified_time"]), $db->quote($links[$i]["modified_user_id"]),
-				$db->quote($links[$i]["created_user_id"]),
-				$db->quote($links[$i]["created_time"]), $db->quote($links[$i]["ordering"]),
-				$db->quote($links[$i]["published"]), $db->quote($links[$i]["access"]), $db->quote(null),
-				$db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
-				$db->quote("*"), $db->quote(null), $db->quote(null));
+				$values = array($db->quote($links[$i]["id"] + $this->getLinksOffset()), $db->quote($links[$i]["title"]),
+					$db->quote($links[$i]["alias"]), $db->quote($links[$i]["filename"]),
+					$db->quote($links[$i]["original_filename"]), $db->quote($links[$i]["document_url"]), $db->quote($links[$i]["description"]),
+					$db->quote($links[$i]["modified_time"]), $db->quote($links[$i]["modified_user_id"]),
+					$db->quote($links[$i]["created_user_id"]),
+					$db->quote($links[$i]["created_time"]), $db->quote($links[$i]["ordering"]),
+					$db->quote($links[$i]["published"]), $db->quote($links[$i]["access"]), $db->quote(null),
+					$db->quote("0"), $db->quote("0.00"), $db->quote("0"), $db->quote("0"), $db->quote(null),
+					$db->quote("*"), $db->quote(null), $db->quote(null));
 
-			$query
-				->insert($db->quoteName('#__edocman_documents'))
-				->columns($db->quoteName($columns))
-				->values(implode(',', $values));
+				$query
+					->insert($db->quoteName('#__edocman_documents'))
+					->columns($db->quoteName($columns))
+					->values(implode(',', $values));
 
-			$db->setQuery($query);
-			$db->execute();
-			$query   = null;
-			$columns = null;
-			$values  = null;
+				$db->setQuery($query);
+				$db->execute();
+				$query   = null;
+				$columns = null;
+				$values  = null;
+			}
+
 		}
-		echo "Migrate links to edocman_document successful! ";
+		echo "Migrate links to edocman_document successful!<br>";
 	}
 
 	public function importFoldersToCategories()
@@ -595,12 +727,12 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		for ($i = 1; $i < sizeof($categories); $i++)
 		{
 			$structure = $edocmanFolder . $categories[$i][1];
-			if (!mkdir(utf8_decode($structure), 0755, true))
+			if (!is_dir(utf8_decode($structure)) && !mkdir(utf8_decode($structure), 0755, true))
 			{
 				die('Create Folder: ' . $structure . ' failed');
 			}
 		}
-		echo "Copy folders to " . $this->getEdocmanDirectory() . " successful! ";
+		echo "Copy folders to " . $this->getEdocmanDirectory() . " successful!<br>";
 	}
 
 	public function importEntitiesToDocuments()
@@ -610,28 +742,81 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		{
 			if (array_key_exists('original_filename_repo', $documents[$i]))
 			{
-				if ($documents[$i]['original_filename_repo'] != false)
+				$file    = "../media/com_thm_repo/" . $documents[$i]["original_filename_repo"];
+				$file    = utf8_decode($file);
+				$newfile = $this->getEdocmanDirectory() . $documents[$i]["filename"];
+				$newfile = utf8_decode($newfile);
+				if (empty($documents[$i]["original_filename_repo"]) || !file_exists($file) || !copy($file, $newfile))
 				{
-					$file    = "../media/com_thm_repo/" . $documents[$i]["original_filename_repo"];
-					$file    = utf8_decode($file);
-					$newfile = $this->getEdocmanDirectory() . $documents[$i]["filename"];
-					$newfile = utf8_decode($newfile);
-
-					if (file_exists($file))
-					{
-						if (!copy($file, $newfile))
-						{
-							echo "copy from $file to $newfile failed\n";
-							var_dump($documents[$i]);
-						}
-					}
-					else
-					{
-						echo "Die Datei $file existiert nicht ";
-					}
+					$this->deleteDocumentFromDb($documents[$i]["id"], $file);
 				}
 			}
 		}
-		echo "Copy documents to " . $this->getEdocmanDirectory() . " successful! ";
+		echo "Copy documents to " . $this->getEdocmanDirectory() . " successful!<br>";
+	}
+
+	public function deleteDocumentFromDb($id, $file)
+	{
+		$db    = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__edocman_documents'));
+		$query->where($db->quoteName('id').'='.$db->quote($id + $this->getDocumentsOffset()));
+		$db->setQuery($query);
+		$db->execute();
+
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__edocman_document_category'));
+		$query->where($db->quoteName('document_id').'='.$db->quote($id + $this->getDocumentsOffset()));
+		$db->setQuery($query);
+		$db->execute();
+
+		echo "Failed to import document $id $file!<br>";
+	}
+
+	public function updateTHMTreeModules()
+	{
+		$db    = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('id', 'params')));
+		$query->from($db->quoteName('#__modules'));
+		$query->where($db->quoteName('module').'='.$db->quote('mod_thm_trees'));
+		$db->setQuery($query);
+		$modules = $db->loadAssocList();
+
+		for ($i = 0; $i < sizeof($modules); $i++)
+		{
+			$params = json_decode($modules[$i]['params']);
+			if ($params->library == 'thm_repo_treesimpl')
+			{
+				$params->library = 'edocman_treesimpl';
+				$params->enable_links = '1';
+				$params->category = strval(intval($params->category) + $this->getCategoriesOffset());
+
+				$query = $db->getQuery(true);
+				$query->update($db->quoteName('#__modules'));
+				$query->set($db->quoteName('params').'='.$db->quote(json_encode($params)));
+				$query->where($db->quoteName('id').'='.$db->quote($modules[$i]['id']));
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+
+		echo "Update of THMTreeModules successful!<br>";
+	}
+
+	/**
+	 * Method to remove special Characters from String
+	 * @param $str
+	 * @return $str
+	 */
+	public function removeSpecialChars($str) {
+		$search = array("Ä", "Ö", "Ü", "ä", "ö", "ü", "ß");
+		$replace = array("Ae", "Oe", "Ue", "ae", "oe", "ue", "ss");
+		$str = str_replace($search, $replace, $str);
+		$str = preg_replace('/[^A-Za-z0-9-]/', '-', $str);
+		$str = preg_replace('/^-+|-+$/', '', $str);
+		return preg_replace('/-+/', '-', $str);
 	}
 }
