@@ -2,13 +2,13 @@
 <extension type="component" version="3" method="upgrade">
     <name>COM_THM_REPO</name>
     <author>THM iCampus</author>
-    <creationDate>September 2016</creationDate>
-    <copyright>TH Mittelhessen 2016</copyright>
+    <creationDate>May 2017</creationDate>
+    <copyright>TH Mittelhessen 2017</copyright>
     <licence>GNU GPL v.2</licence>
     <authorEMail>Stefan.Schneider@mni.thm.de</authorEMail>
     <authorEMail>Andrej.Sajenko@mni.thm.de</authorEMail>
     <authorUrl>www.mni.thm.de</authorUrl>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <description>Filemanagement Tool</description>
 
     <scriptfile>script.php</scriptfile>
