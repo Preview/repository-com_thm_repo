@@ -8,7 +8,7 @@
     <authorEMail>Stefan.Schneider@mni.thm.de</authorEMail>
     <authorEMail>Andrej.Sajenko@mni.thm.de</authorEMail>
     <authorUrl>www.mni.thm.de</authorUrl>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
     <description>Filemanagement Tool</description>
 
     <scriptfile>script.php</scriptfile>
