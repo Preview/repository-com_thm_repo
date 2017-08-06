@@ -244,6 +244,8 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		$this->saveDocumentCategoryToDb();
 		$this->saveLinksToDbDocuments();
 		$this->updateTHMTreeModules();
+		$this->updateJoomlaContent($this->getDocumentsOffset());
+		$this->updateJoomlaAssets();
 
 		$this->importFoldersToCategories();
 		$this->importEntitiesToDocuments();
@@ -486,7 +488,7 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 					$documents[$i]["title"]                  = $result[$j]["name"];
 					$documents[$i]["alias"]                  = strtolower($this->removeSpecialChars($result[$j]["name"]));
 					$originalFilename                        = substr(strrchr($result[$j]["path"], "/"), 1);
-					if ($originalFilename == FALSE)
+					if ($originalFilename === FALSE)
 					{
 						$originalFilename = substr(strrchr($result[$j]["path"], "\\"), 1);
 					}
@@ -771,6 +773,12 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		$db->setQuery($query);
 		$db->execute();
 
+		$query = $db->getQuery(true);
+		$query->delete($db->quoteName('#__assets'));
+		$query->where($db->quoteName('name').'='.$db->quote('com_edocman.document.'.$id + $this->getDocumentsOffset()));
+		$db->setQuery($query);
+		$assets = $db->loadAssocList();
+
 		echo "Failed to import document $id $file!<br>";
 	}
 
@@ -804,6 +812,304 @@ class THM_RepoControllerExport_TO_Edocman_Manager extends JControllerLegacy
 		}
 
 		echo "Update of THMTreeModules successful!<br>";
+	}
+
+	public function updateJoomlaContent($docOffset = 0)
+	{
+		$db    = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('id', 'content')));
+		$query->from($db->quoteName('#__modules'));
+		$query->where($db->quoteName('content').'LIKE'.$db->quote('%{\"repo\":%}%'));
+		$db->setQuery($query);
+		$modules = $db->loadAssocList();
+		for ($i = 0; $i < sizeof($modules); $i++)
+		{
+			if (preg_match_all('/{\"repo\":(\d+)}/', $modules[$i]['content'], $matches, PREG_OFFSET_CAPTURE))
+			{
+				for ($j = 0; $j < sizeof($matches[0]); $j++)
+				{
+					$id =  intval($matches[1][$j][0]) + $this->getDocumentsOffset();
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('title'));
+					$query->from($db->quoteName('#__edocman_documents'));
+					$query->where($db->quoteName('id') . '=' . $db->quote($id));
+					$db->setQuery($query);
+					$title = $db->loadResult();
+					$modules[$i]['content'] = str_replace($matches[0][$j][0], '<a href="index.php?option=com_edocman&amp;view=document&amp;id=' . $id . '">' . $title . '</a>', $modules[$i]['content']);
+				}
+			}
+
+			$query = $db->getQuery(true);
+			$query->update($db->quoteName('#__modules'));
+			$query->set($db->quoteName('content').'='.$db->quote($modules[$i]['content']));
+			$query->where($db->quoteName('id').'='.$db->quote($modules[$i]['id']));
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('id', 'description')));
+		$query->from($db->quoteName('#__categories'));
+		$query->where($db->quoteName('description').'LIKE'.$db->quote('%{\"repo\":%}%'));
+		$db->setQuery($query);
+		$table = $db->loadAssocList();
+		for ($i = 0; $i < sizeof($table); $i++)
+		{
+			if (preg_match_all('/{\"repo\":(\d+)}/', $table[$i]['description'], $matches, PREG_OFFSET_CAPTURE))
+			{
+				for ($j = 0; $j < sizeof($matches[0]); $j++)
+				{
+					$id =  intval($matches[1][$j][0]) + $this->getDocumentsOffset();
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('title'));
+					$query->from($db->quoteName('#__edocman_documents'));
+					$query->where($db->quoteName('id') . '=' . $db->quote($id));
+					$db->setQuery($query);
+					$title = $db->loadResult();
+					$table[$i]['description'] = str_replace($matches[0][$j][0], '<a href="index.php?option=com_edocman&amp;view=document&amp;id=' . $id . '">' . $title . '</a>', $table[$i]['description']);
+				}
+			}
+
+			$query = $db->getQuery(true);
+			$query->update($db->quoteName('#__categories'));
+			$query->set($db->quoteName('description').'='.$db->quote($table[$i]['description']));
+			$query->where($db->quoteName('id').'='.$db->quote($table[$i]['id']));
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('core_content_id', 'core_body')));
+		$query->from($db->quoteName('#__ucm_content'));
+		$query->where($db->quoteName('core_body').'LIKE'.$db->quote('%{\"repo\":%}%'));
+		$db->setQuery($query);
+		$table = $db->loadAssocList();
+		for ($i = 0; $i < sizeof($table); $i++)
+		{
+			if (preg_match_all('/{\"repo\":(\d+)}/', $table[$i]['core_body'], $matches, PREG_OFFSET_CAPTURE))
+			{
+				for ($j = 0; $j < sizeof($matches[0]); $j++)
+				{
+					$id =  intval($matches[1][$j][0]) + $this->getDocumentsOffset();
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('title'));
+					$query->from($db->quoteName('#__edocman_documents'));
+					$query->where($db->quoteName('id') . '=' . $db->quote($id));
+					$db->setQuery($query);
+					$title = $db->loadResult();
+					$table[$i]['core_body'] = str_replace($matches[0][$j][0], '<a href="index.php?option=com_edocman&amp;view=document&amp;id=' . $id . '">' . $title . '</a>', $table[$i]['core_body']);
+				}
+			}
+
+			$query = $db->getQuery(true);
+			$query->update($db->quoteName('#__ucm_content'));
+			$query->set($db->quoteName('core_body').'='.$db->quote($table[$i]['core_body']));
+			$query->where($db->quoteName('core_content_id').'='.$db->quote($table[$i]['core_content_id']));
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+
+
+		$query = $db->getQuery(true);
+		$query->select($db->quoteName(array('id', 'introtext', 'fulltext')));
+		$query->from($db->quoteName('#__content'));
+		$query->where($db->quoteName('introtext') . 'LIKE' . $db->quote('%{\"repo\":%}%'), 'OR');
+		$query->where($db->quoteName('fulltext') . 'LIKE' . $db->quote('%{\"repo\":%}%'));
+		$db->setQuery($query);
+		$content = $db->loadAssocList();
+		for ($i = 0; $i < sizeof($content); $i++)
+		{
+			if (preg_match_all('/{\"repo\":(\d+)}/', $content[$i]['introtext'], $matches, PREG_OFFSET_CAPTURE))
+			{
+				for ($j = 0; $j < sizeof($matches[0]); $j++)
+				{
+					$id =  intval($matches[1][$j][0]) + $this->getDocumentsOffset();
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('title'));
+					$query->from($db->quoteName('#__edocman_documents'));
+					$query->where($db->quoteName('id') . '=' . $db->quote($id));
+					$db->setQuery($query);
+					$title = $db->loadResult();
+					$content[$i]['introtext'] = str_replace($matches[0][$j][0], '<a href="index.php?option=com_edocman&amp;view=document&amp;id=' . $id . '">' . $title . '</a>', $content[$i]['introtext']);
+				}
+			}
+
+			if (preg_match_all('/{\"repo\":(\d+)}/', $content[$i]['fulltext'], $matches, PREG_OFFSET_CAPTURE))
+			{
+				for ($j = 0; $j < sizeof($matches[0]); $j++)
+				{
+					$id =  intval($matches[1][$j][0]) + $this->getDocumentsOffset();
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('title'));
+					$query->from($db->quoteName('#__edocman_documents'));
+					$query->where($db->quoteName('id') . '=' . $db->quote($id));
+					$db->setQuery($query);
+					$title = $db->loadResult();
+					$content[$i]['fulltext'] = str_replace($matches[0][$j][0], '<a href="index.php?option=com_edocman&amp;view=document&amp;id=' . $id . '">' . $title . '</a>', $content[$i]['fulltext']);
+				}
+			}
+
+			$query = $db->getQuery(true);
+			$query->update($db->quoteName('#__content'));
+			$query->set($db->quoteName('introtext').'='.$db->quote($content[$i]['introtext']));
+			$query->set($db->quoteName('fulltext').'='.$db->quote($content[$i]['fulltext']));
+			$query->where($db->quoteName('id').'='.$db->quote($content[$i]['id']));
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+		echo "Update of JoomlaContent successful!<br>";
+	}
+
+	public function updateJoomlaAssets()
+	{
+		$db = JFactory::getDBO();
+
+		$query = $db->getQuery(true);
+		$query->select('max(id)');
+		$query->from('#__assets');
+		$db->setQuery($query);
+		$offset = $db->loadResult() + 1;
+
+		$query = $db->getQuery(true);
+		$query->select('*');
+		$query->from($db->quoteName('#__assets'));
+		$query->where($db->quoteName('name').'LIKE'.$db->quote('com_thm_repo.%'));
+		$db->setQuery($query);
+		$assets = $db->loadAssocList();
+
+		for ($i = 0; $i < sizeof($assets); $i++)
+		{
+			$id = intval(substr(strrchr($assets[$i]['name'], '.'), 1));
+			if (strpos($assets[$i]['name'], 'com_thm_repo.folder.') !== FALSE)
+			{
+				$assets[$i]['id'] = $offset + $i;
+				$assets[$i]['name'] = 'com_edocman.category.'.($id + $this->getCategoriesOffset());
+
+				$query = $db->getQuery(true);
+				$query->update($db->quoteName('#__edocman_categories'));
+				$query->set($db->quoteName('asset_id').'='.$db->quote($assets[$i]['id']));
+				$query->where($db->quoteName('id').'='.$db->quote($id + $this->getCategoriesOffset()));
+				$db->setQuery($query);
+				$db->execute();
+			}
+			else if (strpos($assets[$i]['name'], 'com_thm_repo.entity.') !== FALSE)
+			{
+				$assets[$i]['id'] = $offset + $i;
+				$assets[$i]['name'] = 'com_edocman.document.'.($id + $this->getDocumentsOffset());
+
+				$query = $db->getQuery(true);
+				$query->update($db->quoteName('#__edocman_documents'));
+				$query->set($db->quoteName('asset_id').'='.$db->quote($assets[$i]['id']));
+				$query->where($db->quoteName('id').'='.$db->quote($id + $this->getDocumentsOffset()));
+				$db->setQuery($query);
+				$db->execute();
+			}
+			$rules = json_decode($assets[$i]['rules'], true);
+			foreach($rules as $key => $value){
+				foreach($value as $k => $v){
+					if($v == 0)
+					{
+						unset($rules[$key][$k]);
+					}
+				}
+			}
+			$assets[$i]['rules'] = json_encode($rules);
+		}
+
+		for ($i = 0; $i < sizeof($assets); $i++)
+		{
+			$id = intval(substr(strrchr($assets[$i]['name'], '.'), 1));
+			if (strpos($assets[$i]['name'], 'com_edocman.category.') !== FALSE)
+			{
+				$query = $db->getQuery(true);
+				$query->select(array($db->quoteName('parent_id'), $db->quoteName('title')));
+				$query->from($db->quoteName('#__edocman_categories'));
+				$query->where($db->quoteName('id').'='.$db->quote($id));
+				$db->setQuery($query);
+				$result = $db->loadAssoc();
+				$assets[$i]['title'] = $result['title'];
+
+				if ($assets[$i]['title'] == 'root')
+				{
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('id'));
+					$query->from($db->quoteName('#__assets'));
+					$query->where($db->quoteName('name') . '=' . $db->quote('com_edocman'));
+					$db->setQuery($query);
+					$edocman_asset_id = $db->loadResult();
+					$assets[$i]['parent_id'] = $edocman_asset_id;
+				}
+
+				else
+				{
+					$query = $db->getQuery(true);
+					$query->select($db->quoteName('id'));
+					$query->from($db->quoteName('#__assets'));
+					$query->where($db->quoteName('name').'='.$db->quote('com_edocman.category.' . $result['parent_id']));
+					$db->setQuery($query);
+					$assets[$i]['parent_id'] = $db->loadResult();
+				}
+			}
+			else if (strpos($assets[$i]['name'], 'com_edocman.document.') !== FALSE) {
+				$query = $db->getQuery(true);
+				$query->select($db->quoteName('title'));
+				$query->from($db->quoteName('#__edocman_documents'));
+				$query->where($db->quoteName('id') . '=' . $db->quote($id));
+				$db->setQuery($query);
+				$result = $db->loadResult();
+				$assets[$i]['title'] = $result;
+
+				$query = $db->getQuery(true);
+				$query->select($db->quoteName('category_id'));
+				$query->from($db->quoteName('#__edocman_document_category'));
+				$query->where($db->quoteName('document_id') . '=' . $db->quote($id), 'AND');
+				$query->where($db->quoteName('is_main_category') . '=' . $db->quote(1));
+				$db->setQuery($query);
+				$result = $db->loadResult();
+
+				$query = $db->getQuery(true);
+				$query->select($db->quoteName('id'));
+				$query->from($db->quoteName('#__assets'));
+				$query->where($db->quoteName('name') . '=' . $db->quote('com_edocman.document.' . $result));
+				$db->setQuery($query);
+				$assets[$i]['parent_id'] = $db->loadResult();
+			}
+
+			if ($assets[$i]['parent_id'] != 0)
+			{
+				$query   = $db->getQuery(true);
+				$columns = array('id', 'parent_id', 'name', 'title', 'rules');
+
+				$values = array($db->quote($assets[$i]['id']), $db->quote($assets[$i]['parent_id']),
+					$db->quote($assets[$i]['name']), $db->quote($assets[$i]['title']),
+					$db->quote($assets[$i]['rules']));
+
+				$query
+					->insert($db->quoteName('#__assets'))
+					->columns($db->quoteName($columns))
+					->values(implode(',', $values));
+
+				$db->setQuery($query);
+				$db->execute();
+			}
+		}
+
+		if (JTable::getInstance('asset')->rebuild($edocman_asset_id))
+		{
+			echo "Update of JoomlaAssets successful!<br>";
+		}
+		else
+		{
+			echo "Update of JoomlaAssets unsuccessful!<br>";
+		}
 	}
 
 	/**

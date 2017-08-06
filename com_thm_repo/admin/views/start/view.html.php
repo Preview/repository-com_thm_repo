@@ -52,5 +52,6 @@ class THM_RepoViewStart extends JViewLegacy
 
 		JToolBarHelper::title(JText::_('COM_THM_REPO_MANAGER_START'), 'repo.png', JPATH_COMPONENT . DS . 'img' . DS . 'icon-48-repo.png');
 		JToolBarHelper::custom('export_to_edocman_manager.run', 'iconname.png', 'iconname.png', 'Export data to Edocman', false, false);
+        JToolBarHelper::custom('export_to_edocman_manager.updateJoomlaContent', 'iconname.png', 'iconname.png', 'Update Joomla Content to Edocman', false, false);
 	}
 }
