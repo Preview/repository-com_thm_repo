@@ -1,7 +1,6 @@
-#Component THM Repository
+# Component THM Repository
 
-<a href="http://icampus.thm.de"><img src="com_thm_repo/media/img/iCampusLogo_V2.png"
-alt="Homepage of iCampus"height="180" /></a>
+![Homepage of iCampus](com_thm_repo/media/img/iCampusLogo_V2.png)
 
 This sub project brings the ability of a filesystem into Joomla. Manage and publish your files with an easy-to-use application. You already have a file manager like DOCMAN? No problem! THM Repository provides an interface for the connection to other file managers.
 
@@ -13,17 +12,15 @@ page explains how you can contribute to the iCampus projects by testing
 proposed solutions or sending change requests. You do not need to have
 any coding knowledge, you do need a Joomla installation to test on.
 
-<a href="http://icampus.thm.de/jira/issues/"><img src="com_thm_repo/media/img/issues_button.png"
-alt="Issues"height="80" align="center"/></a>
-</br>
+[![Jira Issue Tracker](com_thm_repo/media/img/issues_button.png)](http://icampus.thm.de/jira/issues/)
 
-#Overview
+# Overview
 An overview of the iCampus development infrastructure is available at
 <http://dev.mni.thm.de/>.
 The illustration provides several links that direct to the depicted
 systems. The figure simplifies the orientation for developers.
 
-#Process
+# Process
 In order to contribute to the iCampus software projects the first step
 is to discover the latest projects on GitHub. A description of the
 projects and iCampus working group can be found at:
